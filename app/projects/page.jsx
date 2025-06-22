@@ -181,25 +181,25 @@ const ProjectsPage = () => {
                           </span>
                         )}
                       </div>
-                    </div>
+              </div>
 
                     {/* External Links Only */}
                     <div className="flex flex-wrap gap-4 pt-4">
                       {project.githubUrl && (
-                        <Button 
-                          variant="outline" 
+                    <Button
+                      variant="outline"
                           onClick={(e) => handleExternalLink(project.githubUrl, e)}
                           className="px-6 py-3 rounded-xl font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 dark:bg-gray-200 dark:text-gray-900"
-                        >
+                    >
                           <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                          </svg>
+                      </svg>
                           GitHub
-                        </Button>
+                    </Button>
                       )}
-                      
+
                       {project.liveUrl && (
-                        <Button 
+                        <Button
                           variant="outline" 
                           onClick={(e) => handleExternalLink(project.liveUrl, e)}
                           className="px-6 py-3 rounded-xl font-semibold border-2 border-green-300 dark:border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 dark:bg-gray-200 dark:text-gray-900"
@@ -331,11 +331,11 @@ const ProjectsPage = () => {
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">
                   {filteredProjects.reduce((sum, p) => sum + parseFloat(p.downloads.replace(/[^0-9.]/g, '')), 0).toFixed(1)}K+
-                </div>
+            </div>
                 <div className="text-sm md:text-base text-gray-600 dark:text-gray-400 font-medium">
                   Total Downloads
-                </div>
-              </div>
+            </div>
+            </div>
             </div>
           </div>
         </div>

@@ -18,7 +18,10 @@ const Header = () => {
   // Navigation menu items
   const menuItems = [
     { name: 'Home', href: '/' },
-    { name: 'Projects', href: '/projects' }
+    { name: 'Projects', href: '/projects' },
+    { name: 'Experience', href: '/experience' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' }
   ];
 
   return (
