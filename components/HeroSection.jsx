@@ -7,56 +7,56 @@ import { Button } from './customUi/Button';
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Dynamic Image Array - Easy to modify
+  // Dynamic Image Array - Developer Technologies
   const carouselImages = [
     {
-              id: 1,
-        title: 'Messenger',
-        category: '💬 Communication',
-        url: 'image-1.png',
-        gradient: 'from-blue-600 to-blue-800',
-        overlayColor: 'bg-blue-600/80 dark:bg-blue-700/90'
-      },
-      {
-        id: 2,
-        title: 'Portfolio',
-        category: '👤 Personal',
-        url: 'image-1.png',
-        gradient: 'from-gray-800 to-gray-900',
-        overlayColor: 'bg-gray-900/80 dark:bg-gray-800/90'
-      },
-      {
-        id: 3,
-        title: 'Crafter',
-        category: '🔧 Business',
-        url: 'image-1.png',
-        gradient: 'from-green-600 to-green-800',
-        overlayColor: 'bg-green-600/80 dark:bg-green-700/90'
-      },
-      {
-        id: 4,
-        title: 'Changelog',
-        category: '📊 Development',
-        url: 'image-1.png',
-        gradient: 'from-purple-900 to-purple-700',
-        overlayColor: 'bg-purple-900/80 dark:bg-purple-800/90'
-      },
-      {
-        id: 5,
-        title: 'Orca',
-        category: '📈 Analytics',
-        url: 'image-1.png',
-        gradient: 'from-blue-500 to-blue-700',
-        overlayColor: 'bg-blue-600/80 dark:bg-blue-700/90'
-      },
-      {
-        id: 6,
-        title: 'Store',
-        category: '🛒 E-commerce',
-        url: 'image-1.png',
-        gradient: 'from-red-600 to-red-800',
-        overlayColor: 'bg-red-600/80 dark:bg-red-700/90'
-      }
+      id: 1,
+      title: 'React.js',
+      category: '⚛️ Frontend',
+      url: 'image-1.png',
+      gradient: 'from-blue-600 to-blue-800',
+      overlayColor: 'bg-blue-600/80 dark:bg-blue-700/90'
+    },
+    {
+      id: 2,
+      title: 'Next.js',
+      category: '🚀 Full-Stack',
+      url: 'image-1.png',
+      gradient: 'from-gray-800 to-gray-900',
+      overlayColor: 'bg-gray-900/80 dark:bg-gray-800/90'
+    },
+    {
+      id: 3,
+      title: 'Node.js',
+      category: '🔧 Backend',
+      url: 'image-1.png',
+      gradient: 'from-green-600 to-green-800',
+      overlayColor: 'bg-green-600/80 dark:bg-green-700/90'
+    },
+    {
+      id: 4,
+      title: 'Python',
+      category: '🐍 Programming',
+      url: 'image-1.png',
+      gradient: 'from-yellow-600 to-yellow-800',
+      overlayColor: 'bg-yellow-600/80 dark:bg-yellow-700/90'
+    },
+    {
+      id: 5,
+      title: 'MongoDB',
+      category: '📊 Database',
+      url: 'image-1.png',
+      gradient: 'from-green-500 to-green-700',
+      overlayColor: 'bg-green-600/80 dark:bg-green-700/90'
+    },
+    {
+      id: 6,
+      title: 'Django',
+      category: '🎯 Framework',
+      url: 'image-1.png',
+      gradient: 'from-emerald-600 to-emerald-800',
+      overlayColor: 'bg-emerald-600/80 dark:bg-emerald-700/90'
+    }
   ];
 
   useEffect(() => {
@@ -160,22 +160,22 @@ const HeroSection = () => {
             className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors duration-300">
-              The Ultimate{' '}
+              Full-Stack{' '}
               <span className="text-blue-600 dark:text-blue-400">
-                Framer
+                Developer
               </span>
               <br />
-              Template Library
+              & Problem Solver
             </h1>
             
             <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-3xl mx-auto leading-relaxed transition-colors duration-300">
-              We pride ourselves on offering a diverse array of top-tier resources
+              Passionate about creating innovative web applications and digital solutions
               <br />
-              tailored to meet the dynamic needs of modern designers like you.
+              that solve real-world problems with modern technologies.
             </p>
             
             <div className='flex justify-center'>
-              <Button className='items-center'>Explore Our Templates</Button>
+              <Button className='items-center'>View My Projects</Button>
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@ const HeroSection = () => {
                 <div key={`first-${image.id}`} className={`carousel-item w-80 h-80 bg-gradient-to-br ${image.gradient} rounded-t-2xl overflow-hidden shadow-lg flex-shrink-0 relative`}>
                   <img 
                     src={image.url}
-                    alt={`${image.title} Template`}
+                    alt={`${image.title} Technology`}
                     className="w-full h-full object-cover"
                   />
                   <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-6`}>
@@ -205,7 +205,7 @@ const HeroSection = () => {
                 <div key={`second-${image.id}`} className={`carousel-item w-80 h-80 bg-gradient-to-br ${image.gradient} rounded-t-2xl overflow-hidden shadow-lg flex-shrink-0 relative`}>
                   <img 
                     src={image.url}
-                    alt={`${image.title} Template`}
+                    alt={`${image.title} Technology`}
                     className="w-full h-full object-cover"
                   />
                   <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-6`}>
