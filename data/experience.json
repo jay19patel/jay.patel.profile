@@ -34,7 +34,7 @@
     },
     {
       "id": 2,
-      "company": "Lifeline Solutions",
+      "company": "Meril Lifesciences Pvt Ltd",
       "position": "Software Developer",
       "location": "On-site",
       "employmentType": "Full-time",
@@ -63,70 +63,6 @@
       "companyLogo": "/man.png",
       "workType": "On-site",
       "category": "Manufacturing Technology"
-    },
-    {
-      "id": 3,
-      "company": "Tech Innovators Hub",
-      "position": "Junior Web Developer",
-      "location": "Hybrid",
-      "employmentType": "Full-time",
-      "startDate": "2021-08-15",
-      "endDate": "2022-05-30",
-      "isCurrentJob": false,
-      "duration": "9 months",
-      "description": "Started my professional journey as a Junior Web Developer, focusing on frontend development and learning modern web technologies. Worked on various client projects and gained experience in responsive web design and JavaScript frameworks.",
-      "responsibilities": [
-        "Developed responsive websites using HTML, CSS, and JavaScript",
-        "Assisted in React.js application development",
-        "Created landing pages and business websites",
-        "Performed website maintenance and bug fixes",
-        "Collaborated with design team for UI/UX implementation",
-        "Participated in code reviews and team meetings",
-        "Learned and implemented best practices in web development"
-      ],
-      "technologies": ["HTML5", "CSS3", "JavaScript", "React.js", "Bootstrap", "jQuery", "Git", "Responsive Design", "WordPress", "PHP"],
-      "achievements": [
-        "Successfully completed 15+ client websites",
-        "Improved website loading speed by 45% through optimization",
-        "Learned React.js and contributed to team projects",
-        "Received appreciation for attention to detail and code quality"
-      ],
-      "companyWebsite": "https://techinnovatorshub.com",
-      "companyLogo": "/image-1.png",
-      "workType": "Hybrid",
-      "category": "Web Development"
-    },
-    {
-      "id": 4,
-      "company": "Freelance Projects",
-      "position": "Freelance Developer",
-      "location": "Remote",
-      "employmentType": "Freelance",
-      "startDate": "2021-01-01",
-      "endDate": "2021-12-31",
-      "isCurrentJob": false,
-      "duration": "1 year",
-      "description": "Worked as a freelance developer taking on various web development projects. Gained experience in client communication, project management, and delivering solutions for small to medium businesses across different industries.",
-      "responsibilities": [
-        "Developed custom websites for small businesses",
-        "Created e-commerce solutions using various platforms",
-        "Provided website maintenance and support services",
-        "Managed client relationships and project timelines",
-        "Handled domain setup and hosting configurations",
-        "Implemented SEO best practices for client websites",
-        "Provided training to clients for website management"
-      ],
-      "technologies": ["WordPress", "PHP", "HTML/CSS", "JavaScript", "MySQL", "WooCommerce", "Shopify", "SEO Tools", "cPanel"],
-      "achievements": [
-        "Successfully completed 25+ freelance projects",
-        "Maintained 100% client satisfaction rate",
-        "Built long-term relationships with 10+ recurring clients",
-        "Developed expertise in multiple CMS platforms"
-      ],
-      "companyWebsite": null,
-      "companyLogo": "/man.png",
-      "workType": "Remote",
-      "category": "Freelance"
     }
   ]
 } 

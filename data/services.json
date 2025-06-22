@@ -1,0 +1,124 @@
+{
+  "services": [
+    {
+      "id": 1,
+      "title": "Website Development",
+      "category": "Web Development",
+      "description": "Complete end-to-end website development from concept to deployment. I create responsive, modern, and user-friendly websites using latest technologies.",
+      "features": [
+        "Responsive Design for all devices",
+        "Modern UI/UX with professional aesthetics",
+        "SEO optimized structure",
+        "Fast loading and performance optimized",
+        "Cross-browser compatibility",
+                "Content Management System integration"
+      ],
+      "pricing": "₹15,000",
+      "pricingUnit": "/project",
+      "deliveryTime": "7-14 days",
+      "bgColor": "bg-orange-50",
+      "darkBgColor": "dark:bg-orange-900/30",
+      "iconColor": "text-orange-600"
+    },
+    {
+      "id": 2,
+      "title": "Landing Page Design",
+      "category": "Web Design",
+      "description": "High-converting landing pages designed to capture leads and drive conversions. Perfect for marketing campaigns and business promotions.",
+      "features": [
+        "Conversion-focused design",
+        "A/B testing ready layouts",
+        "Mobile-first approach",
+        "Fast loading speed",
+        "Lead capture forms",
+                "Analytics integration"
+      ],
+      "pricing": "₹8,000",
+      "pricingUnit": "/page",
+      "deliveryTime": "3-7 days",
+      "bgColor": "bg-blue-50",
+      "darkBgColor": "dark:bg-blue-900/30",
+      "iconColor": "text-blue-600"
+    },
+    {
+      "id": 3,
+      "title": "Automation Scripts",
+      "category": "Automation",
+      "description": "Custom automation solutions to streamline your business processes. From data processing to workflow automation, I've got you covered.",
+      "features": [
+        "Process automation and optimization",
+        "Data scraping and processing",
+        "Email and notification automation",
+        "File management automation",
+        "API integrations",
+                "Scheduled task automation"
+      ],
+      "pricing": "₹5,000",
+      "pricingUnit": "/script",
+      "deliveryTime": "2-5 days",
+      "bgColor": "bg-green-50",
+      "darkBgColor": "dark:bg-green-900/30",
+      "iconColor": "text-green-600"
+    },
+    {
+      "id": 4,
+      "title": "AI Integration",
+      "category": "Artificial Intelligence",
+      "description": "Integrate cutting-edge AI capabilities into your applications. From chatbots to machine learning models, enhance your digital presence with AI.",
+      "features": [
+        "AI Chatbot development",
+        "Machine Learning model integration",
+        "Natural Language Processing",
+        "Computer Vision solutions",
+        "Generative AI implementations",
+                "Custom AI model training"
+      ],
+      "pricing": "₹20,000",
+      "pricingUnit": "/integration",
+      "deliveryTime": "10-21 days",
+      "bgColor": "bg-purple-50",
+      "darkBgColor": "dark:bg-purple-900/30",
+      "iconColor": "text-purple-600"
+    },
+    {
+      "id": 5,
+      "title": "E-commerce Solutions",
+      "category": "E-commerce",
+      "description": "Complete e-commerce platforms with payment integration, inventory management, and admin panels. Perfect for online businesses.",
+      "features": [
+        "Product catalog management",
+        "Secure payment gateway integration",
+        "Order management system",
+        "Inventory tracking",
+        "Customer dashboard",
+                "Admin panel with analytics"
+      ],
+      "pricing": "₹25,000",
+      "pricingUnit": "/platform",
+      "deliveryTime": "14-30 days",
+      "bgColor": "bg-indigo-50",
+      "darkBgColor": "dark:bg-indigo-900/30",
+      "iconColor": "text-indigo-600"
+    },
+    {
+      "id": 6,
+      "title": "ERP & Frappe Support",
+      "category": "Enterprise Solutions",
+      "description": "Comprehensive ERP solutions and Frappe framework support for business automation and management systems.",
+      "features": [
+        "Frappe framework development",
+        "ERPNext customization and setup",
+        "Business process automation",
+        "Custom app development",
+        "System integration and migration",
+                "Training and ongoing support"
+      ],
+      "pricing": "₹5,000",
+      "pricingUnit": "/month",
+      "deliveryTime": "Ongoing",
+      "bgColor": "bg-pink-50",
+      "darkBgColor": "dark:bg-pink-900/30",
+      "iconColor": "text-pink-600"
+    }
+  ]
+} 

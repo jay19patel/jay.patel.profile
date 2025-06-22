@@ -1,5 +1,4 @@
 import React from 'react'
-import { TitleCard } from './TitleCard'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -92,24 +91,24 @@ export const PageSection = ({
                   ))}
                 </h1>
                 
-                <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-xl lg:max-w-none">
-                  {description}
-                </p>
-                
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-6">
-                  {stats.map((stat, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <div className={`w-2 h-2 bg-${stat.color}-500 rounded-full animate-pulse`}></div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{stat.count} {stat.label}</span>
-                    </div>
-                  ))}
-                </div>
+              
               </div>
               
               {/* Right Side - Card Container */}
               <div className="hidden lg:flex justify-center lg:justify-center items-center min-h-[320px] lg:min-h-[400px] p-4">
-                <div className="relative z-10 transform hover:scale-105 transition-transform duration-300">
-                  <TitleCard />
+                <div className="flex flex-col gap-4">
+                  <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-xl lg:max-w-none">
+                    {description}
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-6">
+                    {stats.map((stat, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 bg-${stat.color}-500 rounded-full animate-pulse`}></div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{stat.count} {stat.label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 
                 <div className="absolute inset-0 flex items-center justify-center opacity-30">
