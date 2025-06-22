@@ -18,11 +18,7 @@ const Header = () => {
   // Navigation menu items
   const menuItems = [
     { name: 'Home', href: '/' },
-    { name: 'Toolbox', href: '/toolbox' },
-    { name: 'Templates', href: '/templates' },
-    { name: 'Components', href: '/components' },
-    { name: 'Inspiration', href: '/inspiration' },
-    { name: 'Reviews', href: '/reviews' }
+    { name: 'Projects', href: '/projects' }
   ];
 
   return (
@@ -171,4 +167,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;
