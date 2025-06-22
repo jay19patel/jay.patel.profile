@@ -107,7 +107,7 @@ export const PageSection = ({
               </div>
               
               {/* Right Side - Card Container */}
-              <div className="relative flex justify-center lg:justify-center items-center min-h-[320px] lg:min-h-[400px] p-4">
+              <div className="hidden lg:flex justify-center lg:justify-center items-center min-h-[320px] lg:min-h-[400px] p-4">
                 <div className="relative z-10 transform hover:scale-105 transition-transform duration-300">
                   <TitleCard />
                 </div>

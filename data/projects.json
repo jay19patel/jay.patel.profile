@@ -1,0 +1,184 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "slug": "ecommerce-django-store",
+      "title": "E-Commerce Django Store",
+      "subtitle": "Full-Stack E-Commerce Website",
+      "description": "A complete e-commerce platform built with Django framework during my final semester college project. Features include product catalog, shopping cart, user authentication, order management, and payment integration.",
+      "introduction": "This e-commerce platform was developed as my final semester college project using Django framework with HTML templates and Jinja templating engine. The project demonstrates a complete online shopping experience with modern web development practices. Built with focus on user experience, security, and scalability.",
+      "category": "E-Commerce",
+      "status": "Completed",
+      "rating": 4.8,
+      "downloads": "1.2K+",
+      "image": "/image-1.png",
+      "technologies": ["Django", "Python", "HTML", "CSS", "JavaScript", "Jinja2", "SQLite", "Bootstrap"],
+      "features": [
+        "User Registration & Authentication",
+        "Product Catalog with Categories",
+        "Shopping Cart & Wishlist",
+        "Order Management System",
+        "Payment Gateway Integration",
+        "Admin Dashboard",
+        "Search & Filter Functionality",
+        "Responsive Design"
+      ],
+      "screenshots": [
+        "/image-1.png",
+        "/man.png"
+      ],
+      "createdAt": "2023-08-15",
+      "updatedAt": "2023-12-10",
+      "author": "Your Name",
+      "githubUrl": "https://github.com/yourusername/django-ecommerce",
+      "liveUrl": "https://django-ecommerce-demo.com",
+      "challenges": [
+        "Implementing secure payment gateway",
+        "Optimizing database queries for better performance",
+        "Creating responsive design for all devices",
+        "Managing user sessions and authentication"
+      ],
+      "learnings": [
+        "Django framework architecture",
+        "Database modeling and relationships",
+        "Template inheritance with Jinja2",
+        "User authentication and authorization"
+      ]
+    },
+    {
+      "id": 2,
+      "slug": "paper-trading-nextjs-platform",
+      "title": "Paper Trading Platform",
+      "subtitle": "Stock Market Simulation Website",
+      "description": "A comprehensive paper trading website built with Next.js that allows users to practice stock trading without real money. Features real-time market data, portfolio management, and trading analytics.",
+      "introduction": "This paper trading platform was developed using Next.js to help users learn stock market trading without financial risk. The application provides a realistic trading environment with real market data, portfolio tracking, and comprehensive analytics to help users improve their trading skills.",
+      "category": "FinTech",
+      "status": "Completed",
+      "rating": 4.9,
+      "downloads": "2.8K+",
+      "image": "/image-1.png",
+      "technologies": ["Next.js", "React", "Node.js", "MongoDB", "Chart.js", "API Integration", "TailwindCSS", "Vercel"],
+      "features": [
+        "Real-time Stock Market Data",
+        "Virtual Portfolio Management",
+        "Buy/Sell Stock Simulation",
+        "Trading History & Analytics",
+        "Watchlist Management",
+        "Performance Tracking",
+        "Interactive Charts",
+        "User Dashboard"
+      ],
+      "screenshots": [
+        "/image-1.png",
+        "/man.png"
+      ],
+      "createdAt": "2024-01-20",
+      "updatedAt": "2024-03-15",
+      "author": "Your Name",
+      "githubUrl": "https://github.com/yourusername/paper-trading-nextjs",
+      "liveUrl": "https://paper-trading-platform.vercel.app",
+      "challenges": [
+        "Integrating real-time market data APIs",
+        "Managing complex state for portfolio calculations",
+        "Implementing responsive chart visualizations",
+        "Optimizing performance for real-time updates"
+      ],
+      "learnings": [
+        "Next.js framework and SSR concepts",
+        "Real-time data handling",
+        "Financial calculations and algorithms",
+        "API integration and data management"
+      ]
+    },
+    {
+      "id": 3,
+      "slug": "data-analysis-pandas-numpy",
+      "title": "Data Analysis Project",
+      "subtitle": "Python Data Science & Analytics",
+      "description": "Comprehensive data analysis project using Python libraries like Pandas, NumPy, and Google Colab. Performed statistical analysis, data visualization, and machine learning on various datasets.",
+      "introduction": "This data analysis project showcases the power of Python for data science and analytics. Using industry-standard libraries like Pandas for data manipulation, NumPy for numerical computations, and Google Colab for cloud-based development, I analyzed various datasets to extract meaningful insights and patterns.",
+      "category": "Data Science",
+      "status": "Completed",
+      "rating": 4.7,
+      "downloads": "950+",
+      "image": "/image-1.png",
+      "technologies": ["Python", "Pandas", "NumPy", "Matplotlib", "Seaborn", "Google Colab", "Jupyter Notebook", "Scikit-learn"],
+      "features": [
+        "Data Cleaning & Preprocessing",
+        "Statistical Analysis",
+        "Data Visualization",
+        "Correlation Analysis",
+        "Trend Identification",
+        "Machine Learning Models",
+        "Interactive Notebooks",
+        "Report Generation"
+      ],
+      "screenshots": [
+        "/image-1.png",
+        "/man.png"
+      ],
+      "createdAt": "2024-02-10",
+      "updatedAt": "2024-04-05",
+      "author": "Your Name",
+      "githubUrl": "https://github.com/yourusername/data-analysis-project",
+      "liveUrl": "https://colab.research.google.com/drive/your-notebook-id",
+      "challenges": [
+        "Handling large datasets efficiently",
+        "Choosing appropriate visualization techniques",
+        "Dealing with missing and inconsistent data",
+        "Selecting relevant statistical methods"
+      ],
+      "learnings": [
+        "Advanced Pandas operations",
+        "Statistical analysis techniques",
+        "Data visualization best practices",
+        "Machine learning fundamentals"
+      ]
+    },
+    {
+      "id": 4,
+      "slug": "identity-mask-ai-generator",
+      "title": "Personal Identity Mask Generator",
+      "subtitle": "AI-Powered Image Processing Tool",
+      "description": "An innovative web application that uses AI and Python Pillow library to generate personal identity masks. This tool helps protect privacy by creating realistic face masks for profile pictures and social media.",
+      "introduction": "This AI-powered identity mask generator was developed to address growing privacy concerns in the digital age. Using advanced image processing techniques with Python Pillow library and AI algorithms, the application can generate realistic masks that protect user identity while maintaining visual appeal for profile pictures and social media use.",
+      "category": "AI/ML",
+      "status": "Completed",
+      "rating": 4.6,
+      "downloads": "1.5K+",
+      "image": "/image-1.png",
+      "technologies": ["Python", "Pillow (PIL)", "OpenCV", "TensorFlow", "Flask", "HTML", "CSS", "JavaScript", "AI/ML"],
+      "features": [
+        "AI-Powered Face Detection",
+        "Custom Mask Generation",
+        "Image Processing & Enhancement",
+        "Multiple Mask Styles",
+        "Batch Processing",
+        "Privacy Protection",
+        "User-Friendly Interface",
+        "Download & Share Options"
+      ],
+      "screenshots": [
+        "/image-1.png",
+        "/man.png"
+      ],
+      "createdAt": "2024-03-01",
+      "updatedAt": "2024-05-20",
+      "author": "Your Name",
+      "githubUrl": "https://github.com/yourusername/identity-mask-generator",
+      "liveUrl": "https://identity-mask-generator.herokuapp.com",
+      "challenges": [
+        "Implementing accurate face detection",
+        "Creating realistic mask overlays",
+        "Optimizing image processing performance",
+        "Ensuring user privacy and data security"
+      ],
+      "learnings": [
+        "Advanced image processing techniques",
+        "AI/ML model integration",
+        "Computer vision concepts",
+        "Privacy-focused application development"
+      ]
+    }
+  ]
+} 
