@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
+import ChatBot from '@/components/ChatBot';
 
 export const metadata = {
   title: 'Portfolio',
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
             {children}
           </main>
           <Footer />
+          <ChatBot />
         </ThemeProvider>
       </body>
     </html>
