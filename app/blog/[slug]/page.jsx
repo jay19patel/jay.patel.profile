@@ -135,8 +135,8 @@ const ContentRenderer = ({ section }) => {
   }
 }
 
-export default function BlogDetailPage({ params }) {
-  const { slug } = params
+export default async function BlogDetailPage({ params }) {
+  const { slug } = await params
   
   // Find the current blog post
   const currentBlog = blogData.blogs.find(blog => blog.slug === slug)
