@@ -333,362 +333,362 @@ const BlogAdminPage = () => {
           </Link>
         </div>
       </div>
-        {/* Message Display */}
-        {message && (
-          <div className={`p-4 rounded-lg border flex items-center gap-3 ${
-            messageType === 'success' 
-              ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200'
-              : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
-          }`}>
-            {messageType === 'success' ? (
-              <CheckCircle className="w-5 h-5" />
-            ) : (
-              <XCircle className="w-5 h-5" />
-            )}
-            {message}
+
+      {/* Message Display */}
+      {message && (
+        <div className={`p-4 rounded-lg border flex items-center gap-3 ${
+          messageType === 'success' 
+            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200'
+            : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
+        }`}>
+          {messageType === 'success' ? (
+            <CheckCircle className="w-5 h-5" />
+          ) : (
+            <XCircle className="w-5 h-5" />
+          )}
+          {message}
+        </div>
+      )}
+
+      {/* Basic Information */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Basic Information</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Title *
+            </label>
+            <input
+              type="text"
+              value={blogData.title}
+              onChange={(e) => handleInputChange('title', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Enter blog title"
+            />
           </div>
-        )}
 
-        {/* Basic Information */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Basic Information</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Title *
-              </label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Read Time
+            </label>
+            <input
+              type="text"
+              value={blogData.readTime}
+              onChange={(e) => handleInputChange('readTime', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="e.g., 5 min read"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Subtitle
+            </label>
+            <input
+              type="text"
+              value={blogData.subtitle}
+              onChange={(e) => handleInputChange('subtitle', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Enter blog subtitle"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Excerpt *
+            </label>
+            <textarea
+              value={blogData.excerpt}
+              onChange={(e) => handleInputChange('excerpt', e.target.value)}
+              rows={3}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Brief description of the blog post"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Category
+            </label>
+            <select
+              value={blogData.category}
+              onChange={(e) => handleInputChange('category', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Author
+            </label>
+            <input
+              type="text"
+              value={blogData.author}
+              onChange={(e) => handleInputChange('author', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-2">
               <input
-                type="text"
-                value={blogData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                placeholder="Enter blog title"
+                type="checkbox"
+                id="featured"
+                checked={blogData.featured}
+                onChange={(e) => handleInputChange('featured', e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Read Time
+              <label htmlFor="featured" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Mark as Featured Post
               </label>
-              <input
-                type="text"
-                value={blogData.readTime}
-                onChange={(e) => handleInputChange('readTime', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                placeholder="e.g., 5 min read"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Subtitle
-              </label>
-              <input
-                type="text"
-                value={blogData.subtitle}
-                onChange={(e) => handleInputChange('subtitle', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                placeholder="Enter blog subtitle"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Excerpt *
-              </label>
-              <textarea
-                value={blogData.excerpt}
-                onChange={(e) => handleInputChange('excerpt', e.target.value)}
-                rows={3}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                placeholder="Brief description of the blog post"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Category
-              </label>
-              <select
-                value={blogData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Author
-              </label>
-              <input
-                type="text"
-                value={blogData.author}
-                onChange={(e) => handleInputChange('author', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="featured"
-                  checked={blogData.featured}
-                  onChange={(e) => handleInputChange('featured', e.target.checked)}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label htmlFor="featured" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Mark as Featured Post
-                </label>
-              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Tags */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Tags</h2>
-          
-          <div className="space-y-3">
-            {blogData.tags.map((tag, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <input
-                  type="text"
-                  value={tag}
-                  onChange={(e) => updateTag(index, e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                  placeholder="Enter tag"
-                />
+      {/* Tags */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Tags</h2>
+        
+        <div className="space-y-3">
+          {blogData.tags.map((tag, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <input
+                type="text"
+                value={tag}
+                onChange={(e) => updateTag(index, e.target.value)}
+                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                placeholder="Enter tag"
+              />
+              <button
+                onClick={() => removeTag(index)}
+                className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          <button
+            onClick={addTag}
+            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Tag
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Content</h2>
+        
+        {/* Introduction */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Introduction *
+          </label>
+          <textarea
+            value={blogData.content.introduction}
+            onChange={(e) => handleInputChange('content.introduction', e.target.value)}
+            rows={4}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            placeholder="Write the blog introduction"
+          />
+        </div>
+
+        {/* Sections */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Content Sections</h3>
+            <div className="flex flex-wrap gap-2">
+              {sectionTypes.map(type => (
                 <button
-                  onClick={() => removeTag(index)}
+                  key={type.value}
+                  onClick={() => addSection(type.value)}
+                  className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  title={`Add ${type.label}`}
+                >
+                  {type.icon}
+                  {type.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {blogData.content.sections.map((section, sectionIndex) => (
+            <div key={sectionIndex} className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-medium text-gray-900 dark:text-white">
+                  {sectionTypes.find(t => t.value === section.type)?.label}
+                </h4>
+                <button
+                  onClick={() => removeSection(sectionIndex)}
                   className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                 >
-                  <Minus className="w-4 h-4" />
+                  <XCircle className="w-4 h-4" />
                 </button>
               </div>
-            ))}
-            <button
-              onClick={addTag}
-              className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Add Tag
-            </button>
-          </div>
-        </div>
 
-        {/* Content */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Content</h2>
-          
-          {/* Introduction */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Introduction *
-            </label>
-            <textarea
-              value={blogData.content.introduction}
-              onChange={(e) => handleInputChange('content.introduction', e.target.value)}
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Write the blog introduction"
-            />
-          </div>
-
-          {/* Sections */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Content Sections</h3>
-              <div className="flex flex-wrap gap-2">
-                {sectionTypes.map(type => (
-                  <button
-                    key={type.value}
-                    onClick={() => addSection(type.value)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    title={`Add ${type.label}`}
-                  >
-                    {type.icon}
-                    {type.label}
-                  </button>
-                ))}
+              {/* Section Title */}
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={section.title}
+                  onChange={(e) => updateSection(sectionIndex, 'title', e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  placeholder="Section title"
+                />
               </div>
-            </div>
 
-            {blogData.content.sections.map((section, sectionIndex) => (
-              <div key={sectionIndex} className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-medium text-gray-900 dark:text-white">
-                    {sectionTypes.find(t => t.value === section.type)?.label}
-                  </h4>
-                  <button
-                    onClick={() => removeSection(sectionIndex)}
-                    className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                  >
-                    <XCircle className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* Section Title */}
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    value={section.title}
-                    onChange={(e) => updateSection(sectionIndex, 'title', e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="Section title"
-                  />
-                </div>
-
-                {/* Section Content Based on Type */}
-                {section.type === 'text' && (
-                  <textarea
-                    value={section.content}
-                    onChange={(e) => updateSection(sectionIndex, 'content', e.target.value)}
-                    rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="Section content"
-                  />
-                )}
-
-                {section.type === 'bullets' && (
-                  <div className="space-y-3">
-                    {section.items?.map((item, itemIndex) => (
-                      <div key={itemIndex} className="flex items-center gap-3">
-                        <input
-                          type="text"
-                          value={item}
-                          onChange={(e) => updateBulletPoint(sectionIndex, itemIndex, e.target.value)}
-                          className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                          placeholder="Bullet point"
-                        />
-                        <button
-                          onClick={() => removeBulletPoint(sectionIndex, itemIndex)}
-                          className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => addBulletPoint(sectionIndex)}
-                      className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add Bullet Point
-                    </button>
-                  </div>
-                )}
-
-                {section.type === 'note' && (
-                  <textarea
-                    value={section.content}
-                    onChange={(e) => updateSection(sectionIndex, 'content', e.target.value)}
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="Important note content"
-                  />
-                )}
-
-                {section.type === 'links' && (
-                  <div className="space-y-4">
-                    {section.links?.map((link, linkIndex) => (
-                      <div key={linkIndex} className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                          <input
-                            type="text"
-                            value={link.text}
-                            onChange={(e) => updateLink(sectionIndex, linkIndex, 'text', e.target.value)}
-                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                            placeholder="Link text"
-                          />
-                          <input
-                            type="url"
-                            value={link.url}
-                            onChange={(e) => updateLink(sectionIndex, linkIndex, 'url', e.target.value)}
-                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                            placeholder="Link URL"
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          value={link.description}
-                          onChange={(e) => updateLink(sectionIndex, linkIndex, 'description', e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white mb-3"
-                          placeholder="Link description"
-                        />
-                        <button
-                          onClick={() => removeLink(sectionIndex, linkIndex)}
-                          className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => addLink(sectionIndex)}
-                      className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add Link
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Conclusion */}
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Conclusion
-            </label>
-            <textarea
-              value={blogData.content.conclusion}
-              onChange={(e) => handleInputChange('content.conclusion', e.target.value)}
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Write the blog conclusion"
-            />
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
-          <Link
-            href="/blog"
-            className="flex items-center gap-2 px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Blog
-          </Link>
-
-          <div className="flex gap-4">
-            <button
-              type="button"
-              className="flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              <Eye className="w-4 h-4" />
-              Preview
-            </button>
-
-            <button
-              onClick={handleSave}
-              disabled={isLoading}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isLoading ? (
-                <Loader className="w-4 h-4 animate-spin" />
-              ) : (
-                <Save className="w-4 h-4" />
+              {/* Section Content Based on Type */}
+              {section.type === 'text' && (
+                <textarea
+                  value={section.content}
+                  onChange={(e) => updateSection(sectionIndex, 'content', e.target.value)}
+                  rows={4}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  placeholder="Section content"
+                />
               )}
-              {isLoading ? 'Saving...' : 'Save Blog Post'}
-            </button>
-          </div>
+
+              {section.type === 'bullets' && (
+                <div className="space-y-3">
+                  {section.items?.map((item, itemIndex) => (
+                    <div key={itemIndex} className="flex items-center gap-3">
+                      <input
+                        type="text"
+                        value={item}
+                        onChange={(e) => updateBulletPoint(sectionIndex, itemIndex, e.target.value)}
+                        className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                        placeholder="Bullet point"
+                      />
+                      <button
+                        onClick={() => removeBulletPoint(sectionIndex, itemIndex)}
+                        className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addBulletPoint(sectionIndex)}
+                    className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Bullet Point
+                  </button>
+                </div>
+              )}
+
+              {section.type === 'note' && (
+                <textarea
+                  value={section.content}
+                  onChange={(e) => updateSection(sectionIndex, 'content', e.target.value)}
+                  rows={3}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  placeholder="Important note content"
+                />
+              )}
+
+              {section.type === 'links' && (
+                <div className="space-y-4">
+                  {section.links?.map((link, linkIndex) => (
+                    <div key={linkIndex} className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                        <input
+                          type="text"
+                          value={link.text}
+                          onChange={(e) => updateLink(sectionIndex, linkIndex, 'text', e.target.value)}
+                          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                          placeholder="Link text"
+                        />
+                        <input
+                          type="url"
+                          value={link.url}
+                          onChange={(e) => updateLink(sectionIndex, linkIndex, 'url', e.target.value)}
+                          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                          placeholder="Link URL"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={link.description}
+                        onChange={(e) => updateLink(sectionIndex, linkIndex, 'description', e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white mb-3"
+                        placeholder="Link description"
+                      />
+                      <button
+                        onClick={() => removeLink(sectionIndex, linkIndex)}
+                        className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addLink(sectionIndex)}
+                    className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Link
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Conclusion */}
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Conclusion
+          </label>
+          <textarea
+            value={blogData.content.conclusion}
+            onChange={(e) => handleInputChange('content.conclusion', e.target.value)}
+            rows={4}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            placeholder="Write the blog conclusion"
+          />
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
+        <Link
+          href="/blog"
+          className="flex items-center gap-2 px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Blog
+        </Link>
+
+        <div className="flex gap-4">
+          <button
+            type="button"
+            className="flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            <Eye className="w-4 h-4" />
+            Preview
+          </button>
+
+          <button
+            onClick={handleSave}
+            disabled={isLoading}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isLoading ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            {isLoading ? 'Saving...' : 'Save Blog Post'}
+          </button>
         </div>
       </div>
     </div>
