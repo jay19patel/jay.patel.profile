@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useAdminAuth } from '@/contexts/AdminAuthContext'
 import { Button } from '@/components/customUi/Button'
-import { Lock, Loader, Eye, EyeOff, ArrowLeft } from 'lucide-react'
+import { Lock, Loader, Eye, EyeOff, ArrowLeft, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
 const AdminLogin = () => {
@@ -11,8 +11,15 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPin, setShowPin] = useState(false)
-  const { login } = useAdminAuth()
+  const { login, error: authError } = useAdminAuth()
   const inputRefs = useRef([])
+
+  // Update error when auth context error changes
+  useEffect(() => {
+    if (authError) {
+      setError(authError)
+    }
+  }, [authError])
 
   useEffect(() => {
     // Focus first input on mount
@@ -57,6 +64,8 @@ const AdminLogin = () => {
           setPin(digits)
           handleSubmit(digits.join(''))
         }
+      }).catch(() => {
+        setError('Failed to read clipboard')
       })
     }
   }
@@ -81,7 +90,7 @@ const AdminLogin = () => {
         inputRefs.current[0]?.focus()
       }
     } catch (error) {
-      setError('Authentication failed')
+      setError('Authentication failed. Please try again.')
       setPin(['', '', '', ''])
       inputRefs.current[0]?.focus()
     } finally {
@@ -133,9 +142,14 @@ const AdminLogin = () => {
                   value={digit}
                   onChange={(e) => handleInputChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="w-14 h-14 text-2xl font-bold text-center border-2 border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all"
+                  className={`w-14 h-14 text-2xl font-bold text-center border-2 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-4 transition-all ${
+                    error
+                      ? 'border-red-300 dark:border-red-800 focus:border-red-500 focus:ring-red-500/20'
+                      : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500/20'
+                  }`}
                   maxLength={1}
                   disabled={isLoading}
+                  aria-invalid={error ? 'true' : 'false'}
                 />
               ))}
             </div>
@@ -146,6 +160,7 @@ const AdminLogin = () => {
                 type="button"
                 onClick={() => setShowPin(!showPin)}
                 className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                disabled={isLoading}
               >
                 {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 {showPin ? 'Hide PIN' : 'Show PIN'}
@@ -154,8 +169,9 @@ const AdminLogin = () => {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-red-700 dark:text-red-400 text-sm text-center">
-                {error}
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-red-700 dark:text-red-400 text-sm flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <p>{error}</p>
               </div>
             )}
 

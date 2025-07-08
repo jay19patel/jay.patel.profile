@@ -4,49 +4,49 @@ import { useState, useEffect } from 'react';
 import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
 import { AdminTable } from '@/components/customUi/AdminTable';
 import { AdminFormDialog } from '@/components/customUi/AdminFormDialog';
-import { BlogForm } from '@/components/admin/BlogForm';
+import { ProjectForm } from '@/components/admin/ProjectForm';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function BlogAdminPage() {
-  const [blogs, setBlogs] = useState([]);
+export default function ProjectAdminPage() {
+  const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  // Fetch blogs on mount
+  // Fetch projects on mount
   useEffect(() => {
-    fetchBlogs();
+    fetchProjects();
   }, []);
 
-  const fetchBlogs = async () => {
+  const fetchProjects = async () => {
     try {
-      const response = await fetch('/api/admin/blogs');
-      if (!response.ok) throw new Error('Failed to fetch blogs');
+      const response = await fetch('/api/admin/projects');
+      if (!response.ok) throw new Error('Failed to fetch projects');
       const data = await response.json();
-      setBlogs(data);
+      setProjects(data);
     } catch (error) {
-      toast.error('Failed to fetch blogs');
+      toast.error('Failed to fetch projects');
     }
   };
 
   const handleCreate = async (data) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/admin/blogs', {
+      const response = await fetch('/api/admin/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
       
-      if (!response.ok) throw new Error('Failed to create blog');
+      if (!response.ok) throw new Error('Failed to create project');
       
-      await fetchBlogs();
+      await fetchProjects();
       setIsDialogOpen(false);
-      toast.success('Blog created successfully');
+      toast.success('Project created successfully');
     } catch (error) {
-      toast.error('Failed to create blog');
+      toast.error('Failed to create project');
     } finally {
       setIsLoading(false);
     }
@@ -55,40 +55,40 @@ export default function BlogAdminPage() {
   const handleUpdate = async (data) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/admin/blogs/${selectedBlog._id}`, {
+      const response = await fetch(`/api/admin/projects/${selectedProject._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
       
-      if (!response.ok) throw new Error('Failed to update blog');
+      if (!response.ok) throw new Error('Failed to update project');
       
-      await fetchBlogs();
+      await fetchProjects();
       setIsDialogOpen(false);
-      setSelectedBlog(null);
-      toast.success('Blog updated successfully');
+      setSelectedProject(null);
+      toast.success('Project updated successfully');
     } catch (error) {
-      toast.error('Failed to update blog');
+      toast.error('Failed to update project');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDelete = async (blog) => {
+  const handleDelete = async (project) => {
     toast.promise(
       async () => {
-        const response = await fetch(`/api/admin/blogs/${blog._id}`, {
+        const response = await fetch(`/api/admin/projects/${project._id}`, {
           method: 'DELETE',
         });
         
-        if (!response.ok) throw new Error('Failed to delete blog');
+        if (!response.ok) throw new Error('Failed to delete project');
         
-        await fetchBlogs();
+        await fetchProjects();
       },
       {
-        loading: 'Deleting blog...',
-        success: 'Blog deleted successfully',
-        error: 'Failed to delete blog',
+        loading: 'Deleting project...',
+        success: 'Project deleted successfully',
+        error: 'Failed to delete project',
       }
     );
   };
@@ -99,18 +99,25 @@ export default function BlogAdminPage() {
       accessorKey: 'title',
     },
     {
-      header: 'Author',
-      accessorKey: 'author',
-    },
-    {
       header: 'Category',
       accessorKey: 'category',
     },
     {
-      header: 'Featured',
-      accessorKey: 'featured',
+      header: 'Status',
+      accessorKey: 'status',
+    },
+    {
+      header: 'Rating',
+      accessorKey: 'rating',
       cell: ({ row }) => (
-        <span>{row.original.featured ? 'Yes' : 'No'}</span>
+        <span>{row.original.rating.toFixed(1)}</span>
+      ),
+    },
+    {
+      header: 'Downloads',
+      accessorKey: 'downloads',
+      cell: ({ row }) => (
+        <span>{row.original.downloads.toLocaleString()}</span>
       ),
     },
     {
@@ -121,7 +128,7 @@ export default function BlogAdminPage() {
             variant="ghost"
             size="icon"
             onClick={() => {
-              setSelectedBlog(row.original);
+              setSelectedProject(row.original);
               setIsDialogOpen(true);
             }}
           >
@@ -145,24 +152,24 @@ export default function BlogAdminPage() {
     <AdminPageWrapper
       breadcrumbItems={[
         { label: 'Admin', href: '/admin' },
-        { label: 'Blogs' }
+        { label: 'Projects' }
       ]}
-      title="Manage Blogs"
+      title="Manage Projects"
     >
       <div className="flex justify-end mb-6">
         <Button
           onClick={() => {
-            setSelectedBlog(null);
+            setSelectedProject(null);
             setIsDialogOpen(true);
           }}
         >
           <Plus className="h-4 w-4 mr-2" />
-          New Blog
+          New Project
         </Button>
       </div>
 
       <AdminTable
-        data={blogs}
+        data={projects}
         columns={columns}
       />
 
@@ -170,13 +177,13 @@ export default function BlogAdminPage() {
         isOpen={isDialogOpen}
         onClose={() => {
           setIsDialogOpen(false);
-          setSelectedBlog(null);
+          setSelectedProject(null);
         }}
-        title={selectedBlog ? 'Edit Blog' : 'Create New Blog'}
+        title={selectedProject ? 'Edit Project' : 'Create New Project'}
       >
-        <BlogForm
-          blog={selectedBlog}
-          onSubmit={selectedBlog ? handleUpdate : handleCreate}
+        <ProjectForm
+          project={selectedProject}
+          onSubmit={selectedProject ? handleUpdate : handleCreate}
           isLoading={isLoading}
         />
       </AdminFormDialog>

@@ -1,58 +1,55 @@
-import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { NextResponse } from 'next/server';
+import connectDB from '@/lib/mongodb';
+import Blog from '@/models/Blog';
 
-const blogsFilePath = path.join(process.cwd(), 'data', 'blogs.json')
-
-// GET - Fetch all blogs
-export async function GET() {
+export async function GET(request) {
   try {
-    const fileContents = fs.readFileSync(blogsFilePath, 'utf8')
-    const blogs = JSON.parse(fileContents)
-    return NextResponse.json(blogs)
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to read blogs' }, { status: 500 })
-  }
-}
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json(
+        { error: 'MongoDB connection string is not configured' },
+        { status: 500 }
+      );
+    }
 
-// POST - Add new blog
-export async function POST(request) {
-  try {
-    const newBlog = await request.json()
+    await connectDB();
     
-    // Read existing blogs
-    const fileContents = fs.readFileSync(blogsFilePath, 'utf8')
-    const blogsData = JSON.parse(fileContents)
+    const { searchParams } = new URL(request.url);
+    const slug = searchParams.get('slug');
+    const featured = searchParams.get('featured');
     
-    // Generate new ID
-    const maxId = Math.max(...blogsData.blogs.map(blog => blog.id), 0)
-    newBlog.id = maxId + 1
+    let query = {};
     
-    // Generate slug from title
-    newBlog.slug = newBlog.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
+    // If slug is provided, fetch single blog
+    if (slug) {
+      query.slug = slug;
+      const blog = await Blog.findOne(query);
+      
+      if (!blog) {
+        return NextResponse.json(
+          { error: 'Blog not found' },
+          { status: 404 }
+        );
+      }
+      
+      return NextResponse.json({ blog });
+    }
     
-    // Add timestamps
-    newBlog.publishedDate = new Date().toISOString().split('T')[0]
+    // If featured is provided, filter by featured
+    if (featured === 'true') {
+      query.featured = true;
+    }
     
-    // Add to blogs array
-    blogsData.blogs.unshift(newBlog) // Add to beginning
-    
-    // Write back to file
-    fs.writeFileSync(blogsFilePath, JSON.stringify(blogsData, null, 2))
-    
-    return NextResponse.json({ 
-      success: true, 
-      blog: newBlog,
-      message: 'Blog post created successfully!' 
-    })
+    // Fetch blogs with query
+    const blogs = await Blog.find(query)
+      .sort({ publishedDate: -1 })
+      .select('slug title subtitle excerpt author publishedDate readTime tags image category featured');
+      
+    return NextResponse.json({ blogs });
   } catch (error) {
-    console.error('Error creating blog:', error)
-    return NextResponse.json({ 
-      error: 'Failed to create blog post',
-      details: error.message 
-    }, { status: 500 })
+    console.error('Error in /api/blog:', error);
+    return NextResponse.json(
+      { error: 'Internal server error occurred while fetching blogs' },
+      { status: 500 }
+    );
   }
 } 

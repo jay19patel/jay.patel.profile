@@ -15,6 +15,7 @@ export const useAdminAuth = () => {
 export const AdminAuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     // Check if user is already authenticated from localStorage
@@ -41,6 +42,12 @@ export const AdminAuthProvider = ({ children }) => {
 
   const login = async (pin) => {
     try {
+      setError(null);
+      
+      if (!pin) {
+        throw new Error('PIN is required');
+      }
+
       const response = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: {
@@ -48,6 +55,14 @@ export const AdminAuthProvider = ({ children }) => {
         },
         body: JSON.stringify({ pin }),
       })
+
+      // Check if response is ok before trying to parse JSON
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Invalid PIN');
+        }
+        throw new Error('Authentication failed');
+      }
 
       const data = await response.json()
 
@@ -57,15 +72,17 @@ export const AdminAuthProvider = ({ children }) => {
         localStorage.setItem('adminAuthTime', new Date().toISOString())
         return { success: true }
       } else {
-        return { success: false, error: 'Invalid PIN' }
+        throw new Error(data.error || 'Authentication failed')
       }
     } catch (error) {
-      return { success: false, error: 'Authentication failed' }
+      setError(error.message);
+      return { success: false, error: error.message }
     }
   }
 
   const logout = () => {
     setIsAuthenticated(false)
+    setError(null)
     localStorage.removeItem('adminAuth')
     localStorage.removeItem('adminAuthTime')
   }
@@ -73,6 +90,7 @@ export const AdminAuthProvider = ({ children }) => {
   const value = {
     isAuthenticated,
     isLoading,
+    error,
     login,
     logout,
   }
