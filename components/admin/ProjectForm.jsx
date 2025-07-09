@@ -1,14 +1,17 @@
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Select } from '@/components/ui/select';
-import { Loader, Upload, X } from 'lucide-react';
-import Image from 'next/image';
+'use client';
 
-export function ProjectForm({ project = null, onSubmit, isLoading = false }) {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select } from '@/components/ui/select';
+import { uploadProjectImage, createProject, updateProject } from '@/app/actions/projects';
+
+export default function ProjectForm({ project = null }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: project?.title || '',
     subtitle: project?.subtitle || '',
@@ -16,16 +19,16 @@ export function ProjectForm({ project = null, onSubmit, isLoading = false }) {
     description: project?.description || '',
     introduction: project?.introduction || '',
     content: project?.content || '',
-    technologies: project?.technologies?.join(', ') || '',
+    technologies: project?.technologies || [],
     category: project?.category || '',
     status: project?.status || 'In Progress',
     rating: project?.rating || 0,
     downloads: project?.downloads || '0',
     image: project?.image || '',
-    screenshots: project?.screenshots?.join('\n') || '',
-    features: project?.features?.join('\n') || '',
-    challenges: project?.challenges?.join('\n') || '',
-    learnings: project?.learnings?.join('\n') || '',
+    screenshots: project?.screenshots || [],
+    features: project?.features || [],
+    challenges: project?.challenges || [],
+    learnings: project?.learnings || [],
     author: project?.author || '',
     demoUrl: project?.demoUrl || '',
     githubUrl: project?.githubUrl || '',
@@ -33,52 +36,60 @@ export function ProjectForm({ project = null, onSubmit, isLoading = false }) {
     featured: project?.featured || false,
   });
 
-  const [uploading, setUploading] = useState(false);
-  const [previewImage, setPreviewImage] = useState(project?.image || '');
-
   const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
-      setUploading(true);
+      setIsLoading(true);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('image', file);
 
-      const response = await fetch('/api/admin/projects/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (data.url) {
-        setFormData(prev => ({ ...prev, image: data.url }));
-        setPreviewImage(data.url);
+      const result = await uploadProjectImage(formData);
+      
+      if (!result.success) {
+        throw new Error(result.error);
       }
+
+      setFormData(prev => ({
+        ...prev,
+        image: result.data.url
+      }));
+      toast.success('Image uploaded successfully');
     } catch (error) {
       console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
     } finally {
-      setUploading(false);
+      setIsLoading(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Process arrays from newline-separated strings
-    const processedData = {
-      ...formData,
-      technologies: formData.technologies.split(',').map(tech => tech.trim()).filter(Boolean),
-      screenshots: formData.screenshots.split('\n').map(url => url.trim()).filter(Boolean),
-      features: formData.features.split('\n').map(feature => feature.trim()).filter(Boolean),
-      challenges: formData.challenges.split('\n').map(challenge => challenge.trim()).filter(Boolean),
-      learnings: formData.learnings.split('\n').map(learning => learning.trim()).filter(Boolean),
-    };
-    
-    await onSubmit(processedData);
+    try {
+      setIsLoading(true);
+
+      const result = project?._id 
+        ? await updateProject(project._id, formData)
+        : await createProject(formData);
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      toast.success(`Project ${project?._id ? 'updated' : 'created'} successfully`);
+      router.push('/admin/projects');
+      router.refresh();
+    } catch (error) {
+      console.error('Error saving project:', error);
+      toast.error(`Failed to ${project?._id ? 'update' : 'create'} project`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -86,338 +97,239 @@ export function ProjectForm({ project = null, onSubmit, isLoading = false }) {
     }));
   };
 
+  const handleArrayInput = (e, field) => {
+    const value = e.target.value.split(',').map(item => item.trim());
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 min-h-[calc(100vh-20rem)]">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Title */}
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Basic Information */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Basic Information</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
-            id="title"
             name="title"
+            label="Title"
             value={formData.title}
-            onChange={handleChange}
-            placeholder="Enter project title"
+            onChange={handleInputChange}
+            required
+          />
+          
+          <Input
+            name="subtitle"
+            label="Subtitle"
+            value={formData.subtitle}
+            onChange={handleInputChange}
+          />
+          
+          <Input
+            name="slug"
+            label="Slug"
+            value={formData.slug}
+            onChange={handleInputChange}
+            required
+          />
+          
+          <Input
+            name="category"
+            label="Category"
+            value={formData.category}
+            onChange={handleInputChange}
             required
           />
         </div>
 
-        {/* Subtitle */}
-        <div className="space-y-2">
-          <Label htmlFor="subtitle">Subtitle</Label>
-          <Input
-            id="subtitle"
-            name="subtitle"
-            value={formData.subtitle}
-            onChange={handleChange}
-            placeholder="Enter project subtitle"
-          />
-        </div>
-      </div>
-
-      {/* Slug */}
-      <div className="space-y-2">
-        <Label htmlFor="slug">Slug</Label>
-        <Input
-          id="slug"
-          name="slug"
-          value={formData.slug}
-          onChange={handleChange}
-          placeholder="Enter URL slug"
-          required
-        />
-      </div>
-
-      {/* Description */}
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          placeholder="Enter project description"
-          required
-        />
-      </div>
-
-      {/* Introduction */}
-      <div className="space-y-2">
-        <Label htmlFor="introduction">Introduction</Label>
-        <Textarea
-          id="introduction"
-          name="introduction"
-          value={formData.introduction}
-          onChange={handleChange}
-          placeholder="Enter project introduction"
+        <Select
+          name="status"
+          label="Status"
+          value={formData.status}
+          onChange={handleInputChange}
+          options={[
+            { value: 'In Progress', label: 'In Progress' },
+            { value: 'Completed', label: 'Completed' },
+            { value: 'Planned', label: 'Planned' }
+          ]}
         />
       </div>
 
       {/* Content */}
-      <div className="space-y-2">
-        <Label htmlFor="content">Content</Label>
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Content</h3>
+        
         <Textarea
-          id="content"
-          name="content"
-          value={formData.content}
-          onChange={handleChange}
-          placeholder="Enter project content"
-          className="min-h-[200px]"
+          name="description"
+          label="Short Description"
+          value={formData.description}
+          onChange={handleInputChange}
           required
+        />
+        
+        <Textarea
+          name="introduction"
+          label="Introduction"
+          value={formData.introduction}
+          onChange={handleInputChange}
+          rows={4}
+        />
+        
+        <Textarea
+          name="content"
+          label="Detailed Content"
+          value={formData.content}
+          onChange={handleInputChange}
+          rows={8}
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Category */}
-        <div className="space-y-2">
-          <Label htmlFor="category">Category</Label>
-          <Input
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            placeholder="Enter project category"
-            required
-          />
-        </div>
+      {/* Technologies and Features */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Technologies and Features</h3>
+        
+        <Textarea
+          name="technologies"
+          label="Technologies (comma-separated)"
+          value={formData.technologies.join(', ')}
+          onChange={(e) => handleArrayInput(e, 'technologies')}
+          placeholder="React, Next.js, TailwindCSS"
+        />
+        
+        <Textarea
+          name="features"
+          label="Features (comma-separated)"
+          value={formData.features.join(', ')}
+          onChange={(e) => handleArrayInput(e, 'features')}
+          placeholder="Feature 1, Feature 2, Feature 3"
+        />
+      </div>
 
-        {/* Status */}
+      {/* Images */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Images</h3>
+        
         <div className="space-y-2">
-          <Label htmlFor="status">Status</Label>
-          <select
-            id="status"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
-            required
-          >
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-            <option value="Planned">Planned</option>
-          </select>
+          <label className="block text-sm font-medium">Main Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          {formData.image && (
+            <div className="mt-2">
+              <img
+                src={formData.image}
+                alt="Project preview"
+                className="w-32 h-32 object-cover rounded-lg"
+              />
+            </div>
+          )}
+        </div>
+        
+        <Textarea
+          name="screenshots"
+          label="Screenshot URLs (comma-separated)"
+          value={formData.screenshots.join(', ')}
+          onChange={(e) => handleArrayInput(e, 'screenshots')}
+          placeholder="https://example.com/screenshot1.jpg, https://example.com/screenshot2.jpg"
+        />
+      </div>
+
+      {/* Links */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Links</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            name="demoUrl"
+            label="Demo URL"
+            value={formData.demoUrl}
+            onChange={handleInputChange}
+          />
+          
+          <Input
+            name="githubUrl"
+            label="GitHub URL"
+            value={formData.githubUrl}
+            onChange={handleInputChange}
+          />
+          
+          <Input
+            name="liveUrl"
+            label="Live URL"
+            value={formData.liveUrl}
+            onChange={handleInputChange}
+          />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Rating */}
-        <div className="space-y-2">
-          <Label htmlFor="rating">Rating</Label>
+      {/* Additional Information */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Additional Information</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
-            id="rating"
             name="rating"
             type="number"
+            label="Rating"
+            value={formData.rating}
+            onChange={handleInputChange}
             min="0"
             max="5"
             step="0.1"
-            value={formData.rating}
-            onChange={handleChange}
-            placeholder="Enter project rating"
           />
-        </div>
-
-        {/* Downloads */}
-        <div className="space-y-2">
-          <Label htmlFor="downloads">Downloads</Label>
+          
           <Input
-            id="downloads"
             name="downloads"
+            label="Downloads"
             value={formData.downloads}
-            onChange={handleChange}
-            placeholder="Enter download count (e.g., 1.2K+)"
+            onChange={handleInputChange}
           />
         </div>
-      </div>
-
-      {/* Technologies */}
-      <div className="space-y-2">
-        <Label htmlFor="technologies">Technologies (comma-separated)</Label>
-        <Input
-          id="technologies"
-          name="technologies"
-          value={formData.technologies}
-          onChange={handleChange}
-          placeholder="Enter technologies, separated by commas"
-          required
-        />
-      </div>
-
-      {/* Image Upload */}
-      <div className="space-y-2">
-        <Label htmlFor="image">Project Image</Label>
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
-            <Input
-              id="image"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              placeholder="Enter image URL or upload"
-              required
-            />
-          </div>
-          <div className="relative">
-            <input
-              type="file"
-              id="imageUpload"
-              className="hidden"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => document.getElementById('imageUpload').click()}
-              disabled={uploading}
-            >
-              {uploading ? <Loader className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            </Button>
-          </div>
-        </div>
-        {previewImage && (
-          <div className="relative w-32 h-32 mt-2">
-            <Image
-              src={previewImage}
-              alt="Preview"
-              fill
-              className="object-cover rounded-lg"
-            />
-            <button
-              type="button"
-              className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full"
-              onClick={() => {
-                setPreviewImage('');
-                setFormData(prev => ({ ...prev, image: '' }));
-              }}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Screenshots */}
-      <div className="space-y-2">
-        <Label htmlFor="screenshots">Screenshots (one URL per line)</Label>
+        
         <Textarea
-          id="screenshots"
-          name="screenshots"
-          value={formData.screenshots}
-          onChange={handleChange}
-          placeholder="Enter screenshot URLs, one per line"
-        />
-      </div>
-
-      {/* Features */}
-      <div className="space-y-2">
-        <Label htmlFor="features">Features (one per line)</Label>
-        <Textarea
-          id="features"
-          name="features"
-          value={formData.features}
-          onChange={handleChange}
-          placeholder="Enter features, one per line"
-        />
-      </div>
-
-      {/* Challenges */}
-      <div className="space-y-2">
-        <Label htmlFor="challenges">Challenges (one per line)</Label>
-        <Textarea
-          id="challenges"
           name="challenges"
-          value={formData.challenges}
-          onChange={handleChange}
-          placeholder="Enter challenges, one per line"
+          label="Challenges (comma-separated)"
+          value={formData.challenges.join(', ')}
+          onChange={(e) => handleArrayInput(e, 'challenges')}
+          placeholder="Challenge 1, Challenge 2, Challenge 3"
         />
-      </div>
-
-      {/* Learnings */}
-      <div className="space-y-2">
-        <Label htmlFor="learnings">Learnings (one per line)</Label>
+        
         <Textarea
-          id="learnings"
           name="learnings"
-          value={formData.learnings}
-          onChange={handleChange}
-          placeholder="Enter learnings, one per line"
+          label="Learnings (comma-separated)"
+          value={formData.learnings.join(', ')}
+          onChange={(e) => handleArrayInput(e, 'learnings')}
+          placeholder="Learning 1, Learning 2, Learning 3"
         />
-      </div>
-
-      {/* Author */}
-      <div className="space-y-2">
-        <Label htmlFor="author">Author</Label>
-        <Input
-          id="author"
-          name="author"
-          value={formData.author}
-          onChange={handleChange}
-          placeholder="Enter author name"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Demo URL */}
-        <div className="space-y-2">
-          <Label htmlFor="demoUrl">Demo URL</Label>
-          <Input
-            id="demoUrl"
-            name="demoUrl"
-            value={formData.demoUrl}
-            onChange={handleChange}
-            placeholder="Enter demo URL"
+        
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="featured"
+            id="featured"
+            checked={formData.featured}
+            onChange={handleInputChange}
+            className="rounded border-gray-300"
           />
+          <label htmlFor="featured" className="text-sm font-medium">
+            Featured Project
+          </label>
         </div>
-
-        {/* GitHub URL */}
-        <div className="space-y-2">
-          <Label htmlFor="githubUrl">GitHub URL</Label>
-          <Input
-            id="githubUrl"
-            name="githubUrl"
-            value={formData.githubUrl}
-            onChange={handleChange}
-            placeholder="Enter GitHub URL"
-          />
-        </div>
-
-        {/* Live URL */}
-        <div className="space-y-2">
-          <Label htmlFor="liveUrl">Live URL</Label>
-          <Input
-            id="liveUrl"
-            name="liveUrl"
-            value={formData.liveUrl}
-            onChange={handleChange}
-            placeholder="Enter live URL"
-          />
-        </div>
-      </div>
-
-      {/* Featured Switch */}
-      <div className="flex items-center justify-between py-4 border-t">
-        <Label htmlFor="featured" className="cursor-pointer">Featured Project</Label>
-        <Switch
-          id="featured"
-          name="featured"
-          checked={formData.featured}
-          onCheckedChange={(checked) => 
-            handleChange({ target: { name: 'featured', type: 'checkbox', checked } })
-          }
-        />
       </div>
 
       {/* Submit Button */}
-      <div className="sticky bottom-0 bg-background pt-4 border-t">
-        <Button type="submit" className="w-full" disabled={isLoading || uploading}>
-          {isLoading ? (
-            <>
-              <Loader className="w-4 h-4 mr-2 animate-spin" />
-              {project ? 'Updating...' : 'Creating...'}
-            </>
-          ) : (
-            project ? 'Update Project' : 'Create Project'
-          )}
+      <div className="flex justify-end">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+        >
+          {isLoading ? 'Saving...' : project?._id ? 'Update Project' : 'Create Project'}
         </Button>
       </div>
     </form>

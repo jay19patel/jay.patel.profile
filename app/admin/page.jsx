@@ -1,42 +1,42 @@
 'use client';
 
-import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Star, StarOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Star, StarOff, Loader } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
+import { getAdminBlogs, getAdminProjects } from '@/app/actions/admin';
 
 export default function AdminPage() {
   const [stats, setStats] = useState({
     blogs: { total: 0, active: 0 },
     projects: { total: 0, active: 0 }
   });
-
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useAdminAuth();
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Fetch all data
         const [blogsRes, projectsRes] = await Promise.all([
-          fetch('/api/admin/blogs').then(res => {
-            if (!res.ok) throw new Error('Failed to fetch blogs');
-            return res.json();
-          }),
-          fetch('/api/admin/projects').then(res => {
-            if (!res.ok) throw new Error('Failed to fetch projects');
-            return res.json();
-          })
+          getAdminBlogs(),
+          getAdminProjects()
         ]);
+
+        if (!blogsRes.success) throw new Error(blogsRes.error);
+        if (!projectsRes.success) throw new Error(projectsRes.error);
 
         setStats({
           blogs: {
-            total: blogsRes.length || 0,
-            active: blogsRes.filter(blog => blog.featured)?.length || 0
+            total: blogsRes.data.length || 0,
+            active: blogsRes.data.filter(blog => blog.featured)?.length || 0
           },
           projects: {
-            total: projectsRes.length || 0,
-            active: projectsRes.filter(project => project.status === 'Completed')?.length || 0
+            total: projectsRes.data.length || 0,
+            active: projectsRes.data.filter(project => project.status === 'Completed')?.length || 0
           }
         });
         setLoading(false);
@@ -47,8 +47,25 @@ export default function AdminPage() {
       }
     };
 
-    fetchStats();
-  }, []);
+    if (isAuthenticated) {
+      fetchStats();
+    }
+  }, [isAuthenticated]);
+
+  if (authLoading) {
+    return (
+      <AdminPageWrapper>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      </AdminPageWrapper>
+    );
+  }
+
+  if (!isAuthenticated) {
+    router.push('/admin/login');
+    return null;
+  }
 
   return (
     <AdminPageWrapper

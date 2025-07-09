@@ -176,7 +176,7 @@ const AdminLogin = () => {
             )}
 
             {/* Action Buttons */}
-            <div className="space-y-3">
+            <div className="space-y-3 flex flex-col items-center">
               <Button
                 onClick={() => handleSubmit()}
                 disabled={isLoading || pin.some(digit => digit === '')}
