@@ -4,6 +4,7 @@ import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { mkdir } from 'fs/promises';
 import Project from '@/models/Project';
+import connectDB from '@/lib/mongodb';
 
 // Helper function to convert MongoDB document to plain object
 function serializeDocument(doc) {
@@ -13,16 +14,36 @@ function serializeDocument(doc) {
 
 export async function getProjects() {
   try {
-    const projects = await Project.find().sort({ createdAt: -1 });
+    // Ensure database connection before querying
+    await connectDB();
+    
+    const projects = await Project.find().sort({ createdAt: -1 }).lean();
     return { data: serializeDocument(projects), error: null };
   } catch (error) {
     console.error('Error fetching projects:', error);
-    return { data: null, error: 'Failed to fetch projects' };
+    
+    // Provide more specific error messages based on the error type
+    let errorMessage = 'Failed to fetch projects';
+    if (error.name === 'MongooseError' && error.message.includes('buffering timed out')) {
+      errorMessage = 'Database connection timed out. Please try again.';
+    } else if (error.name === 'MongoNetworkError') {
+      errorMessage = 'Unable to connect to the database. Please check your connection.';
+    }
+    
+    return { 
+      data: null, 
+      error: {
+        message: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      }
+    };
   }
 }
 
 export async function uploadProjectImage(formData) {
   try {
+    await connectDB(); // Ensure database connection
+    
     const file = formData.get('image');
     if (!file) {
       return { success: false, error: 'No file uploaded' };
@@ -31,9 +52,11 @@ export async function uploadProjectImage(formData) {
     // Create uploads directory if it doesn't exist
     const uploadDir = join(process.cwd(), 'public', 'uploads');
     try {
-      await writeFile(join(uploadDir, 'test.txt'), '');
+      await mkdir(uploadDir, { recursive: true });
     } catch (error) {
-      // await mkdir(uploadDir, { recursive: true }); // mkdir is not imported, so this line is commented out
+      if (error.code !== 'EEXIST') {
+        throw error;
+      }
     }
 
     // Generate unique filename
@@ -62,6 +85,8 @@ export async function uploadProjectImage(formData) {
 
 export async function createProject(data) {
   try {
+    await connectDB(); // Ensure database connection
+    
     const project = new Project(data);
     await project.save();
     return { success: true, data: project };
@@ -73,7 +98,12 @@ export async function createProject(data) {
 
 export async function updateProject(id, data) {
   try {
-    const project = await Project.findByIdAndUpdate(id, data, { new: true });
+    await connectDB(); // Ensure database connection
+    
+    const project = await Project.findByIdAndUpdate(id, data, { 
+      new: true,
+      runValidators: true // Run validation on update
+    });
     if (!project) {
       return { success: false, error: 'Project not found' };
     }
@@ -86,6 +116,8 @@ export async function updateProject(id, data) {
 
 export async function deleteProject(id) {
   try {
+    await connectDB(); // Ensure database connection
+    
     const project = await Project.findByIdAndDelete(id);
     if (!project) {
       return { success: false, error: 'Project not found' };

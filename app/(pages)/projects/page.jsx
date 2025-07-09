@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -7,6 +6,7 @@ import { PageSection } from '@/components/customUi/PageSection';
 import { EmptyState } from '@/components/customUi/EmptyState';
 import { Button } from '@/components/ui/button';
 import { getProjects } from '@/app/actions/projects';
+import { toast } from 'sonner';
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState([]);
@@ -18,11 +18,22 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       try {
         const { data, error } = await getProjects();
-        if (error) throw new Error(error);
+        if (error) {
+          const errorMessage = typeof error === 'object' ? error.message : error;
+          toast.error('Failed to fetch projects', {
+            description: errorMessage || 'Please try again later',
+            duration: 5000,
+          });
+          // throw new Error(errorMessage);
+        }
         setProjects(data || []);
-        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching projects:', error);
+        toast.error('Failed to fetch projects', {
+          description: error.message || 'Please try again later',
+          duration: 5000,
+        });
+      } finally {
         setIsLoading(false);
       }
     };
@@ -90,6 +101,22 @@ export default function ProjectsPage() {
     );
   }
 
+  // If no projects are available
+  if (projects.length === 0) {
+    return (
+      <PageSection {...headerProps}>
+        <EmptyState
+          illustration="/projects-empty.svg"
+          title="No Projects Available"
+          description="Currently, there are no projects to display."
+          buttonText="Refresh Projects"
+          buttonOnClick={() => window.location.reload()}
+        />
+      </PageSection>
+    );
+  }
+
+  // If projects are available
   return (
     <PageSection {...headerProps}>
       <div className="space-y-12">
@@ -295,11 +322,10 @@ export default function ProjectsPage() {
               ))}
             </>
           ) : (
-            /* No Projects Found */
             <EmptyState
-              icon={<FaProjectDiagram />}
+              illustration="/projects-empty.svg"
               title="No Projects Found"
-              description="No projects found in the '{selectedCategory}' category."
+              description={`No projects found in the '${selectedCategory}' category.`}
               buttonText="View All Projects"
               buttonOnClick={() => setSelectedCategory('All')}
             />
