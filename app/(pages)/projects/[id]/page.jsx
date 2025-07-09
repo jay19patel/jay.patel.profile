@@ -1,226 +1,237 @@
-'use client';
+import React from 'react'
+import { PageSection } from '@/components/customUi/PageSection'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import Project from '@/models/Project'
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import Image from 'next/image';
-import { PageSection } from '@/components/customUi/PageSection';
-import { Star, ExternalLink, Github } from 'lucide-react';
-
-export default function ProjectDetailPage() {
-  const { id: slug } = useParams();
-  const [project, setProject] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const response = await fetch(`/api/projects?slug=${slug}`);
-        const data = await response.json();
-        setProject(data.project);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching project:', error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchProject();
-  }, [slug]);
-
-  if (isLoading) {
-    return (
-      <PageSection
-        showBreadcrumb
-        breadcrumbItems={[
-          { label: 'Home', href: '/' },
-          { label: 'Projects', href: '/projects' },
-          { label: '...' }
-        ]}
-      >
-        <div className="w-full h-64 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        </div>
-      </PageSection>
-    );
+// Get project data from MongoDB
+async function getProjectData(slug) {
+  try {
+    const project = await Project.findOne({ slug });
+    if (!project) return null;
+    return JSON.parse(JSON.stringify(project)); // Serialize the MongoDB document
+  } catch (error) {
+    console.error('Error fetching project:', error);
+    return null;
   }
+}
+
+const ProjectDetail = async ({ params }) => {
+  const { id } = params;
+  const project = await getProjectData(id);
 
   if (!project) {
-    return (
-      <PageSection
-        showBreadcrumb
-        breadcrumbItems={[
-          { label: 'Home', href: '/' },
-          { label: 'Projects', href: '/projects' },
-          { label: 'Not Found' }
-        ]}
-      >
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Project Not Found</h2>
-          <p className="text-gray-600 dark:text-gray-400">The project you're looking for doesn't exist.</p>
-        </div>
-      </PageSection>
-    );
+    notFound();
   }
 
+  // Breadcrumb items
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Projects", href: "/projects" },
+    { label: project.title }
+  ];
+
   return (
-    <PageSection
-      showBreadcrumb
-      breadcrumbItems={[
-        { label: 'Home', href: '/' },
-        { label: 'Projects', href: '/projects' },
-        { label: project.title }
-      ]}
+    <PageSection 
+      showHeader={false}
+      showBreadcrumb={true}
+      breadcrumbItems={breadcrumbItems}
     >
-      <article className="max-w-4xl mx-auto">
-        {/* Header */}
-        <header className="mb-8">
-          <div className="relative h-[400px] mb-6 rounded-2xl overflow-hidden">
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover"
-            />
-            <div className="absolute top-4 right-4 px-3 py-1.5 bg-gray-900/80 backdrop-blur-sm text-white text-sm font-medium rounded-full flex items-center gap-2">
-              <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
-              {project.rating} Rating
-            </div>
-          </div>
-          
+      <div className="space-y-12">
+        {/* Project Header */}
+        <div className="space-y-6">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className={`px-3 py-1.5 text-sm font-medium rounded-full ${
-                project.status === 'Completed'
-                  ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/20'
-                  : 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/20'
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium">
+                {project.category}
+              </span>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                project.status === 'Completed' 
+                  ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400' 
+                  : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400'
               }`}>
                 {project.status}
               </span>
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                {project.downloads} Downloads
-              </span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
               {project.title}
             </h1>
             
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">
               {project.subtitle}
             </p>
             
-            <div className="flex flex-wrap gap-2">
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              {project.description}
+            </p>
+
+            {/* Project Stats */}
+            <div className="flex flex-wrap gap-4 md:gap-6 pt-4">
+              <div className="flex items-center gap-2">
+                <div className="flex text-yellow-400">
+                  {'★'.repeat(Math.floor(project.rating))}
+                </div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {project.rating} ({project.downloads} downloads)
+                </span>
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Updated: {new Date(project.updatedAt).toLocaleDateString()}
+              </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex gap-4 pt-4">
+              {project.githubUrl && (
+                <Link href={project.githubUrl} target="_blank" className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
+                  <span className="text-sm font-medium ">GitHub</span>
+                </Link>
+              )}
+              {project.liveUrl && (
+                <Link href={project.liveUrl} target="_blank" className="flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 text-blue-600 dark:text-blue-400 rounded-lg transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  <span className="text-sm font-medium">Live Demo</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Project Image */}
+        <div className="relative h-60 sm:h-80 md:h-96 lg:h-[500px] rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-600 shadow-lg">
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+
+        {/* Introduction Section */}
+        <div className="space-y-4 md:space-y-6 p-6 md:p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
+            Introduction:
+          </h2>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+            {project.introduction}
+          </p>
+        </div>
+
+        {/* Project Screenshots */}
+        {project.screenshots && project.screenshots.length > 0 && (
+          <div className="space-y-4 md:space-y-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-blue-500 rounded-full"></div>
+              Project Screenshots:
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
+              {project.screenshots.map((screenshot, index) => (
+                <div key={index} className="relative h-48 sm:h-56 md:h-64 lg:h-80 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-600 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 bg-white dark:bg-gray-800">
+                  <Image
+                    src={screenshot}
+                    alt={`${project.title} screenshot ${index + 1}`}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                  />
+                  <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
+                    {index + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Features Section */}
+        {project.features && project.features.length > 0 && (
+          <div className="space-y-4 md:space-y-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div className="w-1 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
+              Key Features:
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+              {project.features.map((feature, index) => (
+                <div key={index} className="flex items-start gap-3 p-3 md:p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-400 transition-all duration-300">
+                  <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-1.5 flex-shrink-0 shadow-sm"></div>
+                  <span className="text-sm md:text-base text-gray-700 dark:text-gray-200 font-medium">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Technologies Used */}
+        {project.technologies && project.technologies.length > 0 && (
+          <div className="space-y-4 md:space-y-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div className="w-1 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
+              Technologies Used:
+            </h2>
+            <div className="flex flex-wrap gap-3 md:gap-4">
               {project.technologies.map((tech, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium"
+                  className={`px-4 py-2 md:px-5 md:py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full text-sm md:text-base font-semibold cursor-pointer border-2 border-white dark:border-gray-700`}
                 >
                   {tech}
                 </span>
               ))}
             </div>
-            
-            <div className="flex gap-4 pt-4">
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-                >
-                  <Github className="w-4 h-4" />
-                  GitHub Repository
-                </a>
-              )}
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Live Demo
-                </a>
-              )}
-            </div>
           </div>
-        </header>
+        )}
 
-        {/* Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          {/* Introduction */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Project Overview</h2>
-            <p className="text-gray-700 dark:text-gray-300">
-              {project.introduction}
-            </p>
-          </div>
-
-          {/* Description */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Description</h2>
-            <p className="text-gray-700 dark:text-gray-300">
-              {project.description}
-            </p>
-          </div>
-
-          {/* Features */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Key Features</h2>
-            <ul className="list-disc pl-6 space-y-2">
-              {project.features.map((feature, index) => (
-                <li key={index} className="text-gray-700 dark:text-gray-300">
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Screenshots */}
-          {project.screenshots && project.screenshots.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Screenshots</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {project.screenshots.map((screenshot, index) => (
-                  <div key={index} className="relative h-64 rounded-lg overflow-hidden">
-                    <Image
-                      src={screenshot}
-                      alt={`${project.title} Screenshot ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
+        {/* Challenges & Learnings */}
+        {(project.challenges?.length > 0 || project.learnings?.length > 0) && (
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            {project.challenges?.length > 0 && (
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                  <div className="w-1 h-8 bg-gradient-to-b from-red-500 to-orange-500 rounded-full"></div>
+                  Challenges Faced:
+                </h2>
+                <div className="space-y-3">
+                  {project.challenges.map((challenge, index) => (
+                    <div key={index} className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/30 rounded-xl border-2 border-red-200 dark:border-red-700 hover:shadow-lg transition-all duration-300 hover:border-red-300 dark:hover:border-red-600">
+                      <div className="w-3 h-3 bg-gradient-to-r from-red-500 to-orange-500 rounded-full mt-1.5 flex-shrink-0 shadow-sm"></div>
+                      <span className="text-gray-700 dark:text-gray-200 font-medium leading-relaxed">{challenge}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Challenges */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Challenges & Solutions</h2>
-            <ul className="list-disc pl-6 space-y-2">
-              {project.challenges.map((challenge, index) => (
-                <li key={index} className="text-gray-700 dark:text-gray-300">
-                  {challenge}
-                </li>
-              ))}
-            </ul>
+            {project.learnings?.length > 0 && (
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                  <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></div>
+                  Key Learnings:
+                </h2>
+                <div className="space-y-3">
+                  {project.learnings.map((learning, index) => (
+                    <div key={index} className="flex items-start gap-3 p-4 bg-green-50 dark:bg-green-900/30 rounded-xl border-2 border-green-200 dark:border-green-700 hover:shadow-lg transition-all duration-300 hover:border-green-300 dark:hover:border-green-600">
+                      <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mt-1.5 flex-shrink-0 shadow-sm"></div>
+                      <span className="text-gray-700 dark:text-gray-200 font-medium leading-relaxed">{learning}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-
-          {/* Learnings */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Key Learnings</h2>
-            <ul className="list-disc pl-6 space-y-2">
-              {project.learnings.map((learning, index) => (
-                <li key={index} className="text-gray-700 dark:text-gray-300">
-                  {learning}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </article>
+        )}
+      </div>
     </PageSection>
-  );
-} 
+  )
+}
+
+export default ProjectDetail 

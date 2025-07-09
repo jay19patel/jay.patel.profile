@@ -8,6 +8,7 @@ import { ProjectForm } from '@/components/admin/ProjectForm';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash } from 'lucide-react';
 import { toast } from 'sonner';
+import { getProjects, createProject, updateProject, deleteProject } from '@/app/actions/projects';
 
 export default function ProjectAdminPage() {
   const [projects, setProjects] = useState([]);
@@ -22,11 +23,11 @@ export default function ProjectAdminPage() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch('/api/admin/projects');
-      if (!response.ok) throw new Error('Failed to fetch projects');
-      const data = await response.json();
+      const { data, error } = await getProjects();
+      if (error) throw new Error(error);
       setProjects(data);
     } catch (error) {
+      console.error('Error fetching projects:', error);
       toast.error('Failed to fetch projects');
     }
   };
@@ -34,18 +35,14 @@ export default function ProjectAdminPage() {
   const handleCreate = async (data) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/admin/projects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) throw new Error('Failed to create project');
+      const result = await createProject(data);
+      if (result.error) throw new Error(result.error);
       
       await fetchProjects();
       setIsDialogOpen(false);
       toast.success('Project created successfully');
     } catch (error) {
+      console.error('Error creating project:', error);
       toast.error('Failed to create project');
     } finally {
       setIsLoading(false);
@@ -55,19 +52,15 @@ export default function ProjectAdminPage() {
   const handleUpdate = async (data) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/admin/projects/${selectedProject._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) throw new Error('Failed to update project');
+      const result = await updateProject(selectedProject._id, data);
+      if (result.error) throw new Error(result.error);
       
       await fetchProjects();
       setIsDialogOpen(false);
       setSelectedProject(null);
       toast.success('Project updated successfully');
     } catch (error) {
+      console.error('Error updating project:', error);
       toast.error('Failed to update project');
     } finally {
       setIsLoading(false);
@@ -77,12 +70,8 @@ export default function ProjectAdminPage() {
   const handleDelete = async (project) => {
     toast.promise(
       async () => {
-        const response = await fetch(`/api/admin/projects/${project._id}`, {
-          method: 'DELETE',
-        });
-        
-        if (!response.ok) throw new Error('Failed to delete project');
-        
+        const result = await deleteProject(project._id);
+        if (result.error) throw new Error(result.error);
         await fetchProjects();
       },
       {
@@ -110,14 +99,14 @@ export default function ProjectAdminPage() {
       header: 'Rating',
       accessorKey: 'rating',
       cell: ({ row }) => (
-        <span>{row.original.rating.toFixed(1)}</span>
+        <span>{row.original.rating?.toFixed(1) || '0.0'}</span>
       ),
     },
     {
       header: 'Downloads',
       accessorKey: 'downloads',
       cell: ({ row }) => (
-        <span>{row.original.downloads.toLocaleString()}</span>
+        <span>{row.original.downloads?.toLocaleString() || '0'}</span>
       ),
     },
     {

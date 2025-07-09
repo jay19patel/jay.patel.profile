@@ -1,20 +1,23 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
 import Project from '@/models/Project';
 
 export async function GET(request, { params }) {
   try {
-    await connectDB();
-    const { slug } = params;
-    
-    const project = await Project.findOne({ slug });
+    const project = await Project.findOne({ slug: params.slug });
     
     if (!project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Project not found' },
+        { status: 404 }
+      );
     }
     
     return NextResponse.json({ project });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Error fetching project:', error);
+    return NextResponse.json(
+      { error: 'Error fetching project' },
+      { status: 500 }
+    );
   }
 } 
