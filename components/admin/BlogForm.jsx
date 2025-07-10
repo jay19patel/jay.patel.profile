@@ -18,7 +18,15 @@ import {
   CheckCircle,
   XCircle
 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { getBlogBySlug, createBlog, updateBlog } from '@/app/actions/blogs'
+import { generateSlug } from '@/lib/utils'
 
 const BlogForm = ({ blogSlug }) => {
   const router = useRouter()
@@ -37,6 +45,7 @@ const BlogForm = ({ blogSlug }) => {
     image: '/image-1.png',
     category: 'Web Development',
     featured: false,
+    slug: '',
     content: {
       introduction: '',
       sections: [],
@@ -62,6 +71,14 @@ const BlogForm = ({ blogSlug }) => {
     { value: 'note', label: 'Important Note', icon: <AlertCircle className="w-4 h-4" /> },
     { value: 'links', label: 'External Links', icon: <ExternalLink className="w-4 h-4" /> }
   ]
+
+  // Update slug when title changes
+  useEffect(() => {
+    if (!isEditing) {
+      const newSlug = generateSlug(blogData.title)
+      setBlogData(prev => ({ ...prev, slug: newSlug }))
+    }
+  }, [blogData.title, isEditing])
 
   // Fetch blog data if editing
   useEffect(() => {
@@ -349,347 +366,350 @@ const BlogForm = ({ blogSlug }) => {
         </div>
       )}
 
-      {/* Basic Information */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Basic Information</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Title *
-            </label>
-            <input
-              type="text"
-              value={blogData.title}
-              onChange={(e) => handleInputChange('title', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Enter blog title"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Read Time
-            </label>
-            <input
-              type="text"
-              value={blogData.readTime}
-              onChange={(e) => handleInputChange('readTime', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="e.g., 5 min read"
-            />
-          </div>
-
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Subtitle
-            </label>
-            <input
-              type="text"
-              value={blogData.subtitle}
-              onChange={(e) => handleInputChange('subtitle', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Enter blog subtitle"
-            />
-          </div>
-
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Excerpt *
-            </label>
-            <textarea
-              value={blogData.excerpt}
-              onChange={(e) => handleInputChange('excerpt', e.target.value)}
-              rows={3}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              placeholder="Brief description of the blog post"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Category
-            </label>
-            <select
-              value={blogData.category}
-              onChange={(e) => handleInputChange('category', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Author
-            </label>
-            <input
-              type="text"
-              value={blogData.author}
-              onChange={(e) => handleInputChange('author', e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-            />
-          </div>
-
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="featured"
-                checked={blogData.featured}
-                onChange={(e) => handleInputChange('featured', e.target.checked)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label htmlFor="featured" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Mark as Featured Post
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tags */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Tags</h2>
-        
-        <div className="space-y-3">
-          {blogData.tags.map((tag, index) => (
-            <div key={index} className="flex items-center gap-3">
-              <input
-                type="text"
-                value={tag}
-                onChange={(e) => updateTag(index, e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                placeholder="Enter tag"
-              />
-              <button
-                onClick={() => removeTag(index)}
-                className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
-          <button
-            onClick={addTag}
-            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Add Tag
-          </button>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Content</h2>
-        
-        {/* Introduction */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Introduction *
-          </label>
-          <textarea
-            value={blogData.content.introduction}
-            onChange={(e) => handleInputChange('content.introduction', e.target.value)}
-            rows={4}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-            placeholder="Write the blog introduction"
-          />
-        </div>
-
-        {/* Sections */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Content Sections</h3>
-            <div className="flex flex-wrap gap-2">
-              {sectionTypes.map(type => (
-                <button
-                  key={type.value}
-                  onClick={() => addSection(type.value)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  title={`Add ${type.label}`}
-                >
-                  {type.icon}
-                  {type.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {blogData.content.sections.map((section, sectionIndex) => (
-            <div key={sectionIndex} className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="font-medium text-gray-900 dark:text-white">
-                  {sectionTypes.find(t => t.value === section.type)?.label}
-                </h4>
-                <button
-                  onClick={() => removeSection(sectionIndex)}
-                  className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                >
-                  <XCircle className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Section Title */}
-              <div className="mb-4">
-                <input
-                  type="text"
-                  value={section.title}
-                  onChange={(e) => updateSection(sectionIndex, 'title', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                  placeholder="Section title"
-                />
-              </div>
-
-              {/* Section Content Based on Type */}
-              {section.type === 'text' && (
-                <textarea
-                  value={section.content}
-                  onChange={(e) => updateSection(sectionIndex, 'content', e.target.value)}
-                  rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                  placeholder="Section content"
-                />
-              )}
-
-              {section.type === 'bullets' && (
-                <div className="space-y-3">
-                  {section.items?.map((item, itemIndex) => (
-                    <div key={itemIndex} className="flex items-center gap-3">
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) => updateBulletPoint(sectionIndex, itemIndex, e.target.value)}
-                        className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                        placeholder="Bullet point"
-                      />
-                      <button
-                        onClick={() => removeBulletPoint(sectionIndex, itemIndex)}
-                        className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    onClick={() => addBulletPoint(sectionIndex)}
-                    className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Bullet Point
-                  </button>
-                </div>
-              )}
-
-              {section.type === 'note' && (
-                <textarea
-                  value={section.content}
-                  onChange={(e) => updateSection(sectionIndex, 'content', e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                  placeholder="Important note content"
-                />
-              )}
-
-              {section.type === 'links' && (
-                <div className="space-y-4">
-                  {section.links?.map((link, linkIndex) => (
-                    <div key={linkIndex} className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                        <input
-                          type="text"
-                          value={link.text}
-                          onChange={(e) => updateLink(sectionIndex, linkIndex, 'text', e.target.value)}
-                          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                          placeholder="Link text"
-                        />
-                        <input
-                          type="url"
-                          value={link.url}
-                          onChange={(e) => updateLink(sectionIndex, linkIndex, 'url', e.target.value)}
-                          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                          placeholder="Link URL"
-                        />
-                      </div>
-                      <input
-                        type="text"
-                        value={link.description}
-                        onChange={(e) => updateLink(sectionIndex, linkIndex, 'description', e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white mb-3"
-                        placeholder="Link description"
-                      />
-                      <button
-                        onClick={() => removeLink(sectionIndex, linkIndex)}
-                        className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    onClick={() => addLink(sectionIndex)}
-                    className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Link
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Conclusion */}
-        <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Conclusion
-          </label>
-          <textarea
-            value={blogData.content.conclusion}
-            onChange={(e) => handleInputChange('content.conclusion', e.target.value)}
-            rows={4}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-            placeholder="Write the blog conclusion"
-          />
-        </div>
-      </div>
-
       {/* Action Buttons */}
-      <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
-        <Link
-          href="/admin/blog"
-          className="flex items-center gap-2 px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+      <div className="flex items-center justify-between">
+        <Button
+          variant="outline"
+          onClick={() => router.push('/admin/blog')}
+          className="flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Blog List
-        </Link>
+          Back to Blog Posts
+        </Button>
 
-        <div className="flex gap-4">
-          <button
-            type="button"
-            className="flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/blog/${blogData.slug}`)}
+            disabled={!blogData.slug}
+            className="flex items-center gap-2"
           >
             <Eye className="w-4 h-4" />
             Preview
-          </button>
-
-          <button
+          </Button>
+          <Button
             onClick={handleSave}
             disabled={isLoading}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
           >
             {isLoading ? (
               <Loader className="w-4 h-4 animate-spin" />
             ) : (
               <Save className="w-4 h-4" />
             )}
-            {isLoading ? 'Saving...' : (isEditing ? 'Update Blog Post' : 'Save Blog Post')}
-          </button>
+            {isEditing ? 'Update Blog Post' : 'Create Blog Post'}
+          </Button>
         </div>
       </div>
+
+      {/* Basic Information */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Basic Information</h2>
+          
+          <div className="grid grid-cols-1 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title *</Label>
+              <Input
+                id="title"
+                value={blogData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                placeholder="Enter blog title"
+                className="border-gray-200 dark:border-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">Slug</Label>
+              <Input
+                id="slug"
+                value={blogData.slug}
+                readOnly
+                className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Input
+                id="subtitle"
+                value={blogData.subtitle}
+                onChange={(e) => handleInputChange('subtitle', e.target.value)}
+                placeholder="Enter blog subtitle"
+                className="border-gray-200 dark:border-gray-800"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Select
+                  value={blogData.category}
+                  onValueChange={(value) => handleInputChange('category', value)}
+                >
+                  <SelectTrigger className="border-gray-200 dark:border-gray-800">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map(category => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="readTime">Read Time</Label>
+                <Input
+                  id="readTime"
+                  value={blogData.readTime}
+                  onChange={(e) => handleInputChange('readTime', e.target.value)}
+                  placeholder="e.g., 5 min read"
+                  className="border-gray-200 dark:border-gray-800"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="excerpt">Excerpt *</Label>
+              <Textarea
+                id="excerpt"
+                value={blogData.excerpt}
+                onChange={(e) => handleInputChange('excerpt', e.target.value)}
+                placeholder="Enter blog excerpt"
+                className="min-h-[100px] border-gray-200 dark:border-gray-800"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="featured"
+                checked={blogData.featured}
+                onCheckedChange={(checked) => handleInputChange('featured', checked)}
+              />
+              <Label htmlFor="featured">Featured Blog Post</Label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tags */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Tags</h2>
+            <Button
+              onClick={addTag}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Tag
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {blogData.tags.map((tag, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Input
+                  value={tag}
+                  onChange={(e) => updateTag(index, e.target.value)}
+                  placeholder="Enter tag"
+                  className="border-gray-200 dark:border-gray-800"
+                />
+                <Button
+                  onClick={() => removeTag(index)}
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={blogData.tags.length === 1}
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Content */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Content</h2>
+            <div className="flex items-center gap-2">
+              {sectionTypes.map(type => (
+                <Button
+                  key={type.value}
+                  onClick={() => addSection(type.value)}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  {type.icon}
+                  {type.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="introduction">Introduction</Label>
+              <Textarea
+                id="introduction"
+                value={blogData.content.introduction}
+                onChange={(e) => handleInputChange('content.introduction', e.target.value)}
+                placeholder="Enter blog introduction"
+                className="min-h-[150px] border-gray-200 dark:border-gray-800"
+              />
+            </div>
+
+            {/* Sections */}
+            {blogData.content.sections.map((section, index) => (
+              <Card key={index} className="border border-gray-200 dark:border-gray-800">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <Input
+                      value={section.title}
+                      onChange={(e) => updateSection(index, 'title', e.target.value)}
+                      placeholder="Section Title"
+                      className="border-gray-200 dark:border-gray-800"
+                    />
+                    <Button
+                      onClick={() => removeSection(index)}
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-500 hover:text-red-600"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  {/* Section content based on type */}
+                  {section.type === 'text' && (
+                    <Textarea
+                      value={section.content}
+                      onChange={(e) => updateSection(index, 'content', e.target.value)}
+                      placeholder="Enter text content"
+                      className="min-h-[150px] border-gray-200 dark:border-gray-800"
+                    />
+                  )}
+
+                  {section.type === 'bullets' && (
+                    <div className="space-y-3">
+                      {section.items.map((item, itemIndex) => (
+                        <div key={itemIndex} className="flex items-center gap-3">
+                          <Input
+                            value={item}
+                            onChange={(e) => updateBulletPoint(index, itemIndex, e.target.value)}
+                            placeholder="Enter bullet point"
+                            className="border-gray-200 dark:border-gray-800"
+                          />
+                          <Button
+                            onClick={() => removeBulletPoint(index, itemIndex)}
+                            variant="ghost"
+                            size="icon"
+                            className="text-red-500 hover:text-red-600"
+                            disabled={section.items.length === 1}
+                          >
+                            <Minus className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        onClick={() => addBulletPoint(index)}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Bullet Point
+                      </Button>
+                    </div>
+                  )}
+
+                  {section.type === 'links' && (
+                    <div className="space-y-4">
+                      {section.links.map((link, linkIndex) => (
+                        <div key={linkIndex} className="space-y-3">
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1">
+                              <Input
+                                value={link.text}
+                                onChange={(e) => updateLink(index, linkIndex, 'text', e.target.value)}
+                                placeholder="Link Text"
+                                className="border-gray-200 dark:border-gray-800"
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={link.url}
+                                onChange={(e) => updateLink(index, linkIndex, 'url', e.target.value)}
+                                placeholder="URL"
+                                className="border-gray-200 dark:border-gray-800"
+                              />
+                            </div>
+                            <Button
+                              onClick={() => removeLink(index, linkIndex)}
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-500 hover:text-red-600"
+                              disabled={section.links.length === 1}
+                            >
+                              <Minus className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <Textarea
+                            value={link.description}
+                            onChange={(e) => updateLink(index, linkIndex, 'description', e.target.value)}
+                            placeholder="Link Description"
+                            className="border-gray-200 dark:border-gray-800"
+                          />
+                        </div>
+                      ))}
+                      <Button
+                        onClick={() => addLink(index)}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Link
+                      </Button>
+                    </div>
+                  )}
+
+                  {section.type === 'note' && (
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                      <Textarea
+                        value={section.content}
+                        onChange={(e) => updateSection(index, 'content', e.target.value)}
+                        placeholder="Enter important note"
+                        className="bg-transparent border-none focus:ring-0 min-h-[100px]"
+                      />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+
+            <div className="space-y-2">
+              <Label htmlFor="conclusion">Conclusion</Label>
+              <Textarea
+                id="conclusion"
+                value={blogData.content.conclusion}
+                onChange={(e) => handleInputChange('content.conclusion', e.target.value)}
+                placeholder="Enter blog conclusion"
+                className="min-h-[150px] border-gray-200 dark:border-gray-800"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

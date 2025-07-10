@@ -29,6 +29,7 @@ import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { getProjectBySlug, createProject, updateProject } from '@/app/actions/projects'
+import { generateSlug } from '@/lib/utils'
 
 const ProjectForm = ({ projectSlug }) => {
   const router = useRouter()
@@ -56,8 +57,17 @@ const ProjectForm = ({ projectSlug }) => {
     demoUrl: '',
     githubUrl: '',
     liveUrl: '',
-    featured: false
+    featured: false,
+    slug: ''
   })
+
+  // Update slug when title changes
+  useEffect(() => {
+    if (!isEditing) {
+      const newSlug = generateSlug(projectData.title)
+      setProjectData(prev => ({ ...prev, slug: newSlug }))
+    }
+  }, [projectData.title, isEditing])
 
   const categories = [
     'Web Development',
@@ -208,12 +218,48 @@ const ProjectForm = ({ projectSlug }) => {
         </div>
       )}
 
+      {/* Action Buttons */}
+      <div className="flex items-center justify-between">
+        <Button
+          variant="outline"
+          onClick={() => router.push('/admin/projects')}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Projects
+        </Button>
+
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/projects/${projectData.slug}`)}
+            disabled={!projectData.slug}
+            className="flex items-center gap-2"
+          >
+            <Eye className="w-4 h-4" />
+            Preview
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={isLoading}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            {isLoading ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            {isEditing ? 'Update Project' : 'Create Project'}
+          </Button>
+        </div>
+      </div>
+
       {/* Basic Information */}
       <Card>
         <CardContent className="p-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Basic Information</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">
               <Label htmlFor="title">Title *</Label>
               <Input
@@ -221,6 +267,17 @@ const ProjectForm = ({ projectSlug }) => {
                 value={projectData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="Enter project title"
+                className="border-gray-200 dark:border-gray-800"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">Slug</Label>
+              <Input
+                id="slug"
+                value={projectData.slug}
+                readOnly
+                className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800"
               />
             </div>
 
@@ -231,67 +288,79 @@ const ProjectForm = ({ projectSlug }) => {
                 value={projectData.subtitle}
                 onChange={(e) => handleInputChange('subtitle', e.target.value)}
                 placeholder="Enter project subtitle"
+                className="border-gray-200 dark:border-gray-800"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select
-                value={projectData.category}
-                onValueChange={(value) => handleInputChange('category', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map(category => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Select
+                  value={projectData.category}
+                  onValueChange={(value) => handleInputChange('category', value)}
+                >
+                  <SelectTrigger className="border-gray-200 dark:border-gray-800">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map(category => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  value={projectData.status}
+                  onValueChange={(value) => handleInputChange('status', value)}
+                >
+                  <SelectTrigger className="border-gray-200 dark:border-gray-800">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusOptions.map(status => (
+                      <SelectItem key={status} value={status}>
+                        {status}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Select
-                value={projectData.status}
-                onValueChange={(value) => handleInputChange('status', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {statusOptions.map(status => (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="md:col-span-2 space-y-2">
               <Label htmlFor="description">Description *</Label>
               <Textarea
                 id="description"
                 value={projectData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Enter project description"
-                rows={3}
+                className="min-h-[100px] border-gray-200 dark:border-gray-800"
               />
             </div>
 
-            <div className="md:col-span-2 space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="introduction">Introduction</Label>
               <Textarea
                 id="introduction"
                 value={projectData.introduction}
                 onChange={(e) => handleInputChange('introduction', e.target.value)}
                 placeholder="Enter project introduction"
-                rows={4}
+                className="min-h-[150px] border-gray-200 dark:border-gray-800"
               />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="featured"
+                checked={projectData.featured}
+                onCheckedChange={(checked) => handleInputChange('featured', checked)}
+              />
+              <Label htmlFor="featured">Featured Project</Label>
             </div>
           </div>
         </CardContent>
@@ -526,17 +595,6 @@ const ProjectForm = ({ projectSlug }) => {
               </div>
             </div>
           </div>
-
-          <div className="mt-6">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="featured"
-                checked={projectData.featured}
-                onCheckedChange={(checked) => handleInputChange('featured', checked)}
-              />
-              <Label htmlFor="featured">Mark as Featured Project</Label>
-            </div>
-          </div>
         </CardContent>
       </Card>
 
@@ -574,39 +632,6 @@ const ProjectForm = ({ projectSlug }) => {
           </div>
         </CardContent>
       </Card>
-
-      {/* Action Buttons */}
-      <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
-        <Link href="/admin/projects">
-          <Button variant="ghost" className="gap-2">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Projects
-          </Button>
-        </Link>
-
-        <div className="flex gap-4">
-          <Button
-            variant="outline"
-            className="gap-2"
-          >
-            <Eye className="w-4 h-4" />
-            Preview
-          </Button>
-
-          <Button
-            onClick={handleSave}
-            disabled={isLoading}
-            className="gap-2"
-          >
-            {isLoading ? (
-              <Loader className="w-4 h-4 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4" />
-            )}
-            {isLoading ? 'Saving...' : (isEditing ? 'Update Project' : 'Save Project')}
-          </Button>
-        </div>
-      </div>
     </div>
   )
 }
