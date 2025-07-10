@@ -27,11 +27,15 @@ const AdminLayoutContent = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen">
      {/* Admin Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
+        <main className="flex-grow w-full px-4 py-6">
+          <section className='w-full px-4 py-6'>
+              <div className="space-y-8 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] p-6 md:p-12 transition-colors duration-300 overflow-hidden">
+              {children}
+            </div>
+            </section>
+          </main>
 
     </div>
   )

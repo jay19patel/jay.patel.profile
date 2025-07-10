@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Search, User, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/customUi/Button';
 import { 
   Sheet, 
@@ -12,8 +13,10 @@ import {
   SheetTrigger,
   SheetClose
 } from '@/components/ui/sheet';
+
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   // Navigation menu items
   const menuItems = [
@@ -52,16 +55,25 @@ const Header = () => {
 
         {/* Desktop Navigation Menu */}
         <div className="hidden lg:flex items-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full px-3 py-2 shadow-[0_3px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-colors duration-300">
-          {menuItems.map((item, index) => (
-            <Link 
-              key={index}
-              href={item.href} 
-              className="px-5 py-2.5 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white transition-all duration-200 relative group"
-            >
-              {item.name}
-              <span className="absolute inset-x-2 bottom-1 h-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-            </Link>
-          ))}
+          {menuItems.map((item, index) => {
+            const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+            return (
+              <Link 
+                key={index}
+                href={item.href} 
+                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 relative group
+                  ${isActive 
+                    ? 'bg-gray-50 dark:bg-gray-600 text-gray-900 dark:text-white' 
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+              >
+                {item.name}
+                <span className={`absolute inset-x-2 bottom-1 h-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 rounded-full transition-transform duration-200
+                  ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}>
+                </span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Right Section - Icons and CTA */}
@@ -125,17 +137,26 @@ const Header = () => {
               <div className="px-4 space-y-6 h-full overflow-y-auto">
                 {/* Navigation Links */}
                 <div className="space-y-2">
-                  {menuItems.map((item, index) => (
-                    <SheetClose asChild key={index}>
-                      <Link 
-                        href={item.href} 
-                        className="flex items-center px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 font-medium text-sm relative group"
-                      >
-                        {item.name}
-                        <span className="absolute left-4 right-4 bottom-1 h-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-                      </Link>
-                    </SheetClose>
-                  ))}
+                  {menuItems.map((item, index) => {
+                    const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                    return (
+                      <SheetClose asChild key={index}>
+                        <Link 
+                          href={item.href} 
+                          className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 font-medium text-sm relative group
+                            ${isActive 
+                              ? 'bg-gray-50 text-gray-900' 
+                              : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                        >
+                          {item.name}
+                          <span className={`absolute left-4 right-4 bottom-1 h-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full transition-transform duration-200
+                            ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}>
+                          </span>
+                        </Link>
+                      </SheetClose>
+                    );
+                  })}
                 </div>
 
                 {/* Divider */}

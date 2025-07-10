@@ -1,337 +1,614 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
-import { uploadProjectImage, createProject, updateProject } from '@/app/actions/projects';
+import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { 
+  Plus, 
+  Minus, 
+  Save, 
+  Eye, 
+  ArrowLeft, 
+  FileText, 
+  List, 
+  Github,
+  Globe,
+  Play,
+  Star,
+  Download,
+  Image as ImageIcon,
+  Loader,
+  CheckCircle,
+  XCircle
+} from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { getProjectBySlug, createProject, updateProject } from '@/app/actions/projects'
 
-export default function ProjectForm({ project = null }) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    title: project?.title || '',
-    subtitle: project?.subtitle || '',
-    slug: project?.slug || '',
-    description: project?.description || '',
-    introduction: project?.introduction || '',
-    content: project?.content || '',
-    technologies: project?.technologies || [],
-    category: project?.category || '',
-    status: project?.status || 'In Progress',
-    rating: project?.rating || 0,
-    downloads: project?.downloads || '0',
-    image: project?.image || '',
-    screenshots: project?.screenshots || [],
-    features: project?.features || [],
-    challenges: project?.challenges || [],
-    learnings: project?.learnings || [],
-    author: project?.author || '',
-    demoUrl: project?.demoUrl || '',
-    githubUrl: project?.githubUrl || '',
-    liveUrl: project?.liveUrl || '',
-    featured: project?.featured || false,
-  });
+const ProjectForm = ({ projectSlug }) => {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState('')
+  const [isEditing, setIsEditing] = useState(false)
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const [projectData, setProjectData] = useState({
+    title: '',
+    subtitle: '',
+    description: '',
+    introduction: '',
+    category: 'Web Development',
+    status: 'In Progress',
+    rating: 0,
+    downloads: '0',
+    image: '/image-1.png',
+    technologies: [''],
+    features: [''],
+    screenshots: ['/image-1.png'],
+    challenges: [''],
+    learnings: [''],
+    author: 'Jay Patel',
+    demoUrl: '',
+    githubUrl: '',
+    liveUrl: '',
+    featured: false
+  })
 
-    try {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append('image', file);
+  const categories = [
+    'Web Development',
+    'Mobile Development',
+    'E-Commerce',
+    'FinTech',
+    'Data Science',
+    'AI/ML',
+    'DevOps',
+    'Blockchain',
+    'IoT',
+    'Game Development'
+  ]
 
-      const result = await uploadProjectImage(formData);
-      
-      if (!result.success) {
-        throw new Error(result.error);
+  const statusOptions = ['Completed', 'In Progress', 'Planned']
+
+  // Fetch project data if editing
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (projectSlug) {
+        setIsLoading(true)
+        try {
+          const response = await getProjectBySlug(projectSlug)
+          if (response.success) {
+            setProjectData(response.data)
+            setIsEditing(true)
+          } else {
+            setMessage('Failed to fetch project data')
+            setMessageType('error')
+          }
+        } catch (error) {
+          setMessage('Error fetching project data')
+          setMessageType('error')
+        }
+        setIsLoading(false)
       }
-
-      setFormData(prev => ({
-        ...prev,
-        image: result.data.url
-      }));
-      toast.success('Image uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      toast.error('Failed to upload image');
-    } finally {
-      setIsLoading(false);
     }
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      setIsLoading(true);
+    fetchProject()
+  }, [projectSlug])
 
-      const result = project?._id 
-        ? await updateProject(project._id, formData)
-        : await createProject(formData);
-
-      if (!result.success) {
-        throw new Error(result.error);
-      }
-
-      toast.success(`Project ${project?._id ? 'updated' : 'created'} successfully`);
-      router.push('/admin/projects');
-      router.refresh();
-    } catch (error) {
-      console.error('Error saving project:', error);
-      toast.error(`Failed to ${project?._id ? 'update' : 'create'} project`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleArrayInput = (e, field) => {
-    const value = e.target.value.split(',').map(item => item.trim());
-    setFormData(prev => ({
+  // Handle form input changes
+  const handleInputChange = (field, value) => {
+    setProjectData(prev => ({
       ...prev,
       [field]: value
-    }));
-  };
+    }))
+  }
+
+  // Handle array fields
+  const handleArrayFieldAdd = (field) => {
+    setProjectData(prev => ({
+      ...prev,
+      [field]: [...prev[field], '']
+    }))
+  }
+
+  const handleArrayFieldUpdate = (field, index, value) => {
+    setProjectData(prev => ({
+      ...prev,
+      [field]: prev[field].map((item, i) => i === index ? value : item)
+    }))
+  }
+
+  const handleArrayFieldRemove = (field, index) => {
+    setProjectData(prev => ({
+      ...prev,
+      [field]: prev[field].filter((_, i) => i !== index)
+    }))
+  }
+
+  // Save or update project
+  const handleSave = async () => {
+    setIsLoading(true)
+    setMessage('')
+
+    try {
+      // Validation
+      if (!projectData.title.trim()) {
+        throw new Error('Title is required')
+      }
+      if (!projectData.description.trim()) {
+        throw new Error('Description is required')
+      }
+      if (!projectData.technologies.some(tech => tech.trim())) {
+        throw new Error('At least one technology is required')
+      }
+
+      // Filter out empty array items
+      const cleanedData = {
+        ...projectData,
+        technologies: projectData.technologies.filter(tech => tech.trim()),
+        features: projectData.features.filter(feature => feature.trim()),
+        challenges: projectData.challenges.filter(challenge => challenge.trim()),
+        learnings: projectData.learnings.filter(learning => learning.trim()),
+        screenshots: projectData.screenshots.filter(screenshot => screenshot.trim())
+      }
+
+      let response
+      if (isEditing) {
+        response = await updateProject(projectData._id, cleanedData)
+      } else {
+        response = await createProject(cleanedData)
+      }
+
+      if (response.success) {
+        setMessage(isEditing ? 'Project updated successfully' : 'Project created successfully')
+        setMessageType('success')
+        
+        // Redirect after a short delay
+        setTimeout(() => {
+          router.push('/admin/projects')
+        }, 1500)
+      } else {
+        throw new Error(response.error || 'Failed to save project')
+      }
+    } catch (error) {
+      setMessage(error.message)
+      setMessageType('error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (isLoading && !projectData.title) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    )
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Basic Information */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Basic Information</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            name="title"
-            label="Title"
-            value={formData.title}
-            onChange={handleInputChange}
-            required
-          />
-          
-          <Input
-            name="subtitle"
-            label="Subtitle"
-            value={formData.subtitle}
-            onChange={handleInputChange}
-          />
-          
-          <Input
-            name="slug"
-            label="Slug"
-            value={formData.slug}
-            onChange={handleInputChange}
-            required
-          />
-          
-          <Input
-            name="category"
-            label="Category"
-            value={formData.category}
-            onChange={handleInputChange}
-            required
-          />
+    <div className="max-w-4xl mx-auto space-y-8">
+      {/* Message Display */}
+      {message && (
+        <div className={`p-4 rounded-lg border flex items-center gap-3 ${
+          messageType === 'success' 
+            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200'
+            : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
+        }`}>
+          {messageType === 'success' ? (
+            <CheckCircle className="w-5 h-5" />
+          ) : (
+            <XCircle className="w-5 h-5" />
+          )}
+          {message}
         </div>
+      )}
 
-        <Select
-          name="status"
-          label="Status"
-          value={formData.status}
-          onChange={handleInputChange}
-          options={[
-            { value: 'In Progress', label: 'In Progress' },
-            { value: 'Completed', label: 'Completed' },
-            { value: 'Planned', label: 'Planned' }
-          ]}
-        />
-      </div>
-
-      {/* Content */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Content</h3>
-        
-        <Textarea
-          name="description"
-          label="Short Description"
-          value={formData.description}
-          onChange={handleInputChange}
-          required
-        />
-        
-        <Textarea
-          name="introduction"
-          label="Introduction"
-          value={formData.introduction}
-          onChange={handleInputChange}
-          rows={4}
-        />
-        
-        <Textarea
-          name="content"
-          label="Detailed Content"
-          value={formData.content}
-          onChange={handleInputChange}
-          rows={8}
-        />
-      </div>
-
-      {/* Technologies and Features */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Technologies and Features</h3>
-        
-        <Textarea
-          name="technologies"
-          label="Technologies (comma-separated)"
-          value={formData.technologies.join(', ')}
-          onChange={(e) => handleArrayInput(e, 'technologies')}
-          placeholder="React, Next.js, TailwindCSS"
-        />
-        
-        <Textarea
-          name="features"
-          label="Features (comma-separated)"
-          value={formData.features.join(', ')}
-          onChange={(e) => handleArrayInput(e, 'features')}
-          placeholder="Feature 1, Feature 2, Feature 3"
-        />
-      </div>
-
-      {/* Images */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Images</h3>
-        
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Main Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          />
-          {formData.image && (
-            <div className="mt-2">
-              <img
-                src={formData.image}
-                alt="Project preview"
-                className="w-32 h-32 object-cover rounded-lg"
+      {/* Basic Information */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Basic Information</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title *</Label>
+              <Input
+                id="title"
+                value={projectData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                placeholder="Enter project title"
               />
             </div>
-          )}
-        </div>
-        
-        <Textarea
-          name="screenshots"
-          label="Screenshot URLs (comma-separated)"
-          value={formData.screenshots.join(', ')}
-          onChange={(e) => handleArrayInput(e, 'screenshots')}
-          placeholder="https://example.com/screenshot1.jpg, https://example.com/screenshot2.jpg"
-        />
+
+            <div className="space-y-2">
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Input
+                id="subtitle"
+                value={projectData.subtitle}
+                onChange={(e) => handleInputChange('subtitle', e.target.value)}
+                placeholder="Enter project subtitle"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={projectData.category}
+                onValueChange={(value) => handleInputChange('category', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select
+                value={projectData.status}
+                onValueChange={(value) => handleInputChange('status', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {statusOptions.map(status => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="md:col-span-2 space-y-2">
+              <Label htmlFor="description">Description *</Label>
+              <Textarea
+                id="description"
+                value={projectData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                placeholder="Enter project description"
+                rows={3}
+              />
+            </div>
+
+            <div className="md:col-span-2 space-y-2">
+              <Label htmlFor="introduction">Introduction</Label>
+              <Textarea
+                id="introduction"
+                value={projectData.introduction}
+                onChange={(e) => handleInputChange('introduction', e.target.value)}
+                placeholder="Enter project introduction"
+                rows={4}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Technologies */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Technologies</h2>
+          
+          <div className="space-y-3">
+            {projectData.technologies.map((tech, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Input
+                  value={tech}
+                  onChange={(e) => handleArrayFieldUpdate('technologies', index, e.target.value)}
+                  placeholder="Enter technology"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleArrayFieldRemove('technologies', index)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              onClick={() => handleArrayFieldAdd('technologies')}
+              className="w-full"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Technology
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Features */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Features</h2>
+          
+          <div className="space-y-3">
+            {projectData.features.map((feature, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Input
+                  value={feature}
+                  onChange={(e) => handleArrayFieldUpdate('features', index, e.target.value)}
+                  placeholder="Enter feature"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleArrayFieldRemove('features', index)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              onClick={() => handleArrayFieldAdd('features')}
+              className="w-full"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Feature
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Challenges & Learnings */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Challenges</h2>
+            
+            <div className="space-y-3">
+              {projectData.challenges.map((challenge, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <Input
+                    value={challenge}
+                    onChange={(e) => handleArrayFieldUpdate('challenges', index, e.target.value)}
+                    placeholder="Enter challenge"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleArrayFieldRemove('challenges', index)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                variant="outline"
+                onClick={() => handleArrayFieldAdd('challenges')}
+                className="w-full"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Challenge
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Learnings</h2>
+            
+            <div className="space-y-3">
+              {projectData.learnings.map((learning, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <Input
+                    value={learning}
+                    onChange={(e) => handleArrayFieldUpdate('learnings', index, e.target.value)}
+                    placeholder="Enter learning"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleArrayFieldRemove('learnings', index)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                variant="outline"
+                onClick={() => handleArrayFieldAdd('learnings')}
+                className="w-full"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Learning
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Links */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Links</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            name="demoUrl"
-            label="Demo URL"
-            value={formData.demoUrl}
-            onChange={handleInputChange}
-          />
+      {/* URLs & Stats */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">URLs & Statistics</h2>
           
-          <Input
-            name="githubUrl"
-            label="GitHub URL"
-            value={formData.githubUrl}
-            onChange={handleInputChange}
-          />
-          
-          <Input
-            name="liveUrl"
-            label="Live URL"
-            value={formData.liveUrl}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="githubUrl">GitHub URL</Label>
+              <div className="flex items-center gap-2">
+                <Github className="w-4 h-4" />
+                <Input
+                  id="githubUrl"
+                  value={projectData.githubUrl}
+                  onChange={(e) => handleInputChange('githubUrl', e.target.value)}
+                  placeholder="Enter GitHub repository URL"
+                />
+              </div>
+            </div>
 
-      {/* Additional Information */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Additional Information</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            name="rating"
-            type="number"
-            label="Rating"
-            value={formData.rating}
-            onChange={handleInputChange}
-            min="0"
-            max="5"
-            step="0.1"
-          />
-          
-          <Input
-            name="downloads"
-            label="Downloads"
-            value={formData.downloads}
-            onChange={handleInputChange}
-          />
-        </div>
-        
-        <Textarea
-          name="challenges"
-          label="Challenges (comma-separated)"
-          value={formData.challenges.join(', ')}
-          onChange={(e) => handleArrayInput(e, 'challenges')}
-          placeholder="Challenge 1, Challenge 2, Challenge 3"
-        />
-        
-        <Textarea
-          name="learnings"
-          label="Learnings (comma-separated)"
-          value={formData.learnings.join(', ')}
-          onChange={(e) => handleArrayInput(e, 'learnings')}
-          placeholder="Learning 1, Learning 2, Learning 3"
-        />
-        
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="featured"
-            id="featured"
-            checked={formData.featured}
-            onChange={handleInputChange}
-            className="rounded border-gray-300"
-          />
-          <label htmlFor="featured" className="text-sm font-medium">
-            Featured Project
-          </label>
-        </div>
-      </div>
+            <div className="space-y-2">
+              <Label htmlFor="liveUrl">Live URL</Label>
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                <Input
+                  id="liveUrl"
+                  value={projectData.liveUrl}
+                  onChange={(e) => handleInputChange('liveUrl', e.target.value)}
+                  placeholder="Enter live project URL"
+                />
+              </div>
+            </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-end">
-        <Button
-          type="submit"
-          disabled={isLoading}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6"
-        >
-          {isLoading ? 'Saving...' : project?._id ? 'Update Project' : 'Create Project'}
-        </Button>
+            <div className="space-y-2">
+              <Label htmlFor="demoUrl">Demo URL</Label>
+              <div className="flex items-center gap-2">
+                <Play className="w-4 h-4" />
+                <Input
+                  id="demoUrl"
+                  value={projectData.demoUrl}
+                  onChange={(e) => handleInputChange('demoUrl', e.target.value)}
+                  placeholder="Enter demo URL"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="downloads">Downloads</Label>
+              <div className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                <Input
+                  id="downloads"
+                  value={projectData.downloads}
+                  onChange={(e) => handleInputChange('downloads', e.target.value)}
+                  placeholder="e.g., 1.2K+"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="rating">Rating (0-5)</Label>
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                <Input
+                  id="rating"
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  value={projectData.rating}
+                  onChange={(e) => handleInputChange('rating', parseFloat(e.target.value))}
+                  placeholder="Enter rating"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image">Main Image URL</Label>
+              <div className="flex items-center gap-2">
+                <ImageIcon className="w-4 h-4" />
+                <Input
+                  id="image"
+                  value={projectData.image}
+                  onChange={(e) => handleInputChange('image', e.target.value)}
+                  placeholder="Enter main image URL"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="featured"
+                checked={projectData.featured}
+                onCheckedChange={(checked) => handleInputChange('featured', checked)}
+              />
+              <Label htmlFor="featured">Mark as Featured Project</Label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Screenshots */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Screenshots</h2>
+          
+          <div className="space-y-3">
+            {projectData.screenshots.map((screenshot, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Input
+                  value={screenshot}
+                  onChange={(e) => handleArrayFieldUpdate('screenshots', index, e.target.value)}
+                  placeholder="Enter screenshot URL"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleArrayFieldRemove('screenshots', index)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              onClick={() => handleArrayFieldAdd('screenshots')}
+              className="w-full"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Screenshot
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Action Buttons */}
+      <div className="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-700">
+        <Link href="/admin/projects">
+          <Button variant="ghost" className="gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Projects
+          </Button>
+        </Link>
+
+        <div className="flex gap-4">
+          <Button
+            variant="outline"
+            className="gap-2"
+          >
+            <Eye className="w-4 h-4" />
+            Preview
+          </Button>
+
+          <Button
+            onClick={handleSave}
+            disabled={isLoading}
+            className="gap-2"
+          >
+            {isLoading ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            {isLoading ? 'Saving...' : (isEditing ? 'Update Project' : 'Save Project')}
+          </Button>
+        </div>
       </div>
-    </form>
-  );
-} 
+    </div>
+  )
+}
+
+export default ProjectForm 

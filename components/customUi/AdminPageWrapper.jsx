@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export function AdminPageWrapper({ children, breadcrumbItems = [], title }) {
   return (
-    <div className="container mx-auto p-6">
+    <div className="">
       <div className="mb-6">
         <div className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full shadow-inner border border-gray-200 dark:border-gray-600">
           <Breadcrumb>

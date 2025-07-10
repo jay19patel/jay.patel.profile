@@ -164,19 +164,19 @@ export default function ProjectsPage() {
                 <div 
                   key={project._id} 
                   onClick={() => handleCardClick(project.slug)}
-                  className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center p-6 md:p-8 rounded-3xl border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer group ${
+                  className={`grid lg:grid-cols-2 gap-6 lg:gap-8 items-center p-4 md:p-6 rounded-2xl border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 bg-white dark:bg-gray-800 hover:shadow-2xl transition-all duration-300 cursor-pointer group ${
                     index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''
                   }`}
                 >
                   {/* Project Content */}
-                  <div className={`space-y-6 ${index % 2 === 1 ? 'lg:col-start-2' : ''}`}>
+                  <div className={`space-y-4 ${index % 2 === 1 ? 'lg:col-start-2' : ''}`}>
                     {/* Project Header */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <span className="px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 text-blue-600 dark:text-blue-400 rounded-full text-sm font-semibold border border-blue-200 dark:border-blue-700">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-3 py-1 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-semibold border border-blue-200 dark:border-blue-700">
                           {project.category}
                         </span>
-                        <span className={`px-4 py-2 rounded-full text-sm font-semibold border ${
+                        <span className={`px-3 py-1 rounded-lg text-sm font-semibold border ${
                           project.status === 'Completed' 
                             ? 'bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900 dark:to-emerald-900 text-green-600 dark:text-green-400 border-green-200 dark:border-green-700' 
                             : 'bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900 dark:to-orange-900 text-yellow-600 dark:text-yellow-400 border-yellow-200 dark:border-yellow-700'
@@ -185,24 +185,24 @@ export default function ProjectsPage() {
                         </span>
                       </div>
                       
-                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                         {project.title}
                       </h2>
                       
-                      <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-medium">
+                      <p className="text-lg text-gray-600 dark:text-gray-300 font-medium">
                         {project.subtitle}
                       </p>
                     </div>
 
                     {/* Project Description */}
-                    <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                    <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
                       {project.description}
                     </p>
 
                     {/* Project Stats */}
-                    <div className="flex flex-wrap gap-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="flex text-yellow-400 text-lg">
+                    <div className="flex flex-wrap gap-4 py-2">
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex text-yellow-400 text-base">
                           {'★'.repeat(Math.floor(project.rating))}
                         </div>
                         <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
@@ -217,21 +217,21 @@ export default function ProjectsPage() {
                     </div>
 
                     {/* Technologies */}
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <h4 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         Technologies Used
                       </h4>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {project.technologies.slice(0, 6).map((tech, techIndex) => (
                           <span
                             key={techIndex}
-                            className="px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                            className="px-2.5 py-1 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                           >
                             {tech}
                           </span>
                         ))}
                         {project.technologies.length > 6 && (
-                          <span className="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-sm font-medium">
+                          <span className="px-2.5 py-1 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-sm font-medium">
                             +{project.technologies.length - 6} more
                           </span>
                         )}
@@ -239,14 +239,14 @@ export default function ProjectsPage() {
                     </div>
 
                     {/* External Links Only */}
-                    <div className="flex flex-wrap gap-4 pt-4">
+                    <div className="flex flex-wrap gap-3 pt-2">
                       {project.githubUrl && (
                         <Button
                           variant="outline"
                           onClick={(e) => handleExternalLink(project.githubUrl, e)}
-                          className="px-6 py-3 rounded-xl font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 dark:bg-gray-200 dark:text-gray-900"
+                          className="px-4 py-2 rounded-lg font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 dark:bg-gray-200 dark:text-gray-900"
                         >
-                          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                           </svg>
                           GitHub
@@ -257,9 +257,9 @@ export default function ProjectsPage() {
                         <Button
                           variant="outline" 
                           onClick={(e) => handleExternalLink(project.liveUrl, e)}
-                          className="px-6 py-3 rounded-xl font-semibold border-2 border-green-300 dark:border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 dark:bg-gray-200 dark:text-gray-900"
+                          className="px-4 py-2 rounded-lg font-semibold border-2 border-green-300 dark:border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 dark:bg-gray-200 dark:text-gray-900"
                         >
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                           Live Demo
@@ -274,13 +274,13 @@ export default function ProjectsPage() {
                       {/* Background gradient effect */}
                       <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 rounded-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-300 blur-lg"></div>
                       
-                      {/* Main image container */}
-                      <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] rounded-2xl overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl group-hover:shadow-3xl transition-all duration-300">
+                      {/* Main image container - Updated height and aspect ratio */}
+                      <div className="relative h-48 sm:h-56 md:h-64 lg:h-[320px] rounded-2xl overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl group-hover:shadow-3xl transition-all duration-300">
                         <Image
                           src={project.image}
                           alt={project.title}
                           fill
-                          className="object-cover transition-transform duration-500"
+                          className="object-contain" // Changed to contain for better horizontal image display
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 45vw"
                         />
                         
@@ -288,28 +288,28 @@ export default function ProjectsPage() {
                         <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/10" />
                         
                         {/* Project number indicator */}
-                        <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-xl font-bold text-lg shadow-lg">
+                        <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1.5 rounded-lg font-bold text-base shadow-lg">
                           #{index + 1}
                         </div>
                         
                         {/* Rating badge */}
-                        <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-2 rounded-xl shadow-lg">
+                        <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2.5 py-1.5 rounded-lg shadow-lg">
                           <div className="flex items-center gap-1">
                             <span className="text-yellow-500">★</span>
                             <span className="text-sm font-bold text-gray-800 dark:text-gray-200">{project.rating}</span>
                           </div>
                         </div>
                         
-                        {/* Always visible project info overlay */}
+                        {/* Always visible project info overlay - Made more compact */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end">
-                          <div className="p-6 text-white w-full">
-                            <h3 className="text-xl md:text-2xl font-bold mb-2 drop-shadow-lg">{project.title}</h3>
-                            <p className="text-sm md:text-base text-gray-200 drop-shadow-md">{project.subtitle}</p>
-                            <div className="mt-3 flex items-center gap-2">
-                              <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium">
+                          <div className="p-4 text-white w-full">
+                            <h3 className="text-lg md:text-xl font-bold mb-1 drop-shadow-lg">{project.title}</h3>
+                            <p className="text-sm text-gray-200 drop-shadow-md line-clamp-2">{project.subtitle}</p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className="px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium">
                                 {project.category}
                               </span>
-                              <span className="px-3 py-1 bg-green-500/80 backdrop-blur-sm rounded-full text-xs font-medium">
+                              <span className="px-2 py-0.5 bg-green-500/80 backdrop-blur-sm rounded-full text-xs font-medium">
                                 {project.status}
                               </span>
                             </div>
