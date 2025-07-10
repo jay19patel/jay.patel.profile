@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { 
@@ -16,7 +16,9 @@ import {
   ExternalLink,
   Loader,
   CheckCircle,
-  XCircle
+  XCircle,
+  Database,
+  Image as ImageIcon
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -72,13 +74,114 @@ const BlogForm = ({ blogSlug }) => {
     { value: 'links', label: 'External Links', icon: <ExternalLink className="w-4 h-4" /> }
   ]
 
-  // Update slug when title changes
+  // Demo data
+  const demoData = {
+    title: "Complete Guide to Next.js 14: Features and Best Practices",
+    subtitle: "Master the latest features of Next.js 14 including App Router, Server Components, and more",
+    excerpt: "Explore the powerful features of Next.js 14 including the new App Router, Server Components, improved performance, and best practices for modern web development.",
+    author: "Jay Patel",
+    readTime: "8",
+    tags: ["Next.js", "React", "Web Development", "JavaScript"],
+    image: "/image-1.png",
+    category: "Web Development",
+    featured: true,
+    content: {
+      introduction: "Next.js 14 brings revolutionary changes to React development with enhanced performance, better developer experience, and powerful new features. In this comprehensive guide, we'll explore everything you need to know about Next.js 14.",
+      sections: [
+        {
+          title: "Key Features of Next.js 14",
+          type: "text",
+          content: "Next.js 14 introduces several groundbreaking features that revolutionize how we build React applications. Let's dive into the most important ones."
+        },
+        {
+          title: "New Features Overview",
+          type: "bullets",
+          items: [
+            "App Router with enhanced file-based routing",
+            "Server Components for better performance",
+            "Improved Image Optimization",
+            "Enhanced TypeScript support",
+            "Better SEO optimization tools",
+            "Streamlined API routes"
+          ]
+        },
+        {
+          title: "Performance Comparison",
+          type: "table",
+          headers: ["Feature", "Next.js 13", "Next.js 14", "Improvement"],
+          rows: [
+            ["Initial Load Time", "2.3s", "1.8s", "22% faster"],
+            ["Bundle Size", "245KB", "198KB", "19% smaller"],
+            ["Time to Interactive", "3.1s", "2.4s", "23% faster"],
+            ["SEO Score", "85/100", "94/100", "11% better"]
+          ]
+        },
+        {
+          title: "Important Note",
+          type: "note",
+          content: "Always ensure you're using the latest version of Next.js to get the best performance and security updates. Some features may require specific Node.js versions."
+        },
+        {
+          title: "Getting Started with App Router",
+          type: "text",
+          content: "The App Router is one of the most significant changes in Next.js 14. It provides a more intuitive way to organize your application structure and enables powerful features like layout persistence and nested routing."
+        },
+        {
+          title: "Useful Resources",
+          type: "links",
+          links: [
+            {
+              text: "Official Next.js 14 Documentation",
+              url: "https://nextjs.org/docs",
+              description: "Complete documentation for Next.js 14"
+            },
+            {
+              text: "Next.js GitHub Repository",
+              url: "https://github.com/vercel/next.js",
+              description: "Source code and latest updates"
+            },
+            {
+              text: "Vercel Deployment Guide",
+              url: "https://vercel.com/docs",
+              description: "Deploy your Next.js app easily"
+            }
+          ]
+        }
+      ],
+      conclusion: "Next.js 14 represents a major leap forward in React development. With its powerful features and improved performance, it's the perfect choice for building modern web applications. Start experimenting with these features today and elevate your development workflow."
+    }
+  }
+
+  // Generate slug from title - using useCallback to prevent recreation
+  const updateSlug = useCallback((title) => {
+    if (!isEditing && title) {
+      const newSlug = generateSlug(title)
+      setBlogData(prev => {
+        if (prev.slug !== newSlug) {
+          return { ...prev, slug: newSlug }
+        }
+        return prev
+      })
+    }
+  }, [isEditing])
+
+  // Update slug when title changes - removed updateSlug from dependencies
   useEffect(() => {
-    if (!isEditing) {
+    if (!isEditing && blogData.title) {
       const newSlug = generateSlug(blogData.title)
-      setBlogData(prev => ({ ...prev, slug: newSlug }))
+      if (blogData.slug !== newSlug) {
+        setBlogData(prev => ({ ...prev, slug: newSlug }))
+      }
     }
   }, [blogData.title, isEditing])
+
+  // Load demo data
+  const loadDemoData = () => {
+    setBlogData({
+      ...demoData,
+      slug: generateSlug(demoData.title)
+    })
+  }
 
   // Fetch blog data if editing
   useEffect(() => {
@@ -88,7 +191,19 @@ const BlogForm = ({ blogSlug }) => {
         try {
           const response = await getBlogBySlug(blogSlug)
           if (response.success) {
-            setBlogData(response.data)
+            // Parse content if it's a string
+            let contentData = response.data.content
+            if (typeof contentData === 'string') {
+              try {
+                contentData = JSON.parse(contentData)
+              } catch (e) {
+                contentData = { introduction: contentData, sections: [], conclusion: '' }
+              }
+            }
+            setBlogData({
+              ...response.data,
+              content: contentData
+            })
             setIsEditing(true)
           } else {
             setMessage('Failed to fetch blog data')
@@ -243,6 +358,100 @@ const BlogForm = ({ blogSlug }) => {
     }))
   }
 
+  // Handle table headers
+  const addTableHeader = (sectionIndex) => {
+    setBlogData(prev => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        sections: prev.content.sections.map((section, i) => 
+          i === sectionIndex ? { ...section, headers: [...section.headers, ''] } : section
+        )
+      }
+    }))
+  }
+
+  const updateTableHeader = (sectionIndex, headerIndex, value) => {
+    setBlogData(prev => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        sections: prev.content.sections.map((section, i) => 
+          i === sectionIndex ? {
+            ...section,
+            headers: section.headers.map((header, j) => j === headerIndex ? value : header)
+          } : section
+        )
+      }
+    }))
+  }
+
+  const removeTableHeader = (sectionIndex, headerIndex) => {
+    setBlogData(prev => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        sections: prev.content.sections.map((section, i) => 
+          i === sectionIndex ? {
+            ...section,
+            headers: section.headers.filter((_, j) => j !== headerIndex),
+            rows: section.rows.map(row => row.filter((_, j) => j !== headerIndex))
+          } : section
+        )
+      }
+    }))
+  }
+
+  // Handle table rows
+  const addTableRow = (sectionIndex) => {
+    setBlogData(prev => {
+      const section = prev.content.sections[sectionIndex]
+      const newRow = new Array(section.headers.length).fill('')
+      
+      return {
+        ...prev,
+        content: {
+          ...prev.content,
+          sections: prev.content.sections.map((section, i) => 
+            i === sectionIndex ? { ...section, rows: [...section.rows, newRow] } : section
+          )
+        }
+      }
+    })
+  }
+
+  const updateTableCell = (sectionIndex, rowIndex, cellIndex, value) => {
+    setBlogData(prev => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        sections: prev.content.sections.map((section, i) => 
+          i === sectionIndex ? {
+            ...section,
+            rows: section.rows.map((row, j) => 
+              j === rowIndex ? row.map((cell, k) => k === cellIndex ? value : cell) : row
+            )
+          } : section
+        )
+      }
+    }))
+  }
+
+  const removeTableRow = (sectionIndex, rowIndex) => {
+    setBlogData(prev => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        sections: prev.content.sections.map((section, i) => 
+          i === sectionIndex ? {
+            ...section,
+            rows: section.rows.filter((_, j) => j !== rowIndex)
+          } : section
+        )
+      }
+    }))
+  }
+
   // Handle links
   const addLink = (sectionIndex) => {
     setBlogData(prev => ({
@@ -291,48 +500,66 @@ const BlogForm = ({ blogSlug }) => {
     }))
   }
 
-  // Save or update blog post
+  // Save or update blog
   const handleSave = async () => {
     setIsLoading(true)
     setMessage('')
 
     try {
       // Validation
-      if (!blogData.title.trim()) {
-        throw new Error('Title is required')
-      }
-      if (!blogData.excerpt.trim()) {
-        throw new Error('Excerpt is required')
-      }
-      if (!blogData.content.introduction.trim()) {
-        throw new Error('Introduction is required')
+      const requiredFields = {
+        title: 'Title',
+        subtitle: 'Subtitle',
+        excerpt: 'Excerpt',
+        'content.introduction': 'Introduction'
       }
 
-      // Filter out empty tags
-      const cleanedData = {
+      const missingFields = []
+      for (const [field, label] of Object.entries(requiredFields)) {
+        const value = field.includes('.') 
+          ? blogData.content.introduction 
+          : blogData[field]
+        if (!value?.trim()) {
+          missingFields.push(label)
+        }
+      }
+
+      if (missingFields.length > 0) {
+        throw new Error(`Required fields missing: ${missingFields.join(', ')}`)
+      }
+
+      // Format content as a string
+      const formattedContent = JSON.stringify(blogData.content)
+
+      // Prepare data for submission
+      const formattedData = {
         ...blogData,
-        tags: blogData.tags.filter(tag => tag.trim() !== '')
+        content: formattedContent,
+        readTime: parseInt(blogData.readTime) || 5,
+        description: blogData.excerpt,
+        tags: blogData.tags.filter(tag => tag.trim())
       }
 
       let response
       if (isEditing) {
-        response = await updateBlog(blogData._id, cleanedData)
+        response = await updateBlog(blogData._id, formattedData)
       } else {
-        response = await createBlog(cleanedData)
+        response = await createBlog(formattedData)
       }
 
       if (response.success) {
-        setMessage(isEditing ? 'Blog updated successfully' : 'Blog created successfully')
+        setMessage(isEditing ? 'Blog post updated successfully' : 'Blog post created successfully')
         setMessageType('success')
         
         // Redirect after a short delay
         setTimeout(() => {
-          router.push('/admin/blog')
+          router.push(`/blog/${blogData.slug}`)
         }, 1500)
       } else {
         throw new Error(response.error || 'Failed to save blog post')
       }
     } catch (error) {
+      console.error('Blog save error:', error)
       setMessage(error.message)
       setMessageType('error')
     } finally {
@@ -378,6 +605,15 @@ const BlogForm = ({ blogSlug }) => {
         </Button>
 
         <div className="flex items-center gap-3">
+          <Button
+            variant="secondary"
+            onClick={loadDemoData}
+            className="flex items-center gap-2"
+            disabled={isLoading}
+          >
+            <Database className="w-4 h-4" />
+            Load Demo Data
+          </Button>
           <Button
             variant="outline"
             onClick={() => router.push(`/blog/${blogData.slug}`)}
@@ -430,7 +666,7 @@ const BlogForm = ({ blogSlug }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subtitle">Subtitle</Label>
+              <Label htmlFor="subtitle">Subtitle *</Label>
               <Input
                 id="subtitle"
                 value={blogData.subtitle}
@@ -442,7 +678,7 @@ const BlogForm = ({ blogSlug }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category">Category *</Label>
                 <Select
                   value={blogData.category}
                   onValueChange={(value) => handleInputChange('category', value)}
@@ -461,12 +697,28 @@ const BlogForm = ({ blogSlug }) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="readTime">Read Time</Label>
+                <Label htmlFor="readTime">Read Time (minutes) *</Label>
                 <Input
                   id="readTime"
+                  type="number"
+                  min="1"
                   value={blogData.readTime}
                   onChange={(e) => handleInputChange('readTime', e.target.value)}
-                  placeholder="e.g., 5 min read"
+                  placeholder="e.g., 5"
+                  className="border-gray-200 dark:border-gray-800"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image">Banner Image URL *</Label>
+              <div className="flex items-center gap-2">
+                <ImageIcon className="w-4 h-4" />
+                <Input
+                  id="image"
+                  value={blogData.image}
+                  onChange={(e) => handleInputChange('image', e.target.value)}
+                  placeholder="Enter banner image URL"
                   className="border-gray-200 dark:border-gray-800"
                 />
               </div>
@@ -538,27 +790,11 @@ const BlogForm = ({ blogSlug }) => {
       {/* Content */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Content</h2>
-            <div className="flex items-center gap-2">
-              {sectionTypes.map(type => (
-                <Button
-                  key={type.value}
-                  onClick={() => addSection(type.value)}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  {type.icon}
-                  {type.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Content</h2>
+          
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="introduction">Introduction</Label>
+              <Label htmlFor="introduction">Introduction *</Label>
               <Textarea
                 id="introduction"
                 value={blogData.content.introduction}
@@ -568,137 +804,230 @@ const BlogForm = ({ blogSlug }) => {
               />
             </div>
 
-            {/* Sections */}
-            {blogData.content.sections.map((section, index) => (
-              <Card key={index} className="border border-gray-200 dark:border-gray-800">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <Input
-                      value={section.title}
-                      onChange={(e) => updateSection(index, 'title', e.target.value)}
-                      placeholder="Section Title"
-                      className="border-gray-200 dark:border-gray-800"
-                    />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Content Sections</h3>
+                <div className="flex gap-2">
+                  {sectionTypes.map(type => (
                     <Button
-                      onClick={() => removeSection(index)}
-                      variant="ghost"
-                      size="icon"
-                      className="text-red-500 hover:text-red-600"
+                      key={type.value}
+                      onClick={() => addSection(type.value)}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
                     >
-                      <Minus className="w-4 h-4" />
+                      {type.icon}
+                      {type.label}
                     </Button>
-                  </div>
+                  ))}
+                </div>
+              </div>
 
-                  {/* Section content based on type */}
-                  {section.type === 'text' && (
-                    <Textarea
-                      value={section.content}
-                      onChange={(e) => updateSection(index, 'content', e.target.value)}
-                      placeholder="Enter text content"
-                      className="min-h-[150px] border-gray-200 dark:border-gray-800"
-                    />
-                  )}
-
-                  {section.type === 'bullets' && (
-                    <div className="space-y-3">
-                      {section.items.map((item, itemIndex) => (
-                        <div key={itemIndex} className="flex items-center gap-3">
-                          <Input
-                            value={item}
-                            onChange={(e) => updateBulletPoint(index, itemIndex, e.target.value)}
-                            placeholder="Enter bullet point"
-                            className="border-gray-200 dark:border-gray-800"
-                          />
-                          <Button
-                            onClick={() => removeBulletPoint(index, itemIndex)}
-                            variant="ghost"
-                            size="icon"
-                            className="text-red-500 hover:text-red-600"
-                            disabled={section.items.length === 1}
-                          >
-                            <Minus className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
+              {blogData.content.sections.map((section, index) => (
+                <Card key={index} className="border border-gray-200 dark:border-gray-800">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <Input
+                        value={section.title}
+                        onChange={(e) => updateSection(index, 'title', e.target.value)}
+                        placeholder="Section Title"
+                        className="border-gray-200 dark:border-gray-800"
+                      />
                       <Button
-                        onClick={() => addBulletPoint(index)}
-                        variant="outline"
-                        size="sm"
-                        className="flex items-center gap-2"
+                        onClick={() => removeSection(index)}
+                        variant="ghost"
+                        size="icon"
+                        className="text-red-500 hover:text-red-600"
                       >
-                        <Plus className="w-4 h-4" />
-                        Add Bullet Point
+                        <Minus className="w-4 h-4" />
                       </Button>
                     </div>
-                  )}
 
-                  {section.type === 'links' && (
-                    <div className="space-y-4">
-                      {section.links.map((link, linkIndex) => (
-                        <div key={linkIndex} className="space-y-3">
-                          <div className="flex items-center gap-3">
-                            <div className="flex-1">
-                              <Input
-                                value={link.text}
-                                onChange={(e) => updateLink(index, linkIndex, 'text', e.target.value)}
-                                placeholder="Link Text"
-                                className="border-gray-200 dark:border-gray-800"
-                              />
-                            </div>
-                            <div className="flex-1">
-                              <Input
-                                value={link.url}
-                                onChange={(e) => updateLink(index, linkIndex, 'url', e.target.value)}
-                                placeholder="URL"
-                                className="border-gray-200 dark:border-gray-800"
-                              />
-                            </div>
+                    {/* Section content based on type */}
+                    {section.type === 'text' && (
+                      <Textarea
+                        value={section.content || ''}
+                        onChange={(e) => updateSection(index, 'content', e.target.value)}
+                        placeholder="Enter text content"
+                        className="min-h-[150px] border-gray-200 dark:border-gray-800"
+                      />
+                    )}
+
+                    {section.type === 'bullets' && (
+                      <div className="space-y-3">
+                        {section.items?.map((item, itemIndex) => (
+                          <div key={itemIndex} className="flex items-center gap-3">
+                            <Input
+                              value={item}
+                              onChange={(e) => updateBulletPoint(index, itemIndex, e.target.value)}
+                              placeholder="Bullet point"
+                              className="border-gray-200 dark:border-gray-800"
+                            />
                             <Button
-                              onClick={() => removeLink(index, linkIndex)}
+                              onClick={() => removeBulletPoint(index, itemIndex)}
                               variant="ghost"
                               size="icon"
                               className="text-red-500 hover:text-red-600"
-                              disabled={section.links.length === 1}
+                              disabled={section.items.length === 1}
                             >
                               <Minus className="w-4 h-4" />
                             </Button>
                           </div>
-                          <Textarea
-                            value={link.description}
-                            onChange={(e) => updateLink(index, linkIndex, 'description', e.target.value)}
-                            placeholder="Link Description"
-                            className="border-gray-200 dark:border-gray-800"
-                          />
-                        </div>
-                      ))}
-                      <Button
-                        onClick={() => addLink(index)}
-                        variant="outline"
-                        size="sm"
-                        className="flex items-center gap-2"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Link
-                      </Button>
-                    </div>
-                  )}
+                        ))}
+                        <Button
+                          onClick={() => addBulletPoint(index)}
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Add Bullet Point
+                        </Button>
+                      </div>
+                    )}
 
-                  {section.type === 'note' && (
-                    <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                      <Textarea
-                        value={section.content}
-                        onChange={(e) => updateSection(index, 'content', e.target.value)}
-                        placeholder="Enter important note"
-                        className="bg-transparent border-none focus:ring-0 min-h-[100px]"
-                      />
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+                    {section.type === 'table' && (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label>Table Headers</Label>
+                          {section.headers?.map((header, headerIndex) => (
+                            <div key={headerIndex} className="flex items-center gap-3">
+                              <Input
+                                value={header}
+                                onChange={(e) => updateTableHeader(index, headerIndex, e.target.value)}
+                                placeholder="Header name"
+                                className="border-gray-200 dark:border-gray-800"
+                              />
+                              <Button
+                                onClick={() => removeTableHeader(index, headerIndex)}
+                                variant="ghost"
+                                size="icon"
+                                className="text-red-500 hover:text-red-600"
+                                disabled={section.headers.length === 1}
+                              >
+                                <Minus className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            onClick={() => addTableHeader(index)}
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Add Header
+                          </Button>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Table Rows</Label>
+                          {section.rows?.map((row, rowIndex) => (
+                            <div key={rowIndex} className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium">Row {rowIndex + 1}</span>
+                                <Button
+                                  onClick={() => removeTableRow(index, rowIndex)}
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-red-500 hover:text-red-600"
+                                  disabled={section.rows.length === 1}
+                                >
+                                  <Minus className="w-4 h-4" />
+                                  Remove Row
+                                </Button>
+                              </div>
+                              <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${section.headers?.length || 1}, 1fr)` }}>
+                                {row.map((cell, cellIndex) => (
+                                  <Input
+                                    key={cellIndex}
+                                    value={cell}
+                                    onChange={(e) => updateTableCell(index, rowIndex, cellIndex, e.target.value)}
+                                    placeholder={section.headers?.[cellIndex] || `Cell ${cellIndex + 1}`}
+                                    className="border-gray-200 dark:border-gray-800"
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                          <Button
+                            onClick={() => addTableRow(index)}
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Add Row
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {section.type === 'links' && (
+                      <div className="space-y-4">
+                        {section.links?.map((link, linkIndex) => (
+                          <div key={linkIndex} className="space-y-3 p-4 border rounded-lg">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-medium">Link {linkIndex + 1}</h4>
+                              <Button
+                                onClick={() => removeLink(index, linkIndex)}
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-500 hover:text-red-600"
+                              >
+                                <Minus className="w-4 h-4" />
+                                Remove
+                              </Button>
+                            </div>
+                            <Input
+                              value={link.text}
+                              onChange={(e) => updateLink(index, linkIndex, 'text', e.target.value)}
+                              placeholder="Link Text"
+                              className="border-gray-200 dark:border-gray-800"
+                            />
+                            <Input
+                              value={link.url}
+                              onChange={(e) => updateLink(index, linkIndex, 'url', e.target.value)}
+                              placeholder="Link URL"
+                              className="border-gray-200 dark:border-gray-800"
+                            />
+                            <Textarea
+                              value={link.description}
+                              onChange={(e) => updateLink(index, linkIndex, 'description', e.target.value)}
+                              placeholder="Link Description"
+                              className="border-gray-200 dark:border-gray-800"
+                            />
+                          </div>
+                        ))}
+                        <Button
+                          onClick={() => addLink(index)}
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Add Link
+                        </Button>
+                      </div>
+                    )}
+
+                    {section.type === 'note' && (
+                      <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                        <Textarea
+                          value={section.content || ''}
+                          onChange={(e) => updateSection(index, 'content', e.target.value)}
+                          placeholder="Enter important note"
+                          className="bg-transparent border-none focus:ring-0 min-h-[100px]"
+                        />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
 
             <div className="space-y-2">
-              <Label htmlFor="conclusion">Conclusion</Label>
+              <Label htmlFor="conclusion">Conclusion *</Label>
               <Textarea
                 id="conclusion"
                 value={blogData.content.conclusion}

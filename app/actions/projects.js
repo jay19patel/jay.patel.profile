@@ -5,11 +5,24 @@ import { join } from 'path';
 import { mkdir } from 'fs/promises';
 import Project from '@/models/Project';
 import connectDB from '@/lib/mongodb';
+import { revalidatePath } from 'next/cache';
 
-// Helper function to convert MongoDB document to plain object
+// Helper function to serialize MongoDB documents
 function serializeDocument(doc) {
   if (!doc) return null;
-  return JSON.parse(JSON.stringify(doc));
+  
+  if (Array.isArray(doc)) {
+    return doc.map(serializeDocument);
+  }
+  
+  const serialized = JSON.parse(JSON.stringify(doc));
+  
+  // Convert ObjectId to string
+  if (serialized._id) {
+    serialized._id = serialized._id.toString();
+  }
+  
+  return serialized;
 }
 
 export async function getProjectById(id) {
@@ -18,13 +31,13 @@ export async function getProjectById(id) {
     
     const project = await Project.findById(id).lean();
     if (!project) {
-      return { data: null, error: 'Project not found' };
+      return { success: false, error: 'Project not found' };
     }
-    return { data: serializeDocument(project), error: null };
+    return { success: true, data: serializeDocument(project) };
   } catch (error) {
     console.error('Error fetching project:', error);
     return { 
-      data: null, 
+      success: false, 
       error: error.message || 'Failed to fetch project'
     };
   }
@@ -36,13 +49,13 @@ export async function getProjectBySlug(slug) {
     
     const project = await Project.findOne({ slug }).lean();
     if (!project) {
-      return { data: null, error: 'Project not found' };
+      return { success: false, error: 'Project not found' };
     }
-    return { data: serializeDocument(project), error: null };
+    return { success: true, data: serializeDocument(project) };
   } catch (error) {
     console.error('Error fetching project:', error);
     return { 
-      data: null, 
+      success: false, 
       error: error.message || 'Failed to fetch project'
     };
   }
@@ -50,15 +63,13 @@ export async function getProjectBySlug(slug) {
 
 export async function getProjects() {
   try {
-    // Ensure database connection before querying
     await connectDB();
     
     const projects = await Project.find().sort({ createdAt: -1 }).lean();
-    return { data: serializeDocument(projects), error: null };
+    return { success: true, data: serializeDocument(projects) };
   } catch (error) {
     console.error('Error fetching projects:', error);
     
-    // Provide more specific error messages based on the error type
     let errorMessage = 'Failed to fetch projects';
     if (error.name === 'MongooseError' && error.message.includes('buffering timed out')) {
       errorMessage = 'Database connection timed out. Please try again.';
@@ -67,25 +78,21 @@ export async function getProjects() {
     }
     
     return { 
-      data: null, 
-      error: {
-        message: errorMessage,
-        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      }
+      success: false, 
+      error: errorMessage
     };
   }
 }
 
 export async function uploadProjectImage(formData) {
   try {
-    await connectDB(); // Ensure database connection
+    await connectDB();
     
     const file = formData.get('image');
     if (!file) {
       return { success: false, error: 'No file uploaded' };
     }
 
-    // Create uploads directory if it doesn't exist
     const uploadDir = join(process.cwd(), 'public', 'uploads');
     try {
       await mkdir(uploadDir, { recursive: true });
@@ -95,18 +102,15 @@ export async function uploadProjectImage(formData) {
       }
     }
 
-    // Generate unique filename
     const timestamp = Date.now();
     const originalName = file.name.replace(/[^a-zA-Z0-9.]/g, '');
     const filename = `${timestamp}-${originalName}`;
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Write file to uploads directory
     const filepath = join(uploadDir, filename);
     await writeFile(filepath, buffer);
 
-    // Return success with file path
     return {
       success: true,
       data: {
@@ -121,19 +125,16 @@ export async function uploadProjectImage(formData) {
 
 // Helper function to generate a unique slug
 async function generateUniqueSlug(title) {
-  // Convert title to slug format
   let slug = title.toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-  // Check if slug exists
   const existingProject = await Project.findOne({ slug });
   
   if (!existingProject) {
     return slug;
   }
 
-  // If slug exists, add a number suffix
   let counter = 1;
   let newSlug = `${slug}-${counter}`;
   
@@ -149,12 +150,10 @@ export async function createProject(data) {
   try {
     await connectDB();
     
-    // Generate unique slug if not provided or if it's "new"
     if (!data.slug || data.slug === 'new') {
       data.slug = await generateUniqueSlug(data.title);
     }
     
-    // Validate required fields
     const requiredFields = ['title', 'description', 'technologies', 'category'];
     const missingFields = requiredFields.filter(field => !data[field]);
     
@@ -165,7 +164,6 @@ export async function createProject(data) {
       };
     }
     
-    // Ensure technologies is an array
     if (!Array.isArray(data.technologies) || data.technologies.length === 0) {
       return {
         success: false,
@@ -174,8 +172,12 @@ export async function createProject(data) {
     }
     
     const project = new Project(data);
-    await project.save();
-    return { success: true, data: project };
+    const savedProject = await project.save();
+    
+    revalidatePath('/projects');
+    revalidatePath('/admin/projects');
+    
+    return { success: true, data: serializeDocument(savedProject.toObject()) };
   } catch (error) {
     console.error('Error creating project:', error);
     return { 
@@ -187,16 +189,22 @@ export async function createProject(data) {
 
 export async function updateProject(id, data) {
   try {
-    await connectDB(); // Ensure database connection
+    await connectDB();
     
     const project = await Project.findByIdAndUpdate(id, data, { 
       new: true,
-      runValidators: true // Run validation on update
-    });
+      runValidators: true
+    }).lean();
+    
     if (!project) {
       return { success: false, error: 'Project not found' };
     }
-    return { success: true, data: project };
+    
+    revalidatePath('/projects');
+    revalidatePath(`/projects/${project.slug}`);
+    revalidatePath('/admin/projects');
+    
+    return { success: true, data: serializeDocument(project) };
   } catch (error) {
     console.error('Error updating project:', error);
     return { success: false, error: 'Failed to update project' };
@@ -205,13 +213,17 @@ export async function updateProject(id, data) {
 
 export async function deleteProject(id) {
   try {
-    await connectDB(); // Ensure database connection
+    await connectDB();
     
     const project = await Project.findByIdAndDelete(id);
     if (!project) {
       return { success: false, error: 'Project not found' };
     }
-    return { success: true, data: project };
+    
+    revalidatePath('/projects');
+    revalidatePath('/admin/projects');
+    
+    return { success: true };
   } catch (error) {
     console.error('Error deleting project:', error);
     return { success: false, error: 'Failed to delete project' };

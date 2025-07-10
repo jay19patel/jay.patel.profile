@@ -2,11 +2,29 @@
 import Blog from '@/models/Blog';
 import { revalidatePath } from 'next/cache';
 
+// Helper function to serialize MongoDB documents
+function serializeDocument(doc) {
+  if (!doc) return null;
+  
+  if (Array.isArray(doc)) {
+    return doc.map(serializeDocument);
+  }
+  
+  const serialized = JSON.parse(JSON.stringify(doc));
+  
+  // Convert ObjectId to string
+  if (serialized._id) {
+    serialized._id = serialized._id.toString();
+  }
+  
+  return serialized;
+}
+
 // Get all blogs
 export async function getBlogs() {
   try {
-    const blogs = await Blog.find().sort({ publishedDate: -1 });
-    return { success: true, data: blogs };
+    const blogs = await Blog.find().sort({ publishedDate: -1 }).lean();
+    return { success: true, data: serializeDocument(blogs) };
   } catch (error) {
     console.error('Error fetching blogs:', error);
     return { success: false, error: error.message };
@@ -16,13 +34,13 @@ export async function getBlogs() {
 // Get blog by slug
 export async function getBlogBySlug(slug) {
   try {
-    const blog = await Blog.findOne({ slug });
+    const blog = await Blog.findOne({ slug }).lean();
     
     if (!blog) {
       return { success: false, error: 'Blog post not found' };
     }
 
-    return { success: true, data: blog };
+    return { success: true, data: serializeDocument(blog) };
   } catch (error) {
     console.error('Error fetching blog:', error);
     return { success: false, error: error.message };
@@ -33,10 +51,10 @@ export async function getBlogBySlug(slug) {
 export async function createBlog(blogData) {
   try {
     const blog = new Blog(blogData);
-    await blog.save();
+    const savedBlog = await blog.save();
     revalidatePath('/blog');
     revalidatePath('/admin/blog');
-    return { success: true, data: blog };
+    return { success: true, data: serializeDocument(savedBlog.toObject()) };
   } catch (error) {
     console.error('Error creating blog:', error);
     return { success: false, error: error.message };
@@ -50,7 +68,7 @@ export async function updateBlog(id, blogData) {
       id,
       { ...blogData },
       { new: true, runValidators: true }
-    );
+    ).lean();
     
     if (!blog) {
       return { success: false, error: 'Blog post not found' };
@@ -59,7 +77,7 @@ export async function updateBlog(id, blogData) {
     revalidatePath('/blog');
     revalidatePath(`/blog/${blog.slug}`);
     revalidatePath('/admin/blog');
-    return { success: true, data: blog };
+    return { success: true, data: serializeDocument(blog) };
   } catch (error) {
     console.error('Error updating blog:', error);
     return { success: false, error: error.message };
@@ -88,7 +106,6 @@ export async function deleteBlog(id) {
 
 export async function getFeaturedBlogs() {
   try {
-    
     const blogs = await Blog.find({ featured: true })
       .sort({ publishedDate: -1 })
       .limit(3)
@@ -105,7 +122,6 @@ export async function getFeaturedBlogs() {
 
 export async function getBlogsByCategory(category) {
   try {
-    
     const blogs = await Blog.find({ category })
       .sort({ publishedDate: -1 })
       .lean();

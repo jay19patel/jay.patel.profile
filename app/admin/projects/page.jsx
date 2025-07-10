@@ -24,9 +24,9 @@ export default function ProjectAdminPage() {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await getProjects();
-      if (error) throw new Error(error);
-      setProjects(data || []);
+      const response = await getProjects();
+      if (!response.success) throw new Error(response.error);
+      setProjects(response.data || []);
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast.error('Failed to fetch projects', {
@@ -114,7 +114,7 @@ export default function ProjectAdminPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push(`/admin/projects/${row.original._id}`)}
+            onClick={() => router.push(`/admin/projects/${row.original.slug}`)}
           >
             <Pencil className="h-4 w-4" />
             <span className="sr-only">Edit</span>

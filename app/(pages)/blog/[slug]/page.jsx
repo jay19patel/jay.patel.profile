@@ -7,6 +7,7 @@ import { PageSection } from '@/components/customUi/PageSection';
 import { EmptyState } from '@/components/customUi/EmptyState';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { ExternalLink, AlertCircle } from 'lucide-react';
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
@@ -16,15 +17,15 @@ export default function BlogDetailPage() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const { data, error } = await getBlogBySlug(slug);
-        if (error) {
+        const response = await getBlogBySlug(slug);
+        if (!response.success) {
           toast.error('Failed to fetch blog post', {
-            description: error || 'Please try again later',
+            description: response.error || 'Please try again later',
             duration: 5000,
           });
           return;
         }
-        setBlog(data);
+        setBlog(response.data);
       } catch (error) {
         console.error('Error fetching blog:', error);
         toast.error('Failed to fetch blog post', {
@@ -38,6 +39,143 @@ export default function BlogDetailPage() {
 
     fetchBlog();
   }, [slug]);
+
+  // Parse content if it's a string
+  const parseContent = (content) => {
+    if (typeof content === 'string') {
+      try {
+        return JSON.parse(content);
+      } catch (e) {
+        return { introduction: content, sections: [], conclusion: '' };
+      }
+    }
+    return content;
+  };
+
+  // Render section content based on type
+  const renderSection = (section, index) => {
+    switch (section.type) {
+      case 'text':
+        return (
+          <div key={index} className="prose prose-lg dark:prose-invert max-w-none">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              {section.title}
+            </h3>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+              {section.content}
+            </p>
+          </div>
+        );
+
+      case 'bullets':
+        return (
+          <div key={index} className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {section.title}
+            </h3>
+            <ul className="space-y-2">
+              {section.items?.map((item, itemIndex) => (
+                <li key={itemIndex} className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
+                  <span className="text-gray-700 dark:text-gray-300">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+
+      case 'table':
+        return (
+          <div key={index} className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {section.title}
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+                <thead className="bg-gray-50 dark:bg-gray-800">
+                  <tr>
+                    {section.headers?.map((header, headerIndex) => (
+                      <th
+                        key={headerIndex}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700"
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                  {section.rows?.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {row.map((cell, cellIndex) => (
+                        <td
+                          key={cellIndex}
+                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                        >
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+
+      case 'note':
+        return (
+          <div key={index} className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {section.title}
+            </h3>
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-6 rounded-r-lg">
+              <div className="flex items-start">
+                <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5 mr-3 flex-shrink-0" />
+                <p className="text-yellow-800 dark:text-yellow-200 whitespace-pre-wrap">
+                  {section.content}
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'links':
+        return (
+          <div key={index} className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {section.title}
+            </h3>
+            <div className="grid gap-4">
+              {section.links?.map((link, linkIndex) => (
+                <a
+                  key={linkIndex}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors group"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 mb-1">
+                        {link.text}
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {link.description}
+                      </p>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-500 ml-2 flex-shrink-0" />
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   if (isLoading) {
     return (
@@ -59,31 +197,20 @@ export default function BlogDetailPage() {
     );
   }
 
-  const headerProps = {
-    showBreadcrumb: true,
-    breadcrumbItems: [
-      { label: "Home", href: "/" },
-      { label: "Blog", href: "/blog" },
-      { label: blog.title }
-    ],
-    headline: ["Blog", "Post", "Details"],
-    description: blog.subtitle,
-    centerTitle: blog.category,
-    centerSubtitle: "Article",
-    stats: [
-      { count: new Date(blog.publishedDate).toLocaleDateString(), label: "Published", color: "blue" },
-      { count: `${blog.readTime}min`, label: "Read Time", color: "purple" },
-      { count: blog.author, label: "Author", color: "green" }
-    ],
-    centerIcon: (
-      <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15" />
-      </svg>
-    )
-  };
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: blog.title }
+  ];
+
+  const parsedContent = parseContent(blog.content);
 
   return (
-    <PageSection {...headerProps}>
+    <PageSection 
+    showHeader={false}
+    showBreadcrumb={true}
+    breadcrumbItems={breadcrumbItems}
+    >
       <article className="max-w-4xl mx-auto space-y-8">
         {/* Featured Image */}
         <div className="relative h-[400px] rounded-2xl overflow-hidden">
@@ -160,9 +287,35 @@ export default function BlogDetailPage() {
         )}
 
         {/* Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          {blog.content}
+        <div className="space-y-8">
+          {/* Introduction */}
+          {parsedContent?.introduction && (
+            <div className="prose prose-lg dark:prose-invert max-w-none">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Introduction
+              </h2>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg whitespace-pre-wrap">
+                {parsedContent.introduction}
+              </p>
+            </div>
+          )}
+
+          {/* Sections */}
+          {parsedContent?.sections?.map((section, index) => renderSection(section, index))}
+
+          {/* Conclusion */}
+          {parsedContent?.conclusion && (
+            <div className="prose prose-lg dark:prose-invert max-w-none">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Conclusion
+              </h2>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg whitespace-pre-wrap">
+                {parsedContent.conclusion}
+              </p>
+            </div>
+          )}
         </div>
+
       </article>
     </PageSection>
   );

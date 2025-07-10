@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { 
@@ -19,7 +19,8 @@ import {
   Image as ImageIcon,
   Loader,
   CheckCircle,
-  XCircle
+  XCircle,
+  Database
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -61,14 +62,6 @@ const ProjectForm = ({ projectSlug }) => {
     slug: ''
   })
 
-  // Update slug when title changes
-  useEffect(() => {
-    if (!isEditing) {
-      const newSlug = generateSlug(projectData.title)
-      setProjectData(prev => ({ ...prev, slug: newSlug }))
-    }
-  }, [projectData.title, isEditing])
-
   const categories = [
     'Web Development',
     'Mobile Development',
@@ -83,6 +76,82 @@ const ProjectForm = ({ projectSlug }) => {
   ]
 
   const statusOptions = ['Completed', 'In Progress', 'Planned']
+
+  // Demo data
+  const demoData = {
+    title: "E-Commerce Django Store",
+    subtitle: "Full-Stack E-Commerce Website",
+    description: "A complete e-commerce platform built with Django framework during my final semester college project. Features include product catalog, shopping cart, user authentication, order management, and payment integration.",
+    introduction: "This e-commerce platform was developed as my final semester college project using Django framework with HTML templates and Jinja templating engine. The project demonstrates a complete online shopping experience with modern web development practices. Built with focus on user experience, security, and scalability.",
+    category: "E-Commerce",
+    status: "Completed",
+    rating: 4.8,
+    downloads: "1.2K+",
+    image: "/image-1.png",
+    technologies: ["Django", "Python", "HTML", "CSS", "JavaScript", "Jinja2", "SQLite", "Bootstrap"],
+    features: [
+      "User Registration & Authentication",
+      "Product Catalog with Categories",
+      "Shopping Cart & Wishlist",
+      "Order Management System",
+      "Payment Gateway Integration",
+      "Admin Dashboard",
+      "Search & Filter Functionality",
+      "Responsive Design"
+    ],
+    screenshots: [
+      "/image-1.png",
+      "/man.png"
+    ],
+    author: "Jay Patel",
+    githubUrl: "https://github.com/yourusername/django-ecommerce",
+    liveUrl: "https://django-ecommerce-demo.com",
+    demoUrl: "https://django-ecommerce-demo.com",
+    challenges: [
+      "Implementing secure payment gateway",
+      "Optimizing database queries for better performance",
+      "Creating responsive design for all devices",
+      "Managing user sessions and authentication"
+    ],
+    learnings: [
+      "Django framework architecture",
+      "Database modeling and relationships",
+      "Template inheritance with Jinja2",
+      "User authentication and authorization"
+    ],
+    featured: true
+  }
+
+  // Generate slug from title - using useCallback to prevent recreation
+  const updateSlug = useCallback((title) => {
+    if (!isEditing && title) {
+      const newSlug = generateSlug(title)
+      setProjectData(prev => {
+        if (prev.slug !== newSlug) {
+          return { ...prev, slug: newSlug }
+        }
+        return prev
+      })
+    }
+  }, [isEditing])
+
+  // Update slug when title changes - removed updateSlug from dependencies
+  useEffect(() => {
+    if (!isEditing && projectData.title) {
+      const newSlug = generateSlug(projectData.title)
+      if (projectData.slug !== newSlug) {
+        setProjectData(prev => ({ ...prev, slug: newSlug }))
+      }
+    }
+  }, [projectData.title, isEditing])
+
+  // Load demo data
+  const loadDemoData = () => {
+    setProjectData({
+      ...demoData,
+      slug: generateSlug(demoData.title)
+    })
+  }
 
   // Fetch project data if editing
   useEffect(() => {
@@ -146,24 +215,43 @@ const ProjectForm = ({ projectSlug }) => {
 
     try {
       // Validation
-      if (!projectData.title.trim()) {
-        throw new Error('Title is required')
-      }
-      if (!projectData.description.trim()) {
-        throw new Error('Description is required')
-      }
-      if (!projectData.technologies.some(tech => tech.trim())) {
-        throw new Error('At least one technology is required')
+      const requiredFields = {
+        title: 'Title',
+        description: 'Description',
+        category: 'Category'
       }
 
-      // Filter out empty array items
+      const missingFields = []
+      for (const [field, label] of Object.entries(requiredFields)) {
+        if (!projectData[field]?.trim()) {
+          missingFields.push(label)
+        }
+      }
+
+      // Check arrays
+      if (!projectData.technologies.some(tech => tech.trim())) {
+        missingFields.push('At least one technology')
+      }
+
+      if (missingFields.length > 0) {
+        throw new Error(`Required fields missing: ${missingFields.join(', ')}`)
+      }
+
+      // Clean up arrays by removing empty items
       const cleanedData = {
         ...projectData,
         technologies: projectData.technologies.filter(tech => tech.trim()),
         features: projectData.features.filter(feature => feature.trim()),
         challenges: projectData.challenges.filter(challenge => challenge.trim()),
         learnings: projectData.learnings.filter(learning => learning.trim()),
-        screenshots: projectData.screenshots.filter(screenshot => screenshot.trim())
+        screenshots: projectData.screenshots.filter(screenshot => screenshot.trim()),
+        // Add a default content if not provided
+        content: projectData.description,
+        // Ensure image has a value
+        image: projectData.image || '/image-1.png',
+        // Ensure numeric fields are numbers
+        rating: parseFloat(projectData.rating) || 0,
+        downloads: projectData.downloads?.toString() || '0'
       }
 
       let response
@@ -179,12 +267,13 @@ const ProjectForm = ({ projectSlug }) => {
         
         // Redirect after a short delay
         setTimeout(() => {
-          router.push('/admin/projects')
+          router.push(`/projects/${projectData.slug}`)
         }, 1500)
       } else {
         throw new Error(response.error || 'Failed to save project')
       }
     } catch (error) {
+      console.error('Project save error:', error)
       setMessage(error.message)
       setMessageType('error')
     } finally {
@@ -230,6 +319,15 @@ const ProjectForm = ({ projectSlug }) => {
         </Button>
 
         <div className="flex items-center gap-3">
+          <Button
+            variant="secondary"
+            onClick={loadDemoData}
+            className="flex items-center gap-2"
+            disabled={isLoading}
+          >
+            <Database className="w-4 h-4" />
+            Load Demo Data
+          </Button>
           <Button
             variant="outline"
             onClick={() => router.push(`/projects/${projectData.slug}`)}
@@ -294,7 +392,7 @@ const ProjectForm = ({ projectSlug }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category">Category *</Label>
                 <Select
                   value={projectData.category}
                   onValueChange={(value) => handleInputChange('category', value)}
@@ -339,7 +437,7 @@ const ProjectForm = ({ projectSlug }) => {
                 value={projectData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Enter project description"
-                className="min-h-[100px] border-gray-200 dark:border-gray-800"
+                className="min-h-[120px] border-gray-200 dark:border-gray-800"
               />
             </div>
 
@@ -349,9 +447,57 @@ const ProjectForm = ({ projectSlug }) => {
                 id="introduction"
                 value={projectData.introduction}
                 onChange={(e) => handleInputChange('introduction', e.target.value)}
-                placeholder="Enter project introduction"
-                className="min-h-[150px] border-gray-200 dark:border-gray-800"
+                placeholder="Enter detailed project introduction"
+                className="min-h-[120px] border-gray-200 dark:border-gray-800"
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="rating">Rating (0-5)</Label>
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4" />
+                  <Input
+                    id="rating"
+                    type="number"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    value={projectData.rating}
+                    onChange={(e) => handleInputChange('rating', parseFloat(e.target.value))}
+                    placeholder="Enter rating"
+                    className="border-gray-200 dark:border-gray-800"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="downloads">Downloads</Label>
+                <div className="flex items-center gap-2">
+                  <Download className="w-4 h-4" />
+                  <Input
+                    id="downloads"
+                    value={projectData.downloads}
+                    onChange={(e) => handleInputChange('downloads', e.target.value)}
+                    placeholder="e.g., 1.2K+"
+                    className="border-gray-200 dark:border-gray-800"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image">Main Image URL</Label>
+              <div className="flex items-center gap-2">
+                <ImageIcon className="w-4 h-4" />
+                <Input
+                  id="image"
+                  value={projectData.image}
+                  onChange={(e) => handleInputChange('image', e.target.value)}
+                  placeholder="Enter main image URL"
+                  className="border-gray-200 dark:border-gray-800"
+                />
+              </div>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -366,153 +512,12 @@ const ProjectForm = ({ projectSlug }) => {
         </CardContent>
       </Card>
 
-      {/* Technologies */}
+      {/* Project Links */}
       <Card>
         <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Technologies</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Project Links</h2>
           
-          <div className="space-y-3">
-            {projectData.technologies.map((tech, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <Input
-                  value={tech}
-                  onChange={(e) => handleArrayFieldUpdate('technologies', index, e.target.value)}
-                  placeholder="Enter technology"
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleArrayFieldRemove('technologies', index)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Minus className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-            <Button
-              variant="outline"
-              onClick={() => handleArrayFieldAdd('technologies')}
-              className="w-full"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Technology
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Features */}
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Features</h2>
-          
-          <div className="space-y-3">
-            {projectData.features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <Input
-                  value={feature}
-                  onChange={(e) => handleArrayFieldUpdate('features', index, e.target.value)}
-                  placeholder="Enter feature"
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleArrayFieldRemove('features', index)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Minus className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
-            <Button
-              variant="outline"
-              onClick={() => handleArrayFieldAdd('features')}
-              className="w-full"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Feature
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Challenges & Learnings */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Challenges</h2>
-            
-            <div className="space-y-3">
-              {projectData.challenges.map((challenge, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <Input
-                    value={challenge}
-                    onChange={(e) => handleArrayFieldUpdate('challenges', index, e.target.value)}
-                    placeholder="Enter challenge"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleArrayFieldRemove('challenges', index)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                variant="outline"
-                onClick={() => handleArrayFieldAdd('challenges')}
-                className="w-full"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Challenge
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Learnings</h2>
-            
-            <div className="space-y-3">
-              {projectData.learnings.map((learning, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <Input
-                    value={learning}
-                    onChange={(e) => handleArrayFieldUpdate('learnings', index, e.target.value)}
-                    placeholder="Enter learning"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleArrayFieldRemove('learnings', index)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                variant="outline"
-                onClick={() => handleArrayFieldAdd('learnings')}
-                className="w-full"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Learning
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* URLs & Stats */}
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">URLs & Statistics</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <div className="space-y-2">
               <Label htmlFor="githubUrl">GitHub URL</Label>
               <div className="flex items-center gap-2">
@@ -521,7 +526,8 @@ const ProjectForm = ({ projectSlug }) => {
                   id="githubUrl"
                   value={projectData.githubUrl}
                   onChange={(e) => handleInputChange('githubUrl', e.target.value)}
-                  placeholder="Enter GitHub repository URL"
+                  placeholder="https://github.com/username/repo"
+                  className="border-gray-200 dark:border-gray-800"
                 />
               </div>
             </div>
@@ -534,7 +540,8 @@ const ProjectForm = ({ projectSlug }) => {
                   id="liveUrl"
                   value={projectData.liveUrl}
                   onChange={(e) => handleInputChange('liveUrl', e.target.value)}
-                  placeholder="Enter live project URL"
+                  placeholder="https://yourproject.com"
+                  className="border-gray-200 dark:border-gray-800"
                 />
               </div>
             </div>
@@ -547,50 +554,8 @@ const ProjectForm = ({ projectSlug }) => {
                   id="demoUrl"
                   value={projectData.demoUrl}
                   onChange={(e) => handleInputChange('demoUrl', e.target.value)}
-                  placeholder="Enter demo URL"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="downloads">Downloads</Label>
-              <div className="flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                <Input
-                  id="downloads"
-                  value={projectData.downloads}
-                  onChange={(e) => handleInputChange('downloads', e.target.value)}
-                  placeholder="e.g., 1.2K+"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="rating">Rating (0-5)</Label>
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4" />
-                <Input
-                  id="rating"
-                  type="number"
-                  min="0"
-                  max="5"
-                  step="0.1"
-                  value={projectData.rating}
-                  onChange={(e) => handleInputChange('rating', parseFloat(e.target.value))}
-                  placeholder="Enter rating"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="image">Main Image URL</Label>
-              <div className="flex items-center gap-2">
-                <ImageIcon className="w-4 h-4" />
-                <Input
-                  id="image"
-                  value={projectData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  placeholder="Enter main image URL"
+                  placeholder="https://demo.yourproject.com"
+                  className="border-gray-200 dark:border-gray-800"
                 />
               </div>
             </div>
@@ -598,37 +563,202 @@ const ProjectForm = ({ projectSlug }) => {
         </CardContent>
       </Card>
 
+      {/* Technologies */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Technologies *</h2>
+            <Button
+              onClick={() => handleArrayFieldAdd('technologies')}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Technology
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {projectData.technologies.map((tech, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Input
+                  value={tech}
+                  onChange={(e) => handleArrayFieldUpdate('technologies', index, e.target.value)}
+                  placeholder="Enter technology"
+                  className="border-gray-200 dark:border-gray-800"
+                />
+                <Button
+                  onClick={() => handleArrayFieldRemove('technologies', index)}
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={projectData.technologies.length === 1}
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Features */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Features</h2>
+            <Button
+              onClick={() => handleArrayFieldAdd('features')}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Feature
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {projectData.features.map((feature, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Input
+                  value={feature}
+                  onChange={(e) => handleArrayFieldUpdate('features', index, e.target.value)}
+                  placeholder="Enter feature"
+                  className="border-gray-200 dark:border-gray-800"
+                />
+                <Button
+                  onClick={() => handleArrayFieldRemove('features', index)}
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={projectData.features.length === 1}
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Screenshots */}
       <Card>
         <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Screenshots</h2>
-          
-          <div className="space-y-3">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Screenshots</h2>
+            <Button
+              onClick={() => handleArrayFieldAdd('screenshots')}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Screenshot
+            </Button>
+          </div>
+
+          <div className="space-y-4">
             {projectData.screenshots.map((screenshot, index) => (
               <div key={index} className="flex items-center gap-3">
                 <Input
                   value={screenshot}
                   onChange={(e) => handleArrayFieldUpdate('screenshots', index, e.target.value)}
                   placeholder="Enter screenshot URL"
+                  className="border-gray-200 dark:border-gray-800"
                 />
                 <Button
+                  onClick={() => handleArrayFieldRemove('screenshots', index)}
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleArrayFieldRemove('screenshots', index)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={projectData.screenshots.length === 1}
                 >
                   <Minus className="w-4 h-4" />
                 </Button>
               </div>
             ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Challenges */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Challenges</h2>
             <Button
+              onClick={() => handleArrayFieldAdd('challenges')}
               variant="outline"
-              onClick={() => handleArrayFieldAdd('screenshots')}
-              className="w-full"
+              size="sm"
+              className="flex items-center gap-2"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Screenshot
+              <Plus className="w-4 h-4" />
+              Add Challenge
             </Button>
+          </div>
+
+          <div className="space-y-4">
+            {projectData.challenges.map((challenge, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Textarea
+                  value={challenge}
+                  onChange={(e) => handleArrayFieldUpdate('challenges', index, e.target.value)}
+                  placeholder="Describe a challenge you faced"
+                  className="min-h-[80px] border-gray-200 dark:border-gray-800"
+                />
+                <Button
+                  onClick={() => handleArrayFieldRemove('challenges', index)}
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={projectData.challenges.length === 1}
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Learnings */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Key Learnings</h2>
+            <Button
+              onClick={() => handleArrayFieldAdd('learnings')}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Learning
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {projectData.learnings.map((learning, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Textarea
+                  value={learning}
+                  onChange={(e) => handleArrayFieldUpdate('learnings', index, e.target.value)}
+                  placeholder="Describe what you learned"
+                  className="min-h-[80px] border-gray-200 dark:border-gray-800"
+                />
+                <Button
+                  onClick={() => handleArrayFieldRemove('learnings', index)}
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={projectData.learnings.length === 1}
+                >
+                  <Minus className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>

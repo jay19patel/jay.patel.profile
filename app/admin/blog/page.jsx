@@ -25,9 +25,9 @@ export default function BlogAdminPage() {
   const fetchBlogs = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await getBlogs();
-      if (error) throw new Error(error);
-      setBlogs(data || []);
+      const response = await getBlogs();
+      if (!response.success) throw new Error(response.error);
+      setBlogs(response.data || []);
     } catch (error) {
       console.error('Error fetching blogs:', error);
       toast.error('Failed to fetch blogs', {
@@ -121,7 +121,7 @@ export default function BlogAdminPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push(`/admin/blog/${row.original._id}`)}
+            onClick={() => router.push(`/admin/blog/${row.original.slug}`)}
           >
             <Pencil className="h-4 w-4" />
             <span className="sr-only">Edit</span>
