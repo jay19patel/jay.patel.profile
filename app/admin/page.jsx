@@ -3,13 +3,33 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Star, StarOff, Loader } from 'lucide-react';
+import { 
+  MessageSquare,
+  Settings,
+  Users
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
 import { getAdminBlogs, getAdminProjects } from '@/app/actions/admin';
+import ToolkitTab from '@/components/admin/ToolkitTab';
+import SocialMediaTab from '@/components/admin/SocialMediaTab';
+import QnATab from '@/components/admin/QnATab';
 
 export default function AdminPage() {
+
+  // Admin tabs
+
+  const [activeTab, setActiveTab] = useState('toolkit');
+
+  const tabs = [
+    { id: 'toolkit', label: 'My Toolkit', icon: <Settings className="w-4 h-4" /> },
+    { id: 'social', label: 'Social Media', icon: <Users className="w-4 h-4" /> },
+    { id: 'qna', label: 'Q&A', icon: <MessageSquare className="w-4 h-4" /> },
+  ];
+
+
+
   const [stats, setStats] = useState({
     blogs: { total: 0, active: 0 },
     projects: { total: 0, active: 0 }
@@ -176,6 +196,49 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
+
+
+
+        {/* Tabs */}
+
+        <div className="w-full max-w-6xl mx-auto p-6  min-h-screen">
+      {/* Custom Tab Navigation */}
+      <div className="mb-8">
+        <div className="flex items-center justify-center mb-6">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
+            Portfolio Manager
+          </h1>
+        </div>
+        
+        <div className="flex justify-center">
+          <div className="flex bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl p-1 shadow-lg border border-gray-200 dark:border-gray-700">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-md transform scale-105'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      <div className="transition-all duration-300">
+        {activeTab === 'toolkit' && <ToolkitTab />}
+        {activeTab === 'social' && <SocialMediaTab />}
+        {activeTab === 'qna' && <QnATab />}
+      </div>
+    </div>
+
+
     </AdminPageWrapper>
   );
 } 

@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "name": "YouTube",
+    "username": "@YourChannel",
+    "description": "Tech tutorials, coding walkthroughs, and web development tips",
+    "icon": "Youtube",
+    "bgColor": "bg-red-50",
+    "darkBgColor": "dark:bg-red-900/20",
+    "iconColor": "text-red-600 dark:text-red-400",
+    "buttonColor": "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
+    "followers": "2.5K+ Subscribers",
+    "link": "#"
+  },
+  {
+    "id": 2,
+    "name": "Instagram",
+    "username": "@your_insta",
+    "description": "Behind-the-scenes coding, quick tips, and tech lifestyle content",
+    "icon": "Instagram",
+    "bgColor": "bg-gradient-to-br from-purple-50 to-pink-50",
+    "darkBgColor": "dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-pink-900/20",
+    "iconColor": "text-purple-600 dark:text-purple-400",
+    "buttonColor": "bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600",
+    "followers": "1.8K+ Followers",
+    "link": "#"
+  },
+  {
+    "id": 3,
+    "name": "LinkedIn",
+    "username": "@yourname",
+    "description": "Professional insights, career tips, and industry discussions",
+    "icon": "Linkedin",
+    "bgColor": "bg-blue-50",
+    "darkBgColor": "dark:bg-blue-900/20",
+    "iconColor": "text-blue-600 dark:text-blue-400",
+    "buttonColor": "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
+    "followers": "3.2K+ Connections",
+    "link": "#"
+  },
+  {
+    "id": 4,
+    "name": "GitHub",
+    "username": "@yourusername",
+    "description": "Open source projects, code repositories, and development contributions",
+    "icon": "Github",
+    "bgColor": "bg-gray-50",
+    "darkBgColor": "dark:bg-gray-900/20",
+    "iconColor": "text-gray-800 dark:text-gray-200",
+    "buttonColor": "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
+    "followers": "500+ Repositories",
+    "link": "#"
+  }
+] 

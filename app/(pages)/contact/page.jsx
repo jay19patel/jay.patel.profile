@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react";
 import { Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,13 @@ import {
 
 export default function ContactPage() {
   const [state, handleSubmit] = useForm("jaypatel1234567890@gmail.com");
+  const [faq, setFaq] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/qna')
+      .then(res => res.json())
+      .then(data => setFaq(Array.isArray(data) ? data.filter(q => q.active) : []));
+  }, []);
 
   // Custom props for the PageSection header
   const headerProps = {
@@ -148,35 +156,21 @@ export default function ContactPage() {
               Got questions? I've got answers. Here are some common questions clients ask me.
             </p>
           </div>
-          
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border-2 border-gray-100 dark:border-gray-700 overflow-hidden">
             <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1" className="border-b border-gray-200 dark:border-gray-700">
-                <AccordionTrigger className="text-left px-8 py-6 text-lg font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  ⚡ What's your typical response time?
-                </AccordionTrigger>
-                <AccordionContent className="px-8 pb-6 text-gray-700 dark:text-gray-300 text-base leading-relaxed">
-                  I usually respond to all inquiries within 24 hours during business days. For urgent projects, I can respond much faster, often within a few hours. I believe in clear communication and keeping my clients updated throughout the entire process.
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="item-2" className="border-b border-gray-200 dark:border-gray-700">
-                <AccordionTrigger className="text-left px-8 py-6 text-lg font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  💰 What are your development rates?
-                </AccordionTrigger>
-                <AccordionContent className="px-8 pb-6 text-gray-700 dark:text-gray-300 text-base leading-relaxed">
-                  My rates vary depending on the project complexity, timeline, and specific requirements. I offer competitive pricing and can work within different budget ranges. I provide detailed quotes after understanding your project scope. Let's discuss your project details to provide you with an accurate and fair quote.
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="item-3">
-                <AccordionTrigger className="text-left px-8 py-6 text-lg font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                  🛠️ Do you provide ongoing support and maintenance?
-                </AccordionTrigger>
-                <AccordionContent className="px-8 pb-6 text-gray-700 dark:text-gray-300 text-base leading-relaxed">
-                  Absolutely! I provide comprehensive ongoing support and maintenance for all projects I develop. This includes bug fixes, security updates, feature enhancements, performance optimization, and technical support. I offer different maintenance packages to suit your needs and budget, ensuring your project stays current and secure.
-                </AccordionContent>
-              </AccordionItem>
+              {faq.length === 0 && (
+                <div className="px-8 py-8 text-gray-500 text-center">No FAQs available at the moment.</div>
+              )}
+              {faq.map((item, idx) => (
+                <AccordionItem key={item.id} value={`item-${item.id}`} className="border-b border-gray-200 dark:border-gray-700">
+                  <AccordionTrigger className="text-left px-8 py-6 text-lg font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="px-8 pb-6 text-gray-700 dark:text-gray-300 text-base leading-relaxed">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           </div>
         </div>

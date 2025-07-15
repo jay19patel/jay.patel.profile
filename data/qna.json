@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "question": "How can I contact you for a project?",
+    "answer": "You can reach out via the contact form on my website or email me directly at your@email.com.",
+    "active": true
+  },
+  {
+    "id": 2,
+    "question": "Are you available for freelance work?",
+    "answer": "Yes, I am open to freelance opportunities. Please provide project details via the contact form.",
+    "active": true
+  },
+  {
+    "id": 3,
+    "question": "What technologies do you specialize in?",
+    "answer": "I specialize in React, Next.js, Node.js, and modern web development tools.",
+    "active": true
+  }
+]
