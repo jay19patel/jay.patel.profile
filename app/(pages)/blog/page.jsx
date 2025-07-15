@@ -128,11 +128,11 @@ export default function BlogPage() {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`group relative px-6 md:px-8 py-3 md:py-4 rounded-xl transition-all duration-300 font-semibold transform hover:scale-105 hover:shadow-lg ${
-                      selectedCategory === category
-                        ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 text-white shadow-xl shadow-blue-500/25'
-                        : 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700 shadow-md'
-                    }`}
+                    className={`group relative px-6 md:px-8 py-3 md:py-4 rounded-xl transition-all duration-300 font-semibold transform hover:scale-105 hover:shadow-lg bg-white dark:bg-gray-800 border-2 text-gray-700 dark:text-gray-300 shadow-md
+                      ${selectedCategory === category
+                        ? 'border-blue-500 dark:border-blue-400'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700'}
+                    `}
                   >
                     <span className="text-sm md:text-base">{category}</span>
                     <span className={`ml-3 px-2.5 py-1 rounded-full text-xs font-bold ${

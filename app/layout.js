@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         >
           <ThemeToggle />
           <Header />
-          <main className="flex-grow w-full px-4 py-6">
+          <main className="flex-grow w-full py-6">
             {children}
           </main>
           <Footer />

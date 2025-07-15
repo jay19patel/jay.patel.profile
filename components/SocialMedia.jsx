@@ -61,10 +61,10 @@ const SocialMedia = () => {
   return (
     <section className="w-full py-16 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] relative overflow-hidden transition-colors duration-300">
       {/* Decorative Circles */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-32 h-32 border border-blue-500/20 rounded-full" />
-        <div className="absolute bottom-10 right-10 w-24 h-24 border border-blue-500/20 rounded-full" />
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 border border-blue-500/20 rounded-full" />
+      {/* Animated background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-20 h-20 bg-blue-400/10 rounded-full blur-xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-400/10 rounded-full blur-xl animate-pulse delay-1000" />
       </div>
 
       <div className="container mx-auto px-8 relative z-10">
@@ -77,11 +77,7 @@ const SocialMedia = () => {
           </div>
 
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-            Connect With Me{" "}
-            <span className="text-blue-600 dark:text-blue-400 relative">
-              Everywhere
-              <div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" />
-            </span>
+            Connect With Me <span className="text-blue-600 dark:text-blue-400 relative">Everywhere<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
           </h2>
 
           <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
@@ -97,6 +93,7 @@ const SocialMedia = () => {
               <div 
                 key={platform.id} 
                 className="group"
+                onClick={() => window.open(platform.link, '_blank')}
               >
                 <article className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 h-full flex flex-col hover:-translate-y-2">
                   {/* Platform Header */}
@@ -128,18 +125,6 @@ const SocialMedia = () => {
                     <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                       {platform.description}
                     </p>
-                  </div>
-
-                  {/* Action Button */}
-                  <div className="mt-6">
-                    <a
-                      href={platform.link}
-                      className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 ${platform.buttonColor} transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-opacity-50`}
-                    >
-                      <IconComponent className="w-4 h-4" />
-                      Follow
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
                   </div>
                 </article>
               </div>
