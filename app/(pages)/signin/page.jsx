@@ -2,14 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff, ArrowRight, Lock, Mail, Github } from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, Lock, Mail, User, Github } from 'lucide-react';
 
-const LoginPage = () => {
+const SignIn = () => {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
@@ -24,10 +27,16 @@ const LoginPage = () => {
     e.preventDefault();
     setIsLoading(true);
     
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!');
+      setIsLoading(false);
+      return;
+    }
+    
     // Simulate API call
     setTimeout(() => {
-      console.log('Login attempt:', formData);
-      alert('Login functionality would be implemented here!');
+      console.log('Signup attempt:', formData);
+      alert('Account created successfully!');
       setIsLoading(false);
     }, 1500);
   };
@@ -36,33 +45,41 @@ const LoginPage = () => {
     setShowPassword(!showPassword);
   };
 
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        
-        {/* Logo Section */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-0.5">
-              <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-1">
-              <h5 className="text-2xl font-bold text-gray-900">Framer</h5>
-              <h5 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Hub
-              </h5>
-            </div>
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your account to continue</p>
-        </div>
 
-        {/* Login Form */}
+        {/* Signup Form */}
         <div className="bg-white border border-gray-200 rounded-3xl shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             
+            {/* Name Field */}
+            <div className="space-y-2">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <User size={20} className="text-gray-400" />
+                </div>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-300 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Enter your full name"
+                />
+              </div>
+            </div>
+
             {/* Email Field */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -99,12 +116,12 @@ const LoginPage = () => {
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-300 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
                 />
                 <button
                   type="button"
@@ -120,25 +137,59 @@ const LoginPage = () => {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            {/* Confirm Password Field */}
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock size={20} className="text-gray-400" />
+                </div>
                 <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-300 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Confirm your password"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                  Remember me
-                </label>
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} className="text-gray-400 hover:text-gray-600 transition-colors" />
+                  ) : (
+                    <Eye size={20} className="text-gray-400 hover:text-gray-600 transition-colors" />
+                  )}
+                </button>
               </div>
-              <Link 
-                href="/forgot-password" 
-                className="text-sm text-indigo-600 hover:text-indigo-500 transition-colors"
-              >
-                Forgot password?
-              </Link>
+            </div>
+
+            {/* Terms Agreement */}
+            <div className="flex items-start">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                required
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mt-1"
+              />
+              <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
+                I agree to the{' '}
+                <Link href="/terms" className="text-indigo-600 hover:text-indigo-500">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-indigo-600 hover:text-indigo-500">
+                  Privacy Policy
+                </Link>
+              </label>
             </div>
 
             {/* Submit Button */}
@@ -150,11 +201,11 @@ const LoginPage = () => {
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Signing In...</span>
+                  <span>Creating Account...</span>
                 </>
               ) : (
                 <>
-                  <span>Sign In</span>
+                  <span>Create Account</span>
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
                 </>
               )}
@@ -167,11 +218,11 @@ const LoginPage = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or continue with</span>
+              <span className="px-4 bg-white text-gray-500">Or sign up with</span>
             </div>
           </div>
 
-          {/* Social Login Buttons */}
+          {/* Social Signup Buttons */}
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
@@ -195,15 +246,15 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Sign Up Link */}
+          {/* Sign In Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
+              Already have an account?{' '}
               <Link 
-                href="/signup" 
+                href="/signin" 
                 className="text-indigo-600 hover:text-indigo-500 font-medium transition-colors"
               >
-                Sign up for free
+                Sign in here
               </Link>
             </p>
           </div>
@@ -213,4 +264,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage; 
+export default SignIn; 
