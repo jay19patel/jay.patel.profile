@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from 'react'
 import Image from "next/image"
 import { PageSection } from '@/components/customUi/PageSection'
 import { 
@@ -18,18 +19,20 @@ import {
   Calendar
 } from "lucide-react"
 
-export default function AboutPage() {
-  const skills = [
-    "React.js", "Next.js", "JavaScript", "TypeScript", "Node.js", 
-    "Python", "MongoDB", "PostgreSQL", "TailwindCSS", "Docker"
-  ]
+import { getTools } from '@/app/actions/tools'
+import { getSocialMedia } from '@/app/actions/socialMedia'
 
-  const contentCreatorStats = [
-    { icon: Youtube, label: "YouTube Subscribers", value: "2.5K+", color: "text-red-500" },
-    { icon: Instagram, label: "Instagram Followers", value: "1.8K+", color: "text-purple-500" },
-    { icon: Linkedin, label: "LinkedIn Connections", value: "3.2K+", color: "text-blue-500" },
-    { icon: Github, label: "GitHub Repositories", value: "50+", color: "text-gray-700 dark:text-gray-300" }
-  ]
+
+
+export default function AboutPage() {
+
+  const [skills, setTools] = useState([])
+  const [contentCreatorStats, setSocialMedia] = useState([])
+
+  useEffect(() => {
+    getTools().then(setTools)
+    getSocialMedia().then(setSocialMedia)
+  }, [])
 
   const interests = [
     { icon: Code2, title: "Clean Code", desc: "Writing maintainable and scalable code" },
@@ -119,7 +122,6 @@ export default function AboutPage() {
               Bridging the gap between technical expertise and creative storytelling
             </p>
           </div>
-          
           <div className="grid md:grid-cols-2 gap-8">
             {/* Developer Side */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8">
@@ -129,30 +131,29 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">The Developer</h3>
               </div>
-              
               <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                 I craft digital experiences with clean, efficient code. My expertise spans full-stack development, 
                 from responsive frontends to robust backend systems. I believe in writing code that not only works 
                 but is maintainable and scalable.
               </p>
-              
               <div className="mb-6">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Core Technologies</h4>
                 <div className="flex flex-wrap gap-2">
-                  {skills.map((skill, index) => (
-                    <span key={index} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-full text-xs text-gray-700 dark:text-gray-300">
-                      {skill}
+                  {skills.map((tool, index) => (
+                    <span key={index} className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-full text-xs text-gray-700 dark:text-gray-300">
+                      {tool.icon && (
+                        <img src={tool.icon} alt={tool.name} className="w-4 h-4" />
+                      )}
+                      {tool.name}
                     </span>
                   ))}
                 </div>
               </div>
-              
               <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                 <Zap className="w-4 h-4" />
                 <span className="text-sm font-medium">Always learning, always coding</span>
               </div>
             </div>
-
             {/* Content Creator Side */}
             <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-6">
@@ -161,28 +162,27 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">The Creator</h3>
               </div>
-              
               <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                 I share my coding journey through tutorials, tips, and behind-the-scenes content. 
                 My goal is to make programming accessible and inspire others to start their tech careers. 
                 From quick tips to detailed walkthroughs, I love teaching through content.
               </p>
-              
               <div className="space-y-3 mb-6">
                 {contentCreatorStats.map((stat, index) => {
-                  const IconComponent = stat.icon
+                  // Lucide icon mapping
+                  const iconMap = { Youtube, Instagram, Linkedin, Github };
+                  const IconComponent = iconMap[stat.icon] || Users;
                   return (
                     <div key={index} className="flex items-center justify-between p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <IconComponent className={`w-5 h-5 ${stat.color}`} />
-                        <span className="text-sm text-gray-600 dark:text-gray-300">{stat.label}</span>
+                        <IconComponent className={`w-5 h-5 ${stat.iconColor || ''}`} />
+                        <span className="text-sm text-gray-600 dark:text-gray-300">{stat.name}</span>
                       </div>
-                      <span className="font-semibold text-gray-900 dark:text-white">{stat.value}</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">{stat.followers}</span>
                     </div>
                   )
                 })}
               </div>
-              
               <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
                 <Heart className="w-4 h-4" />
                 <span className="text-sm font-medium">Building community through content</span>
