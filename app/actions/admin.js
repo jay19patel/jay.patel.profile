@@ -1,6 +1,7 @@
 'use server';
 import Blog from '@/models/Blog';
 import Project from '@/models/Project';
+import Message from '@/models/Message';
 
 export async function getAdminBlogs() {
   try {
@@ -56,6 +57,29 @@ export async function getAdminProjects() {
       author: project.author
     }));
     return { success: true, data: plainProjects };
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return { success: false, error: 'Failed to fetch projects' };
+  }
+} 
+
+
+export async function getMessages() {
+  try {
+
+    
+    const messages = await Message.find({}).sort({ createdAt: -1 });
+    // Convert Mongoose documents to plain objects
+    const plainMessages = messages.map(message => ({
+      _id: message._id.toString(),
+      name: message.name,
+      email: message.email,
+      subject: message.subject,
+      message: message.message,
+      createdAt: message.createdAt.toISOString()
+      
+    }));
+    return { success: true, data: plainMessages };
   } catch (error) {
     console.error('Error fetching projects:', error);
     return { success: false, error: 'Failed to fetch projects' };

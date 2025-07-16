@@ -5,7 +5,7 @@ import { Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PageSection } from "@/components/customUi/PageSection"
-import { useForm, ValidationError } from '@formspree/react';
+import { createMessage } from '@/app/actions/messages';
 import {
   Accordion,
   AccordionContent,
@@ -14,7 +14,10 @@ import {
 } from "@/components/ui/accordion"
 
 export default function ContactPage() {
-  const [state, handleSubmit] = useForm("jaypatel1234567890@gmail.com");
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [succeeded, setSucceeded] = useState(false);
+  const [error, setError] = useState(null);
   const [faq, setFaq] = useState([]);
 
   useEffect(() => {
@@ -22,6 +25,24 @@ export default function ContactPage() {
       .then(res => res.json())
       .then(data => setFaq(Array.isArray(data) ? data.filter(q => q.active) : []));
   }, []);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    const res = await createMessage(form);
+    setSubmitting(false);
+    if (res.success) {
+      setSucceeded(true);
+      setForm({ name: '', email: '', subject: '', message: '' });
+    } else {
+      setError(res.error || 'Something went wrong. Please try again.');
+    }
+  };
 
   // Custom props for the PageSection header
   const headerProps = {
@@ -40,7 +61,7 @@ export default function ContactPage() {
     ]
   }
 
-  if (state.succeeded) {
+  if (succeeded) {
     return (
       <PageSection {...headerProps}>
         <div className="text-center py-20">
@@ -81,9 +102,10 @@ export default function ContactPage() {
                     name="name"
                     required
                     placeholder="John Doe"
+                    value={form.name}
+                    onChange={handleChange}
                     className="h-12 text-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
                   />
-                  <ValidationError prefix="Name" field="name" errors={state.errors} />
                 </div>
 
                 <div className="space-y-2">
@@ -96,9 +118,10 @@ export default function ContactPage() {
                     name="email"
                     required
                     placeholder="john@example.com"
+                    value={form.email}
+                    onChange={handleChange}
                     className="h-12 text-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
                   />
-                  <ValidationError prefix="Email" field="email" errors={state.errors} />
                 </div>
               </div>
 
@@ -112,9 +135,10 @@ export default function ContactPage() {
                   name="subject"
                   required
                   placeholder="Let's discuss about my project"
+                  value={form.subject}
+                  onChange={handleChange}
                   className="h-12 text-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
                 />
-                <ValidationError prefix="Subject" field="subject" errors={state.errors} />
               </div>
 
               <div className="space-y-2">
@@ -127,20 +151,22 @@ export default function ContactPage() {
                   rows={6}
                   required
                   placeholder="Tell me about your project requirements, goals, timeline, budget, and any specific features you need..."
+                  value={form.message}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 text-lg border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
                 />
-                <ValidationError prefix="Message" field="message" errors={state.errors} />
               </div>
 
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={state.submitting}
+                  disabled={submitting}
                   className="w-full h-14 text-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl"
                 >
                   <Send className="mr-3 h-6 w-6" />
-                  {state.submitting ? 'Sending Message...' : 'Send Message'}
+                  {submitting ? 'Sending Message...' : 'Send Message'}
                 </Button>
+                {error && <div className="text-red-600 text-center mt-2">{error}</div>}
               </div>
             </form>
           </div>

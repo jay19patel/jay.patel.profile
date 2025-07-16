@@ -6,15 +6,17 @@ import Link from 'next/link';
 import { 
   MessageSquare,
   Settings,
-  Users
+  Users,
+  Shield
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
-import { getAdminBlogs, getAdminProjects } from '@/app/actions/admin';
+import { getAdminBlogs, getAdminProjects ,getMessages} from '@/app/actions/admin';
 import ToolkitTab from '@/components/admin/ToolkitTab';
 import SocialMediaTab from '@/components/admin/SocialMediaTab';
 import QnATab from '@/components/admin/QnATab';
+import ExperienceTab from '@/components/admin/ExperienceTab';
 
 export default function AdminPage() {
 
@@ -26,6 +28,7 @@ export default function AdminPage() {
     { id: 'toolkit', label: 'My Toolkit', icon: <Settings className="w-4 h-4" /> },
     { id: 'social', label: 'Social Media', icon: <Users className="w-4 h-4" /> },
     { id: 'qna', label: 'Q&A', icon: <MessageSquare className="w-4 h-4" /> },
+    { id: 'experience', label: 'Experience', icon: <Shield className="w-4 h-4" /> },
   ];
 
 
@@ -41,9 +44,10 @@ export default function AdminPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [blogsRes, projectsRes] = await Promise.all([
+        const [blogsRes, projectsRes,messagesRes] = await Promise.all([
           getAdminBlogs(),
-          getAdminProjects()
+          getAdminProjects(),
+          getMessages(),
         ]);
 
         if (!blogsRes.success) throw new Error(blogsRes.error);
@@ -57,6 +61,10 @@ export default function AdminPage() {
           projects: {
             total: projectsRes.data.length || 0,
             active: projectsRes.data.filter(project => project.status === 'Completed')?.length || 0
+          },
+          messages: {
+            total : messagesRes.data.length || 0,
+            active: messagesRes.data.filter(message => message.is_read === false)?.length || 0
           }
         });
         setLoading(false);
@@ -141,7 +149,7 @@ export default function AdminPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Blog Stats */}
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-xl shadow-sm border border-blue-200 dark:border-blue-800">
           <div className="flex items-center justify-between mb-4">
@@ -180,6 +188,7 @@ export default function AdminPage() {
               View All
             </Link>
           </div>
+          
           <div className="flex items-center justify-between">
             <div>
               <p className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">
@@ -194,6 +203,37 @@ export default function AdminPage() {
               <p className="text-sm text-emerald-700 dark:text-emerald-300">Completed</p>
             </div>
           </div>
+          
+        </div>
+
+
+        {/* Messages Stats */}
+        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 p-6 rounded-xl shadow-sm border border-emerald-200 dark:border-emerald-800">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">Messages</h3>
+            <Link
+              href="/admin/messages"
+              className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium text-sm"
+            >
+              View All
+            </Link>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">
+                {loading ? '...' : stats.projects.total}
+              </p>
+              <p className="text-sm text-emerald-700 dark:text-emerald-300">Total Projects</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-400">
+                {loading ? '...' : stats.projects.active}
+              </p>
+              <p className="text-sm text-emerald-700 dark:text-emerald-300">Completed</p>
+            </div>
+          </div>
+          
         </div>
       </div>
 
@@ -235,6 +275,7 @@ export default function AdminPage() {
         {activeTab === 'toolkit' && <ToolkitTab />}
         {activeTab === 'social' && <SocialMediaTab />}
         {activeTab === 'qna' && <QnATab />}
+        {activeTab === 'experience' && <ExperienceTab />}
       </div>
     </div>
 
