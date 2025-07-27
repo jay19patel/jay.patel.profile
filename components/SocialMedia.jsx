@@ -59,7 +59,7 @@ const SocialMedia = () => {
   ]
 
   return (
-    <section className="w-full py-16 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] relative overflow-hidden transition-colors duration-300">
+    <section className="w-full py-16 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300">
       {/* Decorative Circles */}
       {/* Animated background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -95,7 +95,7 @@ const SocialMedia = () => {
                 className="group"
                 onClick={() => window.open(platform.link, '_blank')}
               >
-                <article className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 h-full flex flex-col hover:-translate-y-2">
+                <article className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 h-full flex flex-col transition-colors duration-200">
                   {/* Platform Header */}
                   <section className={`${platform.bgColor} ${platform.darkBgColor} rounded-xl p-6 mb-4 text-center`}>
                     <div className="flex justify-center mb-4">

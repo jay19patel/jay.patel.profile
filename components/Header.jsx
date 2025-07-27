@@ -26,7 +26,6 @@ const Header = () => {
     { name: 'Experience', href: '/experience' },
     { name: 'Services', href: '/services' },
     { name: 'Blog', href: '/blog' },
-    { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' }
   ];
 
@@ -128,7 +127,9 @@ const Header = () => {
 
           {/* CTA Button - Hidden on mobile */}
           <div className="hidden lg:block">
-          <Button>Explore Our Templates</Button>
+          <Link href="/about">
+            <Button>About Us</Button>
+          </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -211,7 +212,9 @@ const Header = () => {
                   {/* CTA Button */}
                   <div className="pt-2 pb-6">
                     <div className="w-full">
-                      <Button className='items-center'>Explore Our Templates</Button>
+                      <Link href="/about" className="w-full">
+                        <Button className='w-full items-center'>About Us</Button>
+                      </Link>
                     </div>
                   </div>
                 </div>

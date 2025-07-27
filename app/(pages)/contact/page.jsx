@@ -77,9 +77,9 @@ export default function ContactPage() {
       <div className="space-y-16">
         {/* Contact Form */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-10 border-2 border-gray-100 dark:border-gray-700 relative overflow-hidden">
-            {/* Decorative gradient line */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 md:p-10 border border-gray-200 dark:border-gray-700 relative overflow-hidden">
+            {/* Decorative accent line */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-blue-600 dark:bg-blue-500"></div>
             
             <div className="text-center mb-10">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -104,7 +104,7 @@ export default function ContactPage() {
                     placeholder="John Doe"
                     value={form.name}
                     onChange={handleChange}
-                    className="h-12 text-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
+                    className="h-12 text-lg border border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500"
                   />
                 </div>
 
@@ -120,7 +120,7 @@ export default function ContactPage() {
                     placeholder="john@example.com"
                     value={form.email}
                     onChange={handleChange}
-                    className="h-12 text-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
+                    className="h-12 text-lg border border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500"
                   />
                 </div>
               </div>
@@ -137,7 +137,7 @@ export default function ContactPage() {
                   placeholder="Let's discuss about my project"
                   value={form.subject}
                   onChange={handleChange}
-                  className="h-12 text-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
+                  className="h-12 text-lg border border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500"
                 />
               </div>
 
@@ -153,7 +153,7 @@ export default function ContactPage() {
                   placeholder="Tell me about your project requirements, goals, timeline, budget, and any specific features you need..."
                   value={form.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 text-lg border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-500"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500"
                 />
               </div>
 
@@ -161,7 +161,7 @@ export default function ContactPage() {
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="w-full h-14 text-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl"
+                  className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg"
                 >
                   <Send className="mr-3 h-6 w-6" />
                   {submitting ? 'Sending Message...' : 'Send Message'}
@@ -182,17 +182,17 @@ export default function ContactPage() {
               Got questions? I've got answers. Here are some common questions clients ask me.
             </p>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border-2 border-gray-100 dark:border-gray-700 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <Accordion type="single" collapsible className="w-full">
               {faq.length === 0 && (
-                <div className="px-8 py-8 text-gray-500 text-center">No FAQs available at the moment.</div>
+                <div className="px-6 md:px-8 py-6 md:py-8 text-gray-500 dark:text-gray-400 text-center">No FAQs available at the moment.</div>
               )}
               {faq.map((item, idx) => (
                 <AccordionItem key={item.id} value={`item-${item.id}`} className="border-b border-gray-200 dark:border-gray-700">
-                  <AccordionTrigger className="text-left px-8 py-6 text-lg font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <AccordionTrigger className="text-left px-6 md:px-8 py-4 md:py-6 text-lg font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     {item.question}
                   </AccordionTrigger>
-                  <AccordionContent className="px-8 pb-6 text-gray-700 dark:text-gray-300 text-base leading-relaxed">
+                  <AccordionContent className="px-6 md:px-8 pb-4 md:pb-6 text-gray-700 dark:text-gray-300 text-base leading-relaxed">
                     {item.answer}
                   </AccordionContent>
                 </AccordionItem>

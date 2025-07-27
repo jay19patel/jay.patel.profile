@@ -6,34 +6,31 @@ import { getFeaturedBlogs } from "@/app/actions/blogs"
 function BlogCard({ blog, onClick }) {
   return (
     <div
-      className="group cursor-pointer min-w-[320px] max-w-[320px] mx-3 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 flex flex-col hover:-translate-y-3 hover:scale-105 relative overflow-hidden"
+      className="cursor-pointer min-w-[320px] max-w-[320px] mx-3 bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 flex flex-col transition-colors duration-200 relative"
       onClick={onClick}
     >
-      {/* Gradient overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-blue-50/20 dark:to-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
       {/* Category pill */}
-      <div className="absolute -top-0 -right-0 z-20 p-1">
-        <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white dark:border-gray-800 rotate-12 transform group-hover:rotate-6 transition-transform duration-300">
+      <div className="absolute top-2 right-2 z-20">
+        <span className="bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded-lg">
           {blog.category}
         </span>
       </div>
 
       {/* Blog Image */}
       {blog.image && (
-        <div className="w-full h-40 mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 relative">
+        <div className="w-full h-40 mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 relative">
           <img
             src={blog.image || "/placeholder.svg"}
             alt={blog.title}
-            className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+            className="object-cover w-full h-full"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
       )}
 
       {/* Blog Title */}
-      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
         {blog.title}
       </h3>
 
@@ -48,7 +45,7 @@ function BlogCard({ blog, onClick }) {
           {blog.tags.slice(0, 3).map((tag, idx) => (
             <span
               key={tag + idx}
-              className="inline-block bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium px-3 py-1 rounded-full border border-blue-200 dark:border-blue-700 hover:shadow-md transition-shadow duration-200"
+              className="inline-block bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-2 py-1 rounded-lg"
             >
               #{tag}
             </span>
@@ -70,8 +67,8 @@ function BlogCard({ blog, onClick }) {
               })
             : ""}
         </span>
-        <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+          <svg className="w-3 h-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </div>
@@ -132,24 +129,19 @@ export default function RecentBlogs() {
   }
 
   return (
-    <section className="w-full py-16 max-w-7xl mx-auto bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-3xl shadow-2xl relative overflow-hidden transition-colors duration-300 mt-12">
-      {/* Animated background elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-blue-400/10 rounded-full blur-xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-400/10 rounded-full blur-xl animate-pulse delay-1000" />
-      </div>
+    <section className="w-full py-16 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg relative transition-colors duration-300">
 
       {/* Header */}
       <div className="text-center mb-12 relative z-10">
         <div className="flex items-center justify-center space-x-2 mb-4">
-          <div className="w-8 h-px bg-gradient-to-r from-blue-600 to-purple-600" />
-          <span className="text-sm font-bold tracking-wide uppercase bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+          <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">
             Recent Blogs
           </span>
-          <div className="w-8 h-px bg-gradient-to-r from-purple-600 to-blue-600" />
+          <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
         </div>
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-          Latest <span className="text-blue-600 dark:text-blue-400 relative">Posts<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
+          Latest <span className="text-blue-600 dark:text-blue-400">Posts</span>
         </h2>
         <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
           Discover my latest insights, tutorials, and thoughts on technology and development.

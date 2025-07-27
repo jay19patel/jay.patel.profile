@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from "next/image"
+import { motion } from 'framer-motion'
 import { PageSection } from '@/components/customUi/PageSection'
 import { 
   Code2, 
@@ -62,40 +63,84 @@ export default function AboutPage() {
     <PageSection {...headerProps}>
       <div className="space-y-12">
         {/* Personal Intro Section */}
-        <section className="grid lg:grid-cols-3 gap-12 items-center">
-          <div className="flex justify-center items-center lg:col-span-1">
+        <motion.section 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grid lg:grid-cols-3 gap-12 items-center"
+        >
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex justify-center items-center lg:col-span-1"
+          >
             <div className="relative">
-              <Image
-                src="/developer-image.jpg"
-                alt="Jay Patel"
-                width={250}
-                height={250}
-                className="rounded-full shadow-2xl border-8 border-white dark:border-gray-800"
-              />
-              <div className="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full border-4 border-white dark:border-gray-800 flex items-center justify-center">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Image
+                  src="/developer-image.jpg"
+                  alt="Jay Patel"
+                  width={280}
+                  height={280}
+                  className="rounded-full shadow-xl border-4 border-white dark:border-gray-700"
+                />
+              </motion.div>
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
+                className="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full border-4 border-white dark:border-gray-700 flex items-center justify-center"
+              >
                   <div className="w-4 h-4 bg-white rounded-full animate-pulse"></div>
-              </div>
+              </motion.div>
             </div>
-          </div>
-          <div className="lg:col-span-2 space-y-6 text-center lg:text-left">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-              I'm Jay Patel
-            </h2>
-            <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                <span className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="lg:col-span-2 space-y-6 text-center lg:text-left"
+          >
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white"
+            >
+              Hello, I'm{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                Jay Patel
+              </span>
+            </motion.h2>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex flex-wrap justify-center lg:justify-start gap-3"
+            >
+                <span className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-4 py-2 rounded-full text-sm font-medium">
                     <MapPin className="w-4 h-4" />
                     Valsad, Gujarat
                 </span>
-                <span className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm font-medium">
+                <span className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 px-4 py-2 rounded-full text-sm font-medium">
                     <Calendar className="w-4 h-4" />
                     Graduated 2023
                 </span>
-            </div>
-            <p className="text-gray-500 dark:text-gray-400">
-                This space is a blend of my professional work and my creative explorations. I'm passionate about building things for the web and sharing what I learn with the community.
-            </p>
-          </div>
-        </section>
+            </motion.div>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+              className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed"
+            >
+                A passionate developer and content creator who bridges the gap between technical expertise and creative storytelling. 
+                I build innovative web applications and share knowledge to inspire the next generation of developers.
+            </motion.p>
+          </motion.div>
+        </motion.section>
 
         {/* Divider */}
         <div className="w-full h-px bg-gray-200 dark:bg-gray-700"></div>

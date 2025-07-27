@@ -5,6 +5,56 @@ import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './customUi/Button';
+
+const TypewriterEffect = ({ words, loop = true, delayBetweenWords = 2000 }) => {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words[currentWordIndex];
+    
+    const handleTyping = () => {
+      if (isPaused) {
+        setTimeout(() => setIsPaused(false), delayBetweenWords);
+        return;
+      }
+
+      if (!isDeleting) {
+        // Typing effect
+        if (currentText.length < currentWord.length) {
+          setCurrentText(currentWord.slice(0, currentText.length + 1));
+        } else {
+          // Word complete, pause before deleting
+          setIsPaused(true);
+          setIsDeleting(true);
+        }
+      } else {
+        // Deleting effect
+        if (currentText.length > 0) {
+          setCurrentText(currentText.slice(0, -1));
+        } else {
+          // Deletion complete, move to next word
+          setIsDeleting(false);
+          setCurrentWordIndex((prev) => 
+            loop ? (prev + 1) % words.length : Math.min(prev + 1, words.length - 1)
+          );
+        }
+      }
+    };
+
+    const timer = setTimeout(handleTyping, isDeleting ? 100 : 150);
+    return () => clearTimeout(timer);
+  }, [currentText, currentWordIndex, isDeleting, isPaused, words, loop, delayBetweenWords]);
+
+  return (
+    <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+      {currentText}
+      <span className="animate-pulse">|</span>
+    </span>
+  );
+};
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -140,7 +190,7 @@ const HeroSection = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="w-full pt-10 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] relative overflow-hidden transition-colors duration-300"
+      className="w-full pt-6 md:pt-10 px-4 md:px-6 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
     >
       {/* Animated background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -202,85 +252,94 @@ const HeroSection = () => {
       </div>
 
         {/* Header Section */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 md:mb-16 px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
+
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors duration-300"
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors duration-300"
             >
-              Full-Stack{' '}
-              <motion.span 
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                className="text-blue-600 dark:text-blue-400"
-              >
-                Developer
-              </motion.span>
-              <br />
-              & Problem Solver
+              <TypewriterEffect 
+                words={['Developer', 'Content Creator', 'Coder', 'Problem Solver', 'UI/UX Designer']} 
+                loop={true}
+                delayBetweenWords={2000}
+              />
+              <br className="hidden sm:block" />
+              <span className="block sm:inline text-gray-600 dark:text-gray-400">Building Tomorrow</span>
             </motion.h1>
             
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-3xl mx-auto leading-relaxed transition-colors duration-300"
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-gray-600 dark:text-gray-300 text-base sm:text-lg md:text-xl mb-8 max-w-4xl mx-auto leading-relaxed transition-colors duration-300 px-2"
             >
-              Passionate about creating innovative web applications and digital solutions
-              <br />
-              that solve real-world problems with modern technologies.
+              Full-Stack Developer specializing in modern web technologies, creating scalable applications, 
+              <br className="hidden md:block" />
+              and sharing knowledge through engaging content creation and technical tutorials.
             </motion.p>
-            
-            <motion.div 
+
+            {/* Stats Section */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              className='flex justify-center'
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8 px-2"
             >
-              <Button className='items-center'>View My Projects</Button>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">50+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Projects</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">3+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-pink-600 dark:text-pink-400">10K+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Content Views</div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
 
         {/* Continuous Left to Right Infinite Carousel */}
         
-          <div className="infinite-scroll-container">
+          <div className="infinite-scroll-container mb-8 overflow-hidden">
             {/* First Set */}
             <div className="infinite-scroll-track">
               {carouselImages.map((image) => (
-                <div key={`first-${image.id}`} className={`carousel-item w-80 h-80 bg-gradient-to-br ${image.gradient} rounded-t-2xl overflow-hidden shadow-lg flex-shrink-0 relative`}>
+                <div key={`first-${image.id}`} className={`carousel-item w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br ${image.gradient} rounded-2xl overflow-hidden flex-shrink-0 relative transform hover:scale-105 transition-transform duration-300`}>
                   <img 
                     src={image.url}
                     alt={`${image.title} Technology`}
                     className="w-full h-full object-cover"
                   />
-                  <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-6`}>
+                  <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-4 md:p-6`}>
                     <div className="text-white">
-                      <div className="text-sm opacity-80 mb-1">{image.category}</div>
-                      <div className="font-bold text-xl">{image.title}</div>
+                      <div className="text-xs md:text-sm opacity-80 mb-1">{image.category}</div>
+                      <div className="font-bold text-lg md:text-xl">{image.title}</div>
                     </div>
                   </div>
                 </div>
               ))}
               {/* Duplicate Set for Infinite Effect */}
               {carouselImages.map((image) => (
-                <div key={`second-${image.id}`} className={`carousel-item w-80 h-80 bg-gradient-to-br ${image.gradient} rounded-t-2xl overflow-hidden shadow-lg flex-shrink-0 relative`}>
+                <div key={`second-${image.id}`} className={`carousel-item w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br ${image.gradient} rounded-2xl overflow-hidden flex-shrink-0 relative transform hover:scale-105 transition-transform duration-300`}>
                   <img 
                     src={image.url}
                     alt={`${image.title} Technology`}
                     className="w-full h-full object-cover"
                   />
-                  <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-6`}>
+                  <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-4 md:p-6`}>
                     <div className="text-white">
-                      <div className="text-sm opacity-80 mb-1">{image.category}</div>
-                      <div className="font-bold text-xl">{image.title}</div>
+                      <div className="text-xs md:text-sm opacity-80 mb-1">{image.category}</div>
+                      <div className="font-bold text-lg md:text-xl">{image.title}</div>
                     </div>
                   </div>
                 </div>
