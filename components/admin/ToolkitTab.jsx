@@ -55,40 +55,42 @@ export default function ToolkitTab() {
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-lg border-0 bg-white rounded-3xl">
+      <Card className="shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-3xl">
         <CardHeader className="pb-4">
-          <CardTitle className="text-xl text-gray-900">
+          <CardTitle className="text-xl text-gray-900 dark:text-white">
             My Toolkit
           </CardTitle>
-          <CardDescription className="text-sm text-gray-600">
+          <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
             Manage your favorite development tools and resources
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="tool-name">Tool Name</Label>
+              <Label htmlFor="tool-name" className="text-gray-900 dark:text-gray-200">Tool Name</Label>
               <Input
                 id="tool-name"
                 name="name"
                 value={newTool.name}
                 onChange={e => setNewTool(t => ({ ...t, name: e.target.value }))}
                 placeholder="e.g. VS Code"
+                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tool-icon">Icon Image URL</Label>
+              <Label htmlFor="tool-icon" className="text-gray-900 dark:text-gray-200">Icon Image URL</Label>
               <Input
                 id="tool-icon"
                 name="icon"
                 value={newTool.icon}
                 onChange={e => setNewTool(t => ({ ...t, icon: e.target.value }))}
                 placeholder="Paste image URL here"
+                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
               />
             </div>
           </div>
           <div className="flex items-center gap-4 mt-2">
-            <span className="text-sm text-gray-500">Preview:</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">Preview:</span>
             {newTool.icon && (
               <Image
                 src={newTool.icon}
@@ -109,14 +111,14 @@ export default function ToolkitTab() {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg border-0 bg-white rounded-3xl">
+      <Card className="shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-3xl">
         <CardHeader>
-          <CardTitle className="text-lg text-gray-900">Your Toolkit</CardTitle>
+          <CardTitle className="text-lg text-gray-900 dark:text-white">Your Toolkit</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {tools.map((tool, idx) => (
-              <div key={tool.id || idx} className="group p-4 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 space-y-2">
+              <div key={tool.id || idx} className="group p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 space-y-2">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg">
                     {tool.icon && (
@@ -130,11 +132,11 @@ export default function ToolkitTab() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0 space-y-2">
-                    <Label htmlFor={`tool-name-${idx}`}>Tool Name</Label>
+                    <Label htmlFor={`tool-name-${idx}`} className="text-gray-900 dark:text-gray-200">Tool Name</Label>
                     <Input
                       id={`tool-name-${idx}`}
                       name="name"
-                      className="mb-1 font-semibold text-gray-800"
+                      className="mb-1 font-semibold text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={tool.name}
                       onChange={e => handleChange(idx, 'name', e.target.value)}
                     />

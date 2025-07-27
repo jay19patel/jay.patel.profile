@@ -140,13 +140,20 @@ export default function ProjectAdminPage() {
       ]}
       title="Manage Projects"
     >
-      <div className="flex justify-end mb-6">
-        <Button
-          onClick={() => router.push('/admin/projects/new')}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Project
-        </Button>
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Projects</h2>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your portfolio projects and showcase</p>
+          </div>
+          <Button
+            onClick={() => router.push('/admin/projects/new')}
+            className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Project
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

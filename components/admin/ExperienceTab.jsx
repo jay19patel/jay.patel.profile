@@ -94,12 +94,12 @@ export default function ExperienceTab() {
 
   return (
     <div className="space-y-6">
-      <Card className="shadow-lg border-0 bg-white rounded-3xl">
+      <Card className="shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-3xl">
         <CardHeader className="pb-4">
-          <CardTitle className="text-xl text-gray-900">
+          <CardTitle className="text-xl text-gray-900 dark:text-white">
             Experience Management
           </CardTitle>
-          <CardDescription className="text-sm text-gray-600">
+          <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
             Manage your professional experience section
           </CardDescription>
         </CardHeader>
@@ -147,7 +147,7 @@ export default function ExperienceTab() {
             </div>
             <div className="flex items-center gap-2 mt-2">
               <Switch checked={newExp.isCurrentJob} onCheckedChange={() => setNewExp(exp => ({ ...exp, isCurrentJob: !exp.isCurrentJob }))} />
-              <span className="text-sm text-gray-600">{newExp.isCurrentJob ? 'Current' : 'Past'}</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{newExp.isCurrentJob ? 'Current' : 'Past'}</span>
             </div>
             <div className="space-y-2">
               <Label htmlFor="new-exp-location">Location</Label>
@@ -270,133 +270,133 @@ export default function ExperienceTab() {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg border-0 bg-white rounded-3xl">
+      <Card className="shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-3xl">
         <CardHeader>
-          <CardTitle className="text-lg text-gray-900">Your Experience Items</CardTitle>
+          <CardTitle className="text-lg text-gray-900 dark:text-white">Your Experience Items</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {experienceList.map((item, idx) => (
-              <div key={item.id} className="group p-4 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 space-y-2">
+              <div key={item.id} className="group p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 space-y-2">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1 min-w-0 space-y-2">
-                    <Label htmlFor={`exp-company-${idx}`}>Company</Label>
+                    <Label htmlFor={`exp-company-${idx}`} className="text-gray-900 dark:text-gray-200">Company</Label>
                     <Input
                       id={`exp-company-${idx}`}
                       name="company"
-                      className="mb-1 font-semibold text-gray-800"
+                      className="mb-1 font-semibold text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.company || ''}
                       onChange={e => handleChange(idx, 'company', e.target.value)}
                     />
-                    <Label htmlFor={`exp-position-${idx}`}>Position</Label>
+                    <Label htmlFor={`exp-position-${idx}`} className="text-gray-900 dark:text-gray-200">Position</Label>
                     <Input
                       id={`exp-position-${idx}`}
                       name="position"
-                      className="mb-1 font-semibold text-gray-800"
+                      className="mb-1 font-semibold text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.position || ''}
                       onChange={e => handleChange(idx, 'position', e.target.value)}
                     />
-                    <Label htmlFor={`exp-description-${idx}`}>Description</Label>
+                    <Label htmlFor={`exp-description-${idx}`} className="text-gray-900 dark:text-gray-200">Description</Label>
                     <Input
                       id={`exp-description-${idx}`}
                       name="description"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.description || ''}
                       onChange={e => handleChange(idx, 'description', e.target.value)}
                     />
-                    <Label htmlFor={`exp-duration-${idx}`}>Duration</Label>
+                    <Label htmlFor={`exp-duration-${idx}`} className="text-gray-900 dark:text-gray-200">Duration</Label>
                     <Input
                       id={`exp-duration-${idx}`}
                       name="duration"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.duration || ''}
                       onChange={e => handleChange(idx, 'duration', e.target.value)}
                     />
-                    <Label htmlFor={`exp-startDate-${idx}`}>Start Date</Label>
+                    <Label htmlFor={`exp-startDate-${idx}`} className="text-gray-900 dark:text-gray-200">Start Date</Label>
                     <Input
                       id={`exp-startDate-${idx}`}
                       name="startDate"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.startDate || ''}
                       onChange={e => handleChange(idx, 'startDate', e.target.value)}
                     />
-                    <Label htmlFor={`exp-endDate-${idx}`}>End Date</Label>
+                    <Label htmlFor={`exp-endDate-${idx}`} className="text-gray-900 dark:text-gray-200">End Date</Label>
                     <Input
                       id={`exp-endDate-${idx}`}
                       name="endDate"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.endDate || ''}
                       onChange={e => handleChange(idx, 'endDate', e.target.value)}
                     />
-                    <Label htmlFor={`exp-location-${idx}`}>Location</Label>
+                    <Label htmlFor={`exp-location-${idx}`} className="text-gray-900 dark:text-gray-200">Location</Label>
                     <Input
                       id={`exp-location-${idx}`}
                       name="location"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.location || ''}
                       onChange={e => handleChange(idx, 'location', e.target.value)}
                     />
-                    <Label htmlFor={`exp-workType-${idx}`}>Work Type</Label>
+                    <Label htmlFor={`exp-workType-${idx}`} className="text-gray-900 dark:text-gray-200">Work Type</Label>
                     <Input
                       id={`exp-workType-${idx}`}
                       name="workType"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.workType || ''}
                       onChange={e => handleChange(idx, 'workType', e.target.value)}
                     />
-                    <Label htmlFor={`exp-employmentType-${idx}`}>Employment Type</Label>
+                    <Label htmlFor={`exp-employmentType-${idx}`} className="text-gray-900 dark:text-gray-200">Employment Type</Label>
                     <Input
                       id={`exp-employmentType-${idx}`}
                       name="employmentType"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.employmentType || ''}
                       onChange={e => handleChange(idx, 'employmentType', e.target.value)}
                     />
-                    <Label htmlFor={`exp-category-${idx}`}>Category</Label>
+                    <Label htmlFor={`exp-category-${idx}`} className="text-gray-900 dark:text-gray-200">Category</Label>
                     <Input
                       id={`exp-category-${idx}`}
                       name="category"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.category || ''}
                       onChange={e => handleChange(idx, 'category', e.target.value)}
                     />
-                    <Label htmlFor={`exp-companyLogo-${idx}`}>Company Logo URL</Label>
+                    <Label htmlFor={`exp-companyLogo-${idx}`} className="text-gray-900 dark:text-gray-200">Company Logo URL</Label>
                     <Input
                       id={`exp-companyLogo-${idx}`}
                       name="companyLogo"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.companyLogo || ''}
                       onChange={e => handleChange(idx, 'companyLogo', e.target.value)}
                     />
-                    <Label htmlFor={`exp-companyWebsite-${idx}`}>Company Website</Label>
+                    <Label htmlFor={`exp-companyWebsite-${idx}`} className="text-gray-900 dark:text-gray-200">Company Website</Label>
                     <Input
                       id={`exp-companyWebsite-${idx}`}
                       name="companyWebsite"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={item.companyWebsite || ''}
                       onChange={e => handleChange(idx, 'companyWebsite', e.target.value)}
                     />
-                    <Label htmlFor={`exp-responsibilities-${idx}`}>Responsibilities (comma separated)</Label>
+                    <Label htmlFor={`exp-responsibilities-${idx}`} className="text-gray-900 dark:text-gray-200">Responsibilities (comma separated)</Label>
                     <Input
                       id={`exp-responsibilities-${idx}`}
                       name="responsibilities"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={Array.isArray(item.responsibilities) ? item.responsibilities.join(', ') : (item.responsibilities || '')}
                       onChange={e => handleChange(idx, 'responsibilities', e.target.value.split(','))}
                     />
-                    <Label htmlFor={`exp-technologies-${idx}`}>Technologies (comma separated)</Label>
+                    <Label htmlFor={`exp-technologies-${idx}`} className="text-gray-900 dark:text-gray-200">Technologies (comma separated)</Label>
                     <Input
                       id={`exp-technologies-${idx}`}
                       name="technologies"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={Array.isArray(item.technologies) ? item.technologies.join(', ') : (item.technologies || '')}
                       onChange={e => handleChange(idx, 'technologies', e.target.value.split(','))}
                     />
-                    <Label htmlFor={`exp-achievements-${idx}`}>Achievements (comma separated)</Label>
+                    <Label htmlFor={`exp-achievements-${idx}`} className="text-gray-900 dark:text-gray-200">Achievements (comma separated)</Label>
                     <Input
                       id={`exp-achievements-${idx}`}
                       name="achievements"
-                      className="mb-1 text-gray-800"
+                      className="mb-1 text-gray-800 dark:text-white bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                       value={Array.isArray(item.achievements) ? item.achievements.join(', ') : (item.achievements || '')}
                       onChange={e => handleChange(idx, 'achievements', e.target.value.split(','))}
                     />
@@ -407,7 +407,7 @@ export default function ExperienceTab() {
                       onCheckedChange={() => handleToggle(idx, 'isCurrentJob')}
                       size="sm"
                     />
-                    <span className="text-xs text-gray-500">{item.isCurrentJob ? 'Current' : 'Past'}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">{item.isCurrentJob ? 'Current' : 'Past'}</span>
                     <Button
                       variant="ghost"
                       size="sm"

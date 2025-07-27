@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from './customUi/Button';
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -135,55 +136,117 @@ const HeroSection = () => {
   const brandIcons = [...leftBrandIcons, ...rightBrandIcons];
 
   return (
-    <section className="w-full pt-10 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] relative overflow-hidden transition-colors duration-300">
+    <motion.section 
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="w-full pt-10 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] relative overflow-hidden transition-colors duration-300"
+    >
       {/* Animated background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-blue-400/10 rounded-full blur-xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-400/10 rounded-full blur-xl animate-pulse delay-1000" />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{ 
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-10 left-10 w-20 h-20 bg-blue-400/10 rounded-full blur-xl" 
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.5, 0.2]
+          }}
+          transition={{ 
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+          className="absolute bottom-10 right-10 w-32 h-32 bg-purple-400/10 rounded-full blur-xl" 
+        />
       </div>
 
       
       {/* Floating Brand Icons */}
       <div className="absolute inset-0 pointer-events-none">
-        {brandIcons.map((brand) => (
-          <div
+        {brandIcons.map((brand, index) => (
+          <motion.div
             key={brand.id}
-            className={`absolute ${brand.position} opacity-60`}
-            style={{
-              animation: `float 6s ease-in-out infinite`,
-              animationDelay: brand.delay,
-              transform: isVisible ? 'translateY(0)' : 'translateY(100px)',
+            initial={{ opacity: 0, y: 100, scale: 0 }}
+            animate={{ 
+              opacity: 0.6, 
+              y: 0, 
+              scale: 1,
+              y: [0, -10, 0]
             }}
+            transition={{ 
+              duration: 0.8,
+              delay: index * 0.1,
+              y: {
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: index * 0.2
+              }
+            }}
+            className={`absolute ${brand.position}`}
           >
             {brand.element}
-          </div>
+          </motion.div>
         ))}
       </div>
 
         {/* Header Section */}
         <div className="text-center mb-16">
-          <div 
-            className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors duration-300">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors duration-300"
+            >
               Full-Stack{' '}
-              <span className="text-blue-600 dark:text-blue-400">
+              <motion.span 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                className="text-blue-600 dark:text-blue-400"
+              >
                 Developer
-              </span>
+              </motion.span>
               <br />
               & Problem Solver
-            </h1>
+            </motion.h1>
             
-            <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-3xl mx-auto leading-relaxed transition-colors duration-300">
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+              className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-3xl mx-auto leading-relaxed transition-colors duration-300"
+            >
               Passionate about creating innovative web applications and digital solutions
               <br />
               that solve real-world problems with modern technologies.
-            </p>
+            </motion.p>
             
-            <div className='flex justify-center'>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.9 }}
+              className='flex justify-center'
+            >
               <Button className='items-center'>View My Projects</Button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
         {/* Continuous Left to Right Infinite Carousel */}
@@ -272,7 +335,7 @@ const HeroSection = () => {
           pointer-events: none; /* No click/hover effects */
         }
       `}</style>
-    </section>
+    </motion.section>
   );
 };
 

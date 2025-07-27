@@ -111,9 +111,13 @@ export default function BlogAdminPage() {
     {
       header: 'Actions',
       cell: ({ row }) => (
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <Link href={`/blog/${row.original.slug}`} target="_blank">
-            <Button variant="ghost" size="icon">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="h-8 w-8 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
               <Eye className="h-4 w-4" />
               <span className="sr-only">View</span>
             </Button>
@@ -121,6 +125,7 @@ export default function BlogAdminPage() {
           <Button
             variant="ghost"
             size="icon"
+            className="h-8 w-8 text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
             onClick={() => router.push(`/admin/blog/${row.original.slug}`)}
           >
             <Pencil className="h-4 w-4" />
@@ -129,6 +134,7 @@ export default function BlogAdminPage() {
           <Button
             variant="ghost"
             size="icon"
+            className="h-8 w-8 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
             onClick={() => handleDelete(row.original)}
           >
             <Trash className="h-4 w-4" />
@@ -147,13 +153,20 @@ export default function BlogAdminPage() {
       ]}
       title="Manage Blog Posts"
     >
-      <div className="flex justify-end mb-6">
-        <Button
-          onClick={() => router.push('/admin/blog/new')}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Blog Post
-        </Button>
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Blog Posts</h2>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your blog content and articles</p>
+          </div>
+          <Button
+            onClick={() => router.push('/admin/blog/new')}
+            className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Blog Post
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

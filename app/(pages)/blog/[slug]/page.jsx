@@ -6,8 +6,10 @@ import { getBlogBySlug } from '@/app/actions/blogs';
 import { PageSection } from '@/components/customUi/PageSection';
 import { EmptyState } from '@/components/customUi/EmptyState';
 import Image from 'next/image';
+import Head from 'next/head';
 import { toast } from 'sonner';
 import { ExternalLink, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
@@ -205,15 +207,88 @@ export default function BlogDetailPage() {
 
   const parsedContent = parseContent(blog.content);
 
+  // SEO Meta Data
+  const blogMetadata = {
+    title: blog.title,
+    description: blog.description || blog.subtitle,
+    image: blog.image,
+    url: `https://jaypatel.dev/blog/${blog.slug}`,
+    publishedDate: blog.publishedDate,
+    author: blog.author,
+    tags: blog.tags
+  };
+
   return (
-    <PageSection 
-    showHeader={false}
-    showBreadcrumb={true}
-    breadcrumbItems={breadcrumbItems}
-    >
-      <article className="max-w-4xl mx-auto space-y-8">
+    <>
+      <Head>
+        <title>{blogMetadata.title} | Jay Patel Portfolio</title>
+        <meta name="description" content={blogMetadata.description} />
+        <meta name="keywords" content={blogMetadata.tags?.join(', ')} />
+        <meta name="author" content={blogMetadata.author} />
+        <meta name="article:published_time" content={blogMetadata.publishedDate} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={blogMetadata.title} />
+        <meta property="og:description" content={blogMetadata.description} />
+        <meta property="og:image" content={blogMetadata.image} />
+        <meta property="og:url" content={blogMetadata.url} />
+        <meta property="og:type" content="article" />
+        <meta property="article:author" content={blogMetadata.author} />
+        <meta property="article:published_time" content={blogMetadata.publishedDate} />
+        {blogMetadata.tags?.map(tag => (
+          <meta key={tag} property="article:tag" content={tag} />
+        ))}
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={blogMetadata.title} />
+        <meta name="twitter:description" content={blogMetadata.description} />
+        <meta name="twitter:image" content={blogMetadata.image} />
+        
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": blogMetadata.title,
+              "description": blogMetadata.description,
+              "image": blogMetadata.image,
+              "author": {
+                "@type": "Person",
+                "name": blogMetadata.author
+              },
+              "publisher": {
+                "@type": "Person",
+                "name": "Jay Patel"
+              },
+              "datePublished": blogMetadata.publishedDate,
+              "url": blogMetadata.url,
+              "keywords": blogMetadata.tags?.join(', ')
+            })
+          }}
+        />
+      </Head>
+      
+      <PageSection 
+        showHeader={false}
+        showBreadcrumb={true}
+        breadcrumbItems={breadcrumbItems}
+      >
+        <motion.article 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto space-y-8"
+        >
         {/* Featured Image */}
-        <div className="relative h-[400px] rounded-2xl overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative h-[400px] rounded-2xl overflow-hidden"
+        >
           <Image
             src={blog.image}
             alt={blog.title}
@@ -224,7 +299,12 @@ export default function BlogDetailPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           
           {/* Overlay Content */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="absolute bottom-0 left-0 right-0 p-6 text-white"
+          >
             <div className="flex flex-wrap gap-2 mb-4">
               <span className="px-3 py-1 bg-blue-600/80 backdrop-blur-sm rounded-lg text-sm font-medium">
                 {blog.category}
@@ -241,11 +321,16 @@ export default function BlogDetailPage() {
             <p className="text-lg md:text-xl text-gray-200 drop-shadow-md">
               {blog.subtitle}
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Meta Information */}
-        <div className="flex flex-wrap gap-6 py-4 border-y border-gray-200 dark:border-gray-800">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+          className="flex flex-wrap gap-6 py-4 border-y border-gray-200 dark:border-gray-800"
+        >
           <div className="flex items-center gap-2">
             <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -270,24 +355,37 @@ export default function BlogDetailPage() {
               By {blog.author}
             </span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Tags */}
         {blog.tags && blog.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="flex flex-wrap gap-2"
+          >
             {blog.tags.map((tag, index) => (
-              <span
+              <motion.span
                 key={index}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.9 + (index * 0.1) }}
                 className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium"
               >
                 #{tag}
-              </span>
+              </motion.span>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Content */}
-        <div className="space-y-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1 }}
+          className="space-y-8"
+        >
           {/* Introduction */}
           {parsedContent?.introduction && (
             <div className="prose prose-lg dark:prose-invert max-w-none">
@@ -314,9 +412,10 @@ export default function BlogDetailPage() {
               </p>
             </div>
           )}
-        </div>
+        </motion.div>
 
-      </article>
-    </PageSection>
+        </motion.article>
+      </PageSection>
+    </>
   );
 } 

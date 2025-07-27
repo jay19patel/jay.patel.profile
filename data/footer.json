@@ -1,0 +1,68 @@
+{
+  "company": {
+    "name": "Jay Patel",
+    "description": "Simplifying complexity, one interface at a time.",
+    "copyright": "© 2025 Jay Patel. All rights reserved."
+  },
+  "sections": [
+    {
+      "title": "Navigation",
+      "links": [
+        { "name": "Projects", "href": "/projects" },
+        { "name": "Experience", "href": "/experience" },
+        { "name": "Services", "href": "/services" },
+        { "name": "Blog", "href": "/blog" }
+      ]
+    },
+    {
+      "title": "Company", 
+      "links": [
+        { "name": "About", "href": "/about" },
+        { "name": "Contact", "href": "/contact" },
+        { "name": "Admin", "href": "/admin" }
+      ]
+    },
+    {
+      "title": "Resources",
+      "links": [
+        { "name": "GitHub", "href": "https://github.com/jaypatel", "external": true },
+        { "name": "LinkedIn", "href": "https://linkedin.com/in/jaypatel", "external": true },
+        { "name": "Resume", "href": "/resume.pdf", "external": true }
+      ]
+    },
+    {
+      "title": "Legal",
+      "links": [
+        { "name": "Privacy", "href": "/privacy" },
+        { "name": "Terms", "href": "/terms" },
+        { "name": "Cookies", "href": "/cookies" }
+      ]
+    }
+  ],
+  "socialMedia": [
+    {
+      "name": "Twitter",
+      "url": "https://twitter.com/jaypatel",
+      "icon": "Twitter"
+    },
+    {
+      "name": "Instagram", 
+      "url": "https://instagram.com/jaypatel",
+      "icon": "Instagram"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/jaypatel",
+      "icon": "Github"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://linkedin.com/in/jaypatel", 
+      "icon": "Linkedin"
+    }
+  ],
+  "developer": {
+    "name": "Jay Patel",
+    "url": "https://github.com/jaypatel"
+  }
+}
