@@ -73,7 +73,7 @@ const Header = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="hidden lg:flex items-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full px-3 py-2 shadow-[0_3px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-colors duration-300"
+          className="hidden lg:flex items-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full p-3 shadow-[0_3px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-colors duration-300"
         >
           {menuItems.map((item, index) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
