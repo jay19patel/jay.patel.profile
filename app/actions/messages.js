@@ -13,11 +13,24 @@ export async function createMessage({ name, email, subject, message }) {
   }
 }
 
-export async function getMessages() {
+export async function getMessages(page = 1, limit = 10) {
   try {
-    const res = await fetch('/api/messages')
+    const res = await fetch(`/api/messages?page=${page}&limit=${limit}`)
     return await res.json()
   } catch (error) {
     return { success: false, error: error.message }
+  }
+}
+
+export async function toggleMessageRead(id, isRead) {
+  try {
+    const res = await fetch(`/api/messages?id=${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isRead })
+    });
+    return await res.json();
+  } catch (error) {
+    return { success: false, error: error.message };
   }
 } 

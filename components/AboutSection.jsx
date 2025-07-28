@@ -15,29 +15,29 @@ const AboutSection = () => {
         <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-400/10 rounded-full blur-xl animate-pulse delay-1000" />
       </div>
       
-      <div className="container mx-auto px-8">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Image */}
-          <div className="flex justify-center">
+          <div className="flex justify-center order-2 lg:order-1">
             <div className="relative">
               <Image
                 src="/developer-image.jpg"
                 alt="Jay Patel - Software Developer"
                 width={350}
                 height={400}
-                className="rounded-2xl shadow-lg object-cover"
+                className="rounded-2xl shadow-lg object-cover w-full max-w-sm lg:max-w-none"
               />
             </div>
           </div>
 
           {/* Content */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2 text-blue-600 dark:text-blue-400">
+          <div className="space-y-4 order-1 lg:order-2 text-center lg:text-left">
+            <div className="flex items-center justify-center lg:justify-start space-x-2 text-blue-600 dark:text-blue-400">
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
               <span className="text-sm font-medium tracking-wide uppercase">About Me</span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
               Hi, I'm{" "}
               <span className="text-blue-600 dark:text-blue-400 relative">
                 Jay Patel
@@ -45,11 +45,11 @@ const AboutSection = () => {
               </span>
             </h2>
 
-            <p className="text-gray-600 dark:text-gray-300 text-lg">
+            <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
               <strong>Software Developer</strong> from Valsad, Gujarat
             </p>
 
-            <p className="text-gray-600 dark:text-gray-300 text-base">
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
               I'm a passionate software developer who graduated in 2023. I specialize in creating modern web applications and digital solutions that solve real-world problems. My journey in tech started with curiosity and has evolved into a career focused on building innovative software.
             </p>
 
@@ -73,7 +73,7 @@ const AboutSection = () => {
             </p>
 
             {/* CTA */}
-            <div className="pt-4">
+            <div className="pt-4 flex justify-center lg:justify-start">
               <Button>More About Me</Button>
             </div>
           </div>

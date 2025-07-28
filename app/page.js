@@ -5,7 +5,7 @@ import ToolsTechnologiesShowcase from '@/components/ToolsTechnologiesShowcase'
 import RecentBlogs from '@/components/RecentBlogs'
 export default function Home() {
   return (
-    <main className='w-full flex flex-col items-center justify-center gap-10'>
+    <main className='w-full flex flex-col items-center justify-center gap-6 sm:gap-8 lg:gap-10 px-4 sm:px-6 lg:px-8'>
       <HeroSection />
       <AboutSection />
       <ToolsTechnologiesShowcase />

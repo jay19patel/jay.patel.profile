@@ -71,7 +71,9 @@ const BlogForm = ({ blogSlug }) => {
     { value: 'bullets', label: 'Bullet Points', icon: <List className="w-4 h-4" /> },
     { value: 'table', label: 'Table', icon: <Table className="w-4 h-4" /> },
     { value: 'note', label: 'Important Note', icon: <AlertCircle className="w-4 h-4" /> },
-    { value: 'links', label: 'External Links', icon: <ExternalLink className="w-4 h-4" /> }
+    { value: 'links', label: 'External Links', icon: <ExternalLink className="w-4 h-4" /> },
+    { value: 'image', label: 'Image', icon: <ImageIcon className="w-4 h-4" /> },
+    { value: 'code', label: 'Code Block', icon: <Database className="w-4 h-4" /> }
   ]
 
   // Demo data
@@ -281,6 +283,15 @@ const BlogForm = ({ blogSlug }) => {
         break
       case 'links':
         newSection.links = [{ text: '', url: '', description: '' }]
+        break
+      case 'image':
+        newSection.url = ''
+        newSection.alt = ''
+        newSection.caption = ''
+        break
+      case 'code':
+        newSection.code = ''
+        newSection.language = 'javascript'
         break
     }
 
@@ -805,7 +816,7 @@ const BlogForm = ({ blogSlug }) => {
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Content Sections</h3>
                 <div className="flex gap-2">
                   {sectionTypes.map(type => (
@@ -1019,6 +1030,88 @@ const BlogForm = ({ blogSlug }) => {
                           placeholder="Enter important note"
                           className="bg-transparent border-none focus:ring-0 min-h-[100px]"
                         />
+                      </div>
+                    )}
+
+                    {section.type === 'image' && (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label>Image URL</Label>
+                          <Input
+                            value={section.url || ''}
+                            onChange={(e) => updateSection(index, 'url', e.target.value)}
+                            placeholder="Enter image URL"
+                            className="border-gray-200 dark:border-gray-800"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Alt Text</Label>
+                          <Input
+                            value={section.alt || ''}
+                            onChange={(e) => updateSection(index, 'alt', e.target.value)}
+                            placeholder="Enter alt text for accessibility"
+                            className="border-gray-200 dark:border-gray-800"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Caption (Optional)</Label>
+                          <Textarea
+                            value={section.caption || ''}
+                            onChange={(e) => updateSection(index, 'caption', e.target.value)}
+                            placeholder="Enter image caption"
+                            className="border-gray-200 dark:border-gray-800"
+                          />
+                        </div>
+                        {section.url && (
+                          <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                            <img 
+                              src={section.url} 
+                              alt={section.alt || 'Preview'} 
+                              className="max-w-full h-auto rounded"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {section.type === 'code' && (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label>Language</Label>
+                          <Select
+                            value={section.language || 'javascript'}
+                            onValueChange={(value) => updateSection(index, 'language', value)}
+                          >
+                            <SelectTrigger className="border-gray-200 dark:border-gray-800">
+                              <SelectValue placeholder="Select language" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="javascript">JavaScript</SelectItem>
+                              <SelectItem value="python">Python</SelectItem>
+                              <SelectItem value="java">Java</SelectItem>
+                              <SelectItem value="cpp">C++</SelectItem>
+                              <SelectItem value="html">HTML</SelectItem>
+                              <SelectItem value="css">CSS</SelectItem>
+                              <SelectItem value="json">JSON</SelectItem>
+                              <SelectItem value="bash">Bash</SelectItem>
+                              <SelectItem value="sql">SQL</SelectItem>
+                              <SelectItem value="tsx">TSX</SelectItem>
+                              <SelectItem value="jsx">JSX</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Code</Label>
+                          <Textarea
+                            value={section.code || ''}
+                            onChange={(e) => updateSection(index, 'code', e.target.value)}
+                            placeholder="Enter your code here..."
+                            className="min-h-[200px] font-mono text-sm border-gray-200 dark:border-gray-800"
+                          />
+                        </div>
                       </div>
                     )}
                   </CardContent>

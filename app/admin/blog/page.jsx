@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
 import { AdminTable } from '@/components/customUi/AdminTable';
 import { Button } from '@/components/ui/button';
-import { Plus, Pencil, Trash, Eye } from 'lucide-react';
+import { Plus, Pencil, Eye, Power, PowerOff } from 'lucide-react';
 import { toast } from 'sonner';
-import { getBlogs, deleteBlog } from '@/app/actions/blogs';
+import { getBlogs, toggleBlogActive } from '@/app/actions/blogs';
 import Image from 'next/image';
 import { EmptyState } from '@/components/customUi/EmptyState';
+import { Pagination } from '@/components/ui/pagination';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -16,18 +17,29 @@ export default function BlogAdminPage() {
   const router = useRouter();
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false
+  });
 
   // Fetch blogs on mount
   useEffect(() => {
     fetchBlogs();
   }, []);
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = async (page = pagination.page) => {
     try {
       setIsLoading(true);
-      const response = await getBlogs();
+      const response = await getBlogs(page, pagination.limit);
       if (!response.success) throw new Error(response.error);
       setBlogs(response.data || []);
+      if (response.pagination) {
+        setPagination(response.pagination);
+      }
     } catch (error) {
       console.error('Error fetching blogs:', error);
       toast.error('Failed to fetch blogs', {
@@ -38,19 +50,24 @@ export default function BlogAdminPage() {
     }
   };
 
-  const handleDelete = async (blog) => {
+  const handleToggleActive = async (blog) => {
+    const newStatus = !blog.isActive;
     toast.promise(
       async () => {
-        const { success, error } = await deleteBlog(blog._id);
-        if (!success) throw new Error(error || 'Failed to delete blog');
-        await fetchBlogs();
+        const { success, error } = await toggleBlogActive(blog._id, newStatus);
+        if (!success) throw new Error(error || 'Failed to update blog status');
+        await fetchBlogs(pagination.page);
       },
       {
-        loading: 'Deleting blog post...',
-        success: 'Blog post deleted successfully',
-        error: 'Failed to delete blog post'
+        loading: `${newStatus ? 'Activating' : 'Deactivating'} blog post...`,
+        success: `Blog post ${newStatus ? 'activated' : 'deactivated'} successfully`,
+        error: 'Failed to update blog status'
       }
     );
+  };
+
+  const handlePageChange = (newPage) => {
+    fetchBlogs(newPage);
   };
 
   const columns = [
@@ -109,6 +126,19 @@ export default function BlogAdminPage() {
       )
     },
     {
+      header: 'Status',
+      accessorKey: 'isActive',
+      cell: ({ row }) => (
+        <span className={`px-2 py-1 text-xs rounded-full ${
+          row.original.isActive 
+            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+        }`}>
+          {row.original.isActive ? 'Active' : 'Inactive'}
+        </span>
+      )
+    },
+    {
       header: 'Actions',
       cell: ({ row }) => (
         <div className="flex gap-1">
@@ -134,11 +164,20 @@ export default function BlogAdminPage() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-            onClick={() => handleDelete(row.original)}
+            className={`h-8 w-8 text-gray-600 dark:text-gray-400 ${
+              row.original.isActive 
+                ? 'hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+                : 'hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+            }`}
+            onClick={() => handleToggleActive(row.original)}
+            title={row.original.isActive ? 'Deactivate' : 'Activate'}
           >
-            <Trash className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
+            {row.original.isActive ? (
+              <PowerOff className="h-4 w-4" />
+            ) : (
+              <Power className="h-4 w-4" />
+            )}
+            <span className="sr-only">{row.original.isActive ? 'Deactivate' : 'Activate'}</span>
           </Button>
         </div>
       )
@@ -182,12 +221,23 @@ export default function BlogAdminPage() {
           actionHref="/admin/blog/new"
         />
       ) : (
-        <AdminTable
-          data={blogs}
-          columns={columns}
-          searchField="title"
-          searchPlaceholder="Search blog posts..."
-        />
+        <>
+          <AdminTable
+            data={blogs}
+            columns={columns}
+            searchField="title"
+            searchPlaceholder="Search blog posts..."
+          />
+          {pagination.totalPages > 1 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
+        </>
       )}
     </AdminPageWrapper>
   );

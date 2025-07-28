@@ -52,6 +52,10 @@ const blogSchema = new mongoose.Schema({
   readTime: {
     type: Number,
     required: true,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
   }
 }, {
   timestamps: true

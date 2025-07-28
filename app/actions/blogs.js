@@ -21,9 +21,9 @@ function serializeDocument(doc) {
   return serialized;
 }
 
-export async function getBlogs() {
+export async function getBlogs(page = 1, limit = 10) {
   try {
-    const res = await fetch(getApiUrl('/api/blogs'));
+    const res = await fetch(getApiUrl(`/api/blogs?page=${page}&limit=${limit}`));
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
     return data;
@@ -97,4 +97,19 @@ export async function getBlogsByCategory(category) {
   if (!all.success) return { data: null, error: { message: 'Failed to fetch blogs by category' } };
   const blogs = all.data.filter(b => b.category === category);
   return { data: blogs, error: null };
+}
+
+export async function toggleBlogActive(id, isActive) {
+  try {
+    const res = await fetch(getApiUrl(`/api/blogs?id=${encodeURIComponent(id)}`), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isActive })
+    });
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
 } 

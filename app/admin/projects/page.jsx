@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
 import { AdminTable } from '@/components/customUi/AdminTable';
 import { Button } from '@/components/ui/button';
-import { Plus, Pencil, Trash, Eye } from 'lucide-react';
+import { Plus, Pencil, Eye, Power, PowerOff } from 'lucide-react';
 import { toast } from 'sonner';
-import { getProjects, deleteProject } from '@/app/actions/projects';
+import { getProjects, toggleProjectActive } from '@/app/actions/projects';
 import { EmptyState } from '@/components/customUi/EmptyState';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -37,17 +37,18 @@ export default function ProjectAdminPage() {
     }
   };
 
-  const handleDelete = async (project) => {
+  const handleToggleActive = async (project) => {
+    const newStatus = !project.isActive;
     toast.promise(
       async () => {
-        const result = await deleteProject(project._id);
-        if (result.error) throw new Error(result.error);
+        const { success, error } = await toggleProjectActive(project._id, newStatus);
+        if (!success) throw new Error(error || 'Failed to update project status');
         await fetchProjects();
       },
       {
-        loading: 'Deleting project...',
-        success: 'Project deleted successfully',
-        error: 'Failed to delete project'
+        loading: `${newStatus ? 'Activating' : 'Deactivating'} project...`,
+        success: `Project ${newStatus ? 'activated' : 'deactivated'} successfully`,
+        error: 'Failed to update project status'
       }
     );
   };
@@ -102,6 +103,19 @@ export default function ProjectAdminPage() {
       )
     },
     {
+      header: 'Status',
+      accessorKey: 'isActive',
+      cell: ({ row }) => (
+        <span className={`px-2 py-1 text-xs rounded-full ${
+          row.original.isActive 
+            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+        }`}>
+          {row.original.isActive ? 'Active' : 'Inactive'}
+        </span>
+      )
+    },
+    {
       header: 'Actions',
       cell: ({ row }) => (
         <div className="flex gap-2">
@@ -122,10 +136,20 @@ export default function ProjectAdminPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => handleDelete(row.original)}
+            className={`text-gray-600 dark:text-gray-400 ${
+              row.original.isActive 
+                ? 'hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
+                : 'hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+            }`}
+            onClick={() => handleToggleActive(row.original)}
+            title={row.original.isActive ? 'Deactivate' : 'Activate'}
           >
-            <Trash className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
+            {row.original.isActive ? (
+              <PowerOff className="h-4 w-4" />
+            ) : (
+              <Power className="h-4 w-4" />
+            )}
+            <span className="sr-only">{row.original.isActive ? 'Deactivate' : 'Activate'}</span>
           </Button>
         </div>
       )

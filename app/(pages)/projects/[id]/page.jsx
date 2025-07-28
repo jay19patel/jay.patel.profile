@@ -55,11 +55,11 @@ const ProjectDetail = async ({ params }) => {
               </span>
             </div>
             
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
               {project.title}
             </h1>
             
-            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">
+            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
               {project.subtitle}
             </p>
             
@@ -118,11 +118,11 @@ const ProjectDetail = async ({ params }) => {
 
         {/* Introduction Section */}
         <div className="space-y-4 md:space-y-6 p-6 md:p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
             Introduction:
           </h2>
-          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
             {project.introduction}
           </p>
         </div>
@@ -130,8 +130,8 @@ const ProjectDetail = async ({ params }) => {
         {/* Project Screenshots */}
         {project.screenshots && project.screenshots.length > 0 && (
           <div className="space-y-4 md:space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-              <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-blue-500 rounded-full"></div>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div className="w-1 h-6 bg-gradient-to-b from-green-500 to-blue-500 rounded-full"></div>
               Project Screenshots:
             </h2>
             <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
@@ -156,8 +156,8 @@ const ProjectDetail = async ({ params }) => {
         {/* Features Section */}
         {project.features && project.features.length > 0 && (
           <div className="space-y-4 md:space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-              <div className="w-1 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
               Key Features:
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
@@ -174,8 +174,8 @@ const ProjectDetail = async ({ params }) => {
         {/* Technologies Used */}
         {project.technologies && project.technologies.length > 0 && (
           <div className="space-y-4 md:space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-              <div className="w-1 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <div className="w-1 h-6 bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
               Technologies Used:
             </h2>
             <div className="flex flex-wrap gap-3 md:gap-4">
@@ -196,8 +196,8 @@ const ProjectDetail = async ({ params }) => {
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             {project.challenges?.length > 0 && (
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                  <div className="w-1 h-8 bg-gradient-to-b from-red-500 to-orange-500 rounded-full"></div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                  <div className="w-1 h-6 bg-gradient-to-b from-red-500 to-orange-500 rounded-full"></div>
                   Challenges Faced:
                 </h2>
                 <div className="space-y-3">
@@ -213,8 +213,8 @@ const ProjectDetail = async ({ params }) => {
 
             {project.learnings?.length > 0 && (
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                  <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                  <div className="w-1 h-6 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full"></div>
                   Key Learnings:
                 </h2>
                 <div className="space-y-3">

@@ -158,4 +158,19 @@ export async function deleteProject(id) {
   } catch (error) {
     return { success: false, error: 'Failed to delete project: ' + error.message };
   }
+}
+
+export async function toggleProjectActive(id, isActive) {
+  try {
+    const res = await fetch(getApiUrl(`/api/projects?id=${encodeURIComponent(id)}`), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isActive })
+    });
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    return { success: false, error: 'Failed to toggle project status: ' + error.message };
+  }
 } 

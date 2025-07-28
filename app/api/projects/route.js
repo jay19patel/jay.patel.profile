@@ -84,6 +84,21 @@ export async function PUT(req) {
   }
 }
 
+export async function PATCH(req) {
+  await dbConnect();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id');
+  if (!id) return NextResponse.json({ success: false, error: 'Missing id' }, { status: 400 });
+  try {
+    const body = await req.json();
+    const project = await Project.findByIdAndUpdate(id, body, { new: true, runValidators: true }).lean();
+    if (!project) return NextResponse.json({ success: false, error: 'Project not found' }, { status: 404 });
+    return NextResponse.json({ success: true, data: serializeDocument(project) });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(req) {
   await dbConnect();
   const { searchParams } = new URL(req.url);

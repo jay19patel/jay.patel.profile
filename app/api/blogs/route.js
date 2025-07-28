@@ -14,14 +14,38 @@ export async function GET(req) {
   await dbConnect();
   const { searchParams } = new URL(req.url);
   const slug = searchParams.get('slug');
+  const page = parseInt(searchParams.get('page')) || 1;
+  const limit = parseInt(searchParams.get('limit')) || 10;
+  const skip = (page - 1) * limit;
+  
   try {
     if (slug) {
       const blog = await Blog.findOne({ slug }).lean();
       if (!blog) return NextResponse.json({ success: false, error: 'Blog post not found' }, { status: 404 });
       return NextResponse.json({ success: true, data: serializeDocument(blog) });
     }
-    const blogs = await Blog.find().sort({ publishedDate: -1 }).lean();
-    return NextResponse.json({ success: true, data: serializeDocument(blogs) });
+    
+    const totalBlogs = await Blog.countDocuments();
+    const blogs = await Blog.find()
+      .sort({ publishedDate: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+    
+    const totalPages = Math.ceil(totalBlogs / limit);
+    
+    return NextResponse.json({ 
+      success: true, 
+      data: serializeDocument(blogs),
+      pagination: {
+        page,
+        limit,
+        total: totalBlogs,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
+    });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -47,6 +71,21 @@ export async function PUT(req) {
   try {
     const body = await req.json();
     const blog = await Blog.findByIdAndUpdate(id, { ...body }, { new: true, runValidators: true }).lean();
+    if (!blog) return NextResponse.json({ success: false, error: 'Blog post not found' }, { status: 404 });
+    return NextResponse.json({ success: true, data: serializeDocument(blog) });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(req) {
+  await dbConnect();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id');
+  if (!id) return NextResponse.json({ success: false, error: 'Missing id' }, { status: 400 });
+  try {
+    const body = await req.json();
+    const blog = await Blog.findByIdAndUpdate(id, body, { new: true, runValidators: true }).lean();
     if (!blog) return NextResponse.json({ success: false, error: 'Blog post not found' }, { status: 404 });
     return NextResponse.json({ success: true, data: serializeDocument(blog) });
   } catch (error) {

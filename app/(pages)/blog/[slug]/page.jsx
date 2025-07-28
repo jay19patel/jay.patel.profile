@@ -174,6 +174,49 @@ export default function BlogDetailPage() {
           </div>
         );
 
+      case 'image':
+        return (
+          <div key={index} className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {section.title}
+            </h3>
+            <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+              <img
+                src={section.url}
+                alt={section.alt || section.title}
+                className="w-full h-auto"
+                loading="lazy"
+              />
+              {section.caption && (
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 text-center italic">
+                    {section.caption}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case 'code':
+        return (
+          <div key={index} className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {section.title}
+            </h3>
+            <div className="relative">
+              <div className="absolute top-3 right-3 px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded font-mono">
+                {section.language}
+              </div>
+              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
+                <code className={`language-${section.language}`}>
+                  {section.code}
+                </code>
+              </pre>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
