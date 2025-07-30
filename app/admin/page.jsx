@@ -8,7 +8,8 @@ import {
   MessageSquare,
   Settings,
   Users,
-  Shield
+  Shield,
+  CheckSquare
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
@@ -18,6 +19,7 @@ import ToolkitTab from '@/components/admin/ToolkitTab';
 import SocialMediaTab from '@/components/admin/SocialMediaTab';
 import QnATab from '@/components/admin/QnATab';
 import ExperienceTab from '@/components/admin/ExperienceTab';
+import AdminTodos from '@/components/admin/AdminTodos';
 
 export default function AdminPage() {
 
@@ -30,6 +32,7 @@ export default function AdminPage() {
     { id: 'social', label: 'Social Media', icon: <Users className="w-4 h-4" /> },
     { id: 'qna', label: 'Q&A', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'experience', label: 'Experience', icon: <Shield className="w-4 h-4" /> },
+    { id: 'todos', label: 'My Todos', icon: <CheckSquare className="w-4 h-4" /> },
   ];
 
 
@@ -354,6 +357,11 @@ export default function AdminPage() {
                   <span className="text-sm text-gray-500 dark:text-gray-400">Manage work history</span>
                 </div>
                 <ExperienceTab />
+              </div>
+            )}
+            {activeTab === 'todos' && (
+              <div className="space-y-6">
+                <AdminTodos />
               </div>
             )}
           </div>

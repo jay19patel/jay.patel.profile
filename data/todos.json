@@ -1,0 +1,31 @@
+{
+  "todos": [
+    {
+      "id": "1753872637711",
+      "title": "Learning NN",
+      "description": "Best way to leatrn NN",
+      "priority": "medium",
+      "category": "learning",
+      "dueDate": "2025-07-31",
+      "links": [],
+      "completed": true,
+      "createdAt": "2025-07-30T10:50:37.711Z",
+      "updatedAt": "2025-07-30T11:06:04.514Z"
+    },
+    {
+      "id": "1753873979651",
+      "title": "111",
+      "description": "121212",
+      "priority": "high",
+      "category": "event",
+      "dueDate": "2025-07-23",
+      "links": [
+        "www.natkhatjay.com"
+      ],
+      "completed": false,
+      "visible": true,
+      "createdAt": "2025-07-30T11:12:59.651Z",
+      "updatedAt": "2025-07-30T11:12:59.651Z"
+    }
+  ]
+}
