@@ -259,19 +259,23 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
 
-            <motion.h1 
+             {/* Main Heading */}
+             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors duration-300"
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight"
             >
-              <TypewriterEffect 
-                words={['Developer', 'Content Creator', 'Coder', 'Problem Solver', 'UI/UX Designer']} 
-                loop={true}
-                delayBetweenWords={2000}
-              />
-              <br className="hidden sm:block" />
-              <span className="block sm:inline text-gray-600 dark:text-gray-400">Building Tomorrow</span>
+              Building{" "}
+              <span className="relative">
+                <TypewriterEffect 
+                  words={['Amazing', 'Scalable', 'Modern', 'Beautiful']} 
+                  loop={true}
+                  delayBetweenWords={2000}
+                />
+              </span>
+              <br />
+              Digital Experiences
             </motion.h1>
             
             <motion.p 
