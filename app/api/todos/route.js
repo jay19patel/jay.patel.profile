@@ -41,11 +41,14 @@ const writeTodosFile = (data) => {
 export async function GET() {
   try {
     const todosData = readTodosFile();
-    return NextResponse.json(todosData);
+    return NextResponse.json({
+      success: true,
+      todos: todosData.todos
+    });
   } catch (error) {
     console.error('Error in GET /api/todos:', error);
     return NextResponse.json(
-      { error: 'Failed to read todos' },
+      { success: false, error: 'Failed to read todos' },
       { status: 500 }
     );
   }

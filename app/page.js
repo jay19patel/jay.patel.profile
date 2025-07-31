@@ -9,8 +9,8 @@ export default function Home() {
     <main className='w-full flex flex-col items-center justify-center gap-6 sm:gap-8 lg:gap-10 px-4 sm:px-6 lg:px-8'>
       <HeroSection />
       <AboutSection />
-      <TodoDisplay />
       <ToolsTechnologiesShowcase />
+      <TodoDisplay />
       <SocialMedia />
       <RecentBlogs />
     </main>

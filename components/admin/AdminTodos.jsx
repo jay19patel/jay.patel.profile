@@ -32,7 +32,10 @@ export default function AdminTodos() {
     priority: 'medium',
     category: 'learning',
     dueDate: '',
-    links: [''],
+    time: '',
+    status: 'pending',
+    progress: 0,
+    links: [{ url: '', title: '' }],
     visible: true
   });
   const [editingId, setEditingId] = useState(null);
@@ -43,6 +46,7 @@ export default function AdminTodos() {
     { id: 'learning', label: 'Learning', icon: BookOpen, color: 'blue' },
     { id: 'event', label: 'Event', icon: Calendar, color: 'purple' },
     { id: 'task', label: 'Task', icon: Target, color: 'green' },
+    { id: 'design', label: 'Design', icon: Target, color: 'pink' },
     { id: 'reminder', label: 'Reminder', icon: Clock, color: 'orange' }
   ];
 
@@ -50,6 +54,13 @@ export default function AdminTodos() {
     { id: 'low', label: 'Low', color: 'gray' },
     { id: 'medium', label: 'Medium', color: 'yellow' },
     { id: 'high', label: 'High', color: 'red' }
+  ];
+
+  const statuses = [
+    { id: 'pending', label: 'Pending', color: 'gray' },
+    { id: 'ongoing', label: 'Ongoing', color: 'blue' },
+    { id: 'working', label: 'Working', color: 'pink' },
+    { id: 'completed', label: 'Completed', color: 'green' }
   ];
 
   useEffect(() => {
@@ -106,8 +117,11 @@ export default function AdminTodos() {
       priority: newTodo.priority,
       category: newTodo.category,
       dueDate: newTodo.dueDate,
-      links: newTodo.links.filter(link => link.trim()),
-      completed: false,
+      time: newTodo.time,
+      status: newTodo.status,
+      progress: newTodo.progress,
+      links: newTodo.links.filter(link => link.url.trim()),
+      completed: newTodo.status === 'completed',
       visible: newTodo.visible,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -124,7 +138,10 @@ export default function AdminTodos() {
         priority: 'medium',
         category: 'learning',
         dueDate: '',
-        links: [''],
+        time: '',
+        status: 'pending',
+        progress: 0,
+        links: [{ url: '', title: '' }],
         visible: true
       });
       setShowForm(false);
@@ -180,7 +197,10 @@ export default function AdminTodos() {
       priority: todo.priority,
       category: todo.category,
       dueDate: todo.dueDate,
-      links: todo.links.length > 0 ? todo.links : [''],
+      time: todo.time || '',
+      status: todo.status || 'pending',
+      progress: todo.progress || 0,
+      links: todo.links && todo.links.length > 0 ? todo.links : [{ url: '', title: '' }],
       visible: todo.visible ?? true
     });
   };
@@ -200,7 +220,11 @@ export default function AdminTodos() {
             priority: editForm.priority,
             category: editForm.category,
             dueDate: editForm.dueDate,
-            links: editForm.links.filter(link => link.trim()),
+            time: editForm.time,
+            status: editForm.status,
+            progress: editForm.progress,
+            links: editForm.links.filter(link => link.url && link.url.trim()),
+            completed: editForm.status === 'completed',
             visible: editForm.visible,
             updatedAt: new Date().toISOString()
           }
@@ -240,14 +264,16 @@ export default function AdminTodos() {
   const addLinkField = (form, setForm) => {
     setForm(prev => ({
       ...prev,
-      links: [...prev.links, '']
+      links: [...prev.links, { url: '', title: '' }]
     }));
   };
 
-  const updateLink = (index, value, form, setForm) => {
+  const updateLink = (index, field, value, form, setForm) => {
     setForm(prev => ({
       ...prev,
-      links: prev.links.map((link, i) => i === index ? value : link)
+      links: prev.links.map((link, i) => 
+        i === index ? { ...link, [field]: value } : link
+      )
     }));
   };
 
@@ -364,6 +390,37 @@ export default function AdminTodos() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Time
+                </label>
+                <Input
+                  type="time"
+                  value={newTodo.time}
+                  onChange={(e) => setNewTodo(prev => ({ ...prev, time: e.target.value }))}
+                  className="w-full"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Status
+                </label>
+                <select
+                  value={newTodo.status}
+                  onChange={(e) => setNewTodo(prev => ({ ...prev, status: e.target.value }))}
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                >
+                  {statuses.map(status => (
+                    <option key={status.id} value={status.id}>
+                      {status.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Description
@@ -377,7 +434,7 @@ export default function AdminTodos() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Category
@@ -411,6 +468,20 @@ export default function AdminTodos() {
                   ))}
                 </select>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Progress: {newTodo.progress}%
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={newTodo.progress}
+                  onChange={(e) => setNewTodo(prev => ({ ...prev, progress: parseInt(e.target.value) }))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                />
+              </div>
             </div>
 
             <div className="mb-4">
@@ -418,23 +489,30 @@ export default function AdminTodos() {
                 Links (Optional)
               </label>
               {newTodo.links.map((link, index) => (
-                <div key={index} className="flex gap-2 mb-2">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                   <Input
-                    value={link}
-                    onChange={(e) => updateLink(index, e.target.value, newTodo, setNewTodo)}
+                    value={link.url}
+                    onChange={(e) => updateLink(index, 'url', e.target.value, newTodo, setNewTodo)}
                     placeholder="https://example.com"
-                    className="flex-1"
                   />
-                  {newTodo.links.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeLink(index, newTodo, setNewTodo)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
+                  <div className="flex gap-2">
+                    <Input
+                      value={link.title}
+                      onChange={(e) => updateLink(index, 'title', e.target.value, newTodo, setNewTodo)}
+                      placeholder="Link title"
+                      className="flex-1"
+                    />
+                    {newTodo.links.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeLink(index, newTodo, setNewTodo)}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
                 </div>
               ))}
               <Button
@@ -519,6 +597,26 @@ export default function AdminTodos() {
                         onChange={(e) => setEditForm(prev => ({ ...prev, dueDate: e.target.value }))}
                       />
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        type="time"
+                        value={editForm.time}
+                        onChange={(e) => setEditForm(prev => ({ ...prev, time: e.target.value }))}
+                        placeholder="Time"
+                      />
+                      <select
+                        value={editForm.status}
+                        onChange={(e) => setEditForm(prev => ({ ...prev, status: e.target.value }))}
+                        className="p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      >
+                        {statuses.map(status => (
+                          <option key={status.id} value={status.id}>
+                            {status.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     
                     <textarea
                       value={editForm.description}
@@ -532,7 +630,7 @@ export default function AdminTodos() {
                       <select
                         value={editForm.category}
                         onChange={(e) => setEditForm(prev => ({ ...prev, category: e.target.value }))}
-                        className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         {categories.map(category => (
                           <option key={category.id} value={category.id}>
@@ -544,7 +642,7 @@ export default function AdminTodos() {
                       <select
                         value={editForm.priority}
                         onChange={(e) => setEditForm(prev => ({ ...prev, priority: e.target.value }))}
-                        className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         {priorities.map(priority => (
                           <option key={priority.id} value={priority.id}>
@@ -556,26 +654,47 @@ export default function AdminTodos() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Progress: {editForm.progress}%
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={editForm.progress}
+                        onChange={(e) => setEditForm(prev => ({ ...prev, progress: parseInt(e.target.value) }))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Links
                       </label>
                       {editForm.links.map((link, index) => (
-                        <div key={index} className="flex gap-2 mb-2">
+                        <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                           <Input
-                            value={link}
-                            onChange={(e) => updateLink(index, e.target.value, editForm, setEditForm)}
+                            value={link.url || ''}
+                            onChange={(e) => updateLink(index, 'url', e.target.value, editForm, setEditForm)}
                             placeholder="https://example.com"
-                            className="flex-1"
                           />
-                          {editForm.links.length > 1 && (
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={() => removeLink(index, editForm, setEditForm)}
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
-                          )}
+                          <div className="flex gap-2">
+                            <Input
+                              value={link.title || ''}
+                              onChange={(e) => updateLink(index, 'title', e.target.value, editForm, setEditForm)}
+                              placeholder="Link title"
+                              className="flex-1"
+                            />
+                            {editForm.links.length > 1 && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => removeLink(index, editForm, setEditForm)}
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))}
                       <Button
@@ -677,13 +796,13 @@ export default function AdminTodos() {
                           {todo.links.map((link, index) => (
                             <a
                               key={index}
-                              href={link}
+                              href={typeof link === 'string' ? link : link.url}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
                             >
                               <ExternalLink className="w-3 h-3" />
-                              Link {index + 1}
+                              {typeof link === 'string' ? `Link ${index + 1}` : (link.title || `Link ${index + 1}`)}
                             </a>
                           ))}
                         </div>
