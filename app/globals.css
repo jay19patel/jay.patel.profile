@@ -122,18 +122,12 @@
 
 
 :root {
-  --bg-color: #ffffff;
-  --grid-color: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme='dark'] {
-  --bg-color: #0d0d0d;
-  --grid-color: rgba(255, 255, 255, 0.05);
+  --grid-color: rgba(165, 165, 165, 0.238);
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-color);
+  background-color: var(--background);
   background-image: 
     linear-gradient(0deg, var(--grid-color) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
