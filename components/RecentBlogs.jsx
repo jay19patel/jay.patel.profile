@@ -165,7 +165,13 @@ export default function RecentBlogs() {
   }
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <motion.section 
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+      className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -253,6 +259,6 @@ export default function RecentBlogs() {
           </div>
         )}
       </motion.div>
-    </section>
+    </motion.section>
   )
 }

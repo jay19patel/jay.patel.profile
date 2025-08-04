@@ -2,7 +2,6 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import ThemeToggle from '@/components/ThemeToggle';
 import ChatBot from '@/components/ChatBot';
 import { Toaster } from 'sonner';
 
@@ -113,9 +112,8 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <ThemeToggle />
           <Header />
-          <main className="flex-grow w-full py-6">
+          <main className="flex-grow w-full pt-20 pb-6">
             {children}
           </main>
           <Footer />

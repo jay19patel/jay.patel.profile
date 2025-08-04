@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/customUi/Button';
+import { useTheme } from './ThemeProvider';
+import { Sun, Moon } from 'lucide-react';
 import { 
   Sheet, 
   SheetContent, 
@@ -18,6 +20,7 @@ import {
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   // Navigation menu items
   const menuItems = [
@@ -34,13 +37,13 @@ const Header = () => {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="w-full px-4 py-6"
+      className="fixed top-0 left-0 right-0 w-full px-4 py-3 z-50"
     >
       <motion.nav 
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] flex items-center justify-between px-8 py-4 relative transition-colors duration-300"
+        className="max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow-[0_3px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_3px_15px_rgba(0,0,0,0.2)] flex items-center justify-between px-6 py-2.5 relative transition-colors duration-300"
       >
         
         {/* Logo Section */}
@@ -73,7 +76,7 @@ const Header = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="hidden lg:flex items-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full p-3 shadow-[0_3px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_3px_10px_rgba(0,0,0,0.2)] transition-colors duration-300"
+          className="hidden lg:flex items-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full p-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-colors duration-300"
         >
           {menuItems.map((item, index) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
@@ -86,7 +89,7 @@ const Header = () => {
               >
                 <Link 
                   href={item.href} 
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 relative group
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 relative group
                     ${isActive 
                       ? 'bg-gray-50 dark:bg-gray-600 text-gray-900 dark:text-white' 
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white'
@@ -117,12 +120,17 @@ const Header = () => {
             <Search size={18} className="text-gray-600 group-hover:text-gray-800 transition-colors" />
           </button>
 
-          {/* User Button - Hidden on mobile */}
+          {/* Theme Toggle Button */}
           <button 
-            className="hidden lg:flex w-11 h-11 bg-white border border-gray-200/50 rounded-full items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)] transition-all duration-200 group"
-            aria-label="User Profile"
+            onClick={toggleTheme}
+            className="w-11 h-11 bg-white dark:bg-gray-800 border border-gray-200/50 dark:border-gray-700/50 rounded-full flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)] transition-all duration-200 group"
+            aria-label="Toggle theme"
           >
-            <User size={18} className="text-gray-600 group-hover:text-gray-800 transition-colors" />
+            {theme === 'light' ? (
+              <Moon size={18} className="text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-100 transition-colors" />
+            ) : (
+              <Sun size={18} className="text-yellow-500 group-hover:text-yellow-600 transition-colors" />
+            )}
           </button>
 
           {/* CTA Button - Hidden on mobile */}
@@ -203,10 +211,17 @@ const Header = () => {
                     <span>Search</span>
                   </button>
 
-                  {/* Profile */}
-                  <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-all duration-200 font-medium text-sm border border-gray-200/50">
-                    <User size={16} className="text-gray-500" />
-                    <span>Profile</span>
+                  {/* Theme Toggle */}
+                  <button 
+                    onClick={toggleTheme}
+                    className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 font-medium text-sm border border-gray-200/50 dark:border-gray-600/50"
+                  >
+                    {theme === 'light' ? (
+                      <Moon size={16} className="text-gray-500 dark:text-gray-400" />
+                    ) : (
+                      <Sun size={16} className="text-yellow-500" />
+                    )}
+                    <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
                   </button>
 
                   {/* CTA Button */}

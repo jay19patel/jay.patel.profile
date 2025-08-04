@@ -1,6 +1,7 @@
 "use client"
 
 import { Youtube, Instagram, Linkedin, Github, ExternalLink } from "lucide-react"
+import { motion } from "framer-motion"
 
 const SocialMedia = () => {
   const socialPlatforms = [
@@ -59,7 +60,13 @@ const SocialMedia = () => {
   ]
 
   return (
-    <section className="w-full py-16 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300">
+    <motion.section 
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+      className="w-full py-16 max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
+    >
       {/* Decorative Circles */}
       {/* Animated background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -87,11 +94,15 @@ const SocialMedia = () => {
 
         {/* Social Media Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {socialPlatforms.map((platform) => {
+          {socialPlatforms.map((platform, index) => {
             const IconComponent = platform.icon
             return (
-              <div 
+              <motion.div 
                 key={platform.id} 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
                 className="group"
                 onClick={() => window.open(platform.link, '_blank')}
               >
@@ -127,13 +138,13 @@ const SocialMedia = () => {
                     </p>
                   </div>
                 </article>
-              </div>
+              </motion.div>
             )
           })}
         </div>
 
       </div>
-    </section>
+    </motion.section>
   )
 }
 
