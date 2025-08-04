@@ -73,9 +73,6 @@ const TodoDisplay = () => {
 
       {/* Timeline Container */}
       <div className="relative max-w-4xl mx-auto px-4">
-        {/* Vertical Line - Hidden on mobile */}
-        <div className="absolute left-6 sm:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 hidden sm:block"></div>
-        
         {/* Todo Items */}
         <div className="space-y-4 sm:space-y-6">
           {todos.map((todo, index) => {
@@ -91,15 +88,6 @@ const TodoDisplay = () => {
                 viewport={{ once: true }}
                 className="relative flex items-start space-x-4 sm:space-x-6"
               >
-                {/* Timeline Dot - Hidden on mobile */}
-                <div className="relative flex-shrink-0 hidden sm:block">
-                  <div className={`w-4 h-4 ${statusStyle.dot} rounded-full border-4 border-white dark:border-gray-900 z-10 relative`}>
-                    {todo.status === 'working' && (
-                      <div className="absolute inset-0 bg-gray-400 rounded-full animate-ping opacity-75"></div>
-                    )}
-                  </div>
-                </div>
-
                 {/* Todo Card */}
                 <div className={`flex-1 w-full ${statusStyle.bg} ${statusStyle.shadow} rounded-xl p-4 sm:p-6 shadow-md border border-gray-200 dark:border-gray-700 transition-all hover:shadow-lg`}>
                   {/* Mobile and Desktop Layout */}
