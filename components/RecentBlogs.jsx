@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { getFeaturedBlogs } from "@/app/actions/blogs"
 import { ChevronLeft, ChevronRight, Calendar, ArrowUpRight } from "lucide-react"
 
 function BlogCard({ blog, onClick, isActive }) {
@@ -106,8 +105,12 @@ export default function RecentBlogs() {
     async function fetchBlogs() {
       try {
         setIsLoading(true)
-        const recent = await getFeaturedBlogs()
-        setBlogs(recent.data || [])
+        // Import blogs from JSON file and get latest 5
+        const blogsData = await import('@/data/blogs.json')
+        const sortedBlogs = (blogsData.blogs || [])
+          .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+          .slice(0, 5)
+        setBlogs(sortedBlogs)
       } catch (e) {
         console.error("Failed to fetch blogs:", e)
         setBlogs([])
@@ -204,7 +207,7 @@ export default function RecentBlogs() {
             <BlogCard
               key={currentIndex}
               blog={blogs[currentIndex]}
-              onClick={() => router.push(`/blog/${blogs[currentIndex].slug || blogs[currentIndex]._id}`)}
+              onClick={() => router.push(`/blog/${blogs[currentIndex].slug}`)}
               isActive={true}
             />
           </AnimatePresence>

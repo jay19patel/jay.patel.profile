@@ -14,7 +14,7 @@ import {
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
-import { getAdminBlogs, getAdminProjects ,getMessages} from '@/app/actions/admin';
+import { getMessages} from '@/app/actions/admin';
 import ToolkitTab from '@/components/admin/ToolkitTab';
 import SocialMediaTab from '@/components/admin/SocialMediaTab';
 import QnATab from '@/components/admin/QnATab';
@@ -38,8 +38,7 @@ export default function AdminPage() {
 
 
   const [stats, setStats] = useState({
-    blogs: { total: 0, active: 0 },
-    projects: { total: 0, active: 0 }
+    messages: { total: 0, unread: 0 }
   });
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -48,27 +47,12 @@ export default function AdminPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [blogsRes, projectsRes,messagesRes] = await Promise.all([
-          getAdminBlogs(),
-          getAdminProjects(),
-          getMessages(),
-        ]);
-
-        if (!blogsRes.success) throw new Error(blogsRes.error);
-        if (!projectsRes.success) throw new Error(projectsRes.error);
+        const messagesRes = await getMessages();
 
         setStats({
-          blogs: {
-            total: blogsRes.data.length || 0,
-            active: blogsRes.data.filter(blog => blog.featured)?.length || 0
-          },
-          projects: {
-            total: projectsRes.data.length || 0,
-            active: projectsRes.data.filter(project => project.status === 'Completed')?.length || 0
-          },
           messages: {
             total : messagesRes.data.length || 0,
-            active: messagesRes.data.filter(message => message.is_read === false)?.length || 0
+            unread: messagesRes.data.filter(message => message.is_read === false)?.length || 0
           }
         });
         setLoading(false);
@@ -123,26 +107,6 @@ export default function AdminPage() {
                 Manage your portfolio content and settings
               </p>
             </div>
-            <div className="flex gap-3">
-              <Link
-                href="/admin/blog/new"
-                className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                New Blog
-              </Link>
-              <Link
-                href="/admin/projects/new"
-                className="inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md"
-              >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                New Project
-              </Link>
-            </div>
           </div>
         </div>
       </motion.div>
@@ -152,97 +116,13 @@ export default function AdminPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+        className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8 max-w-md mx-auto"
       >
-        {/* Blog Stats */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Blog Posts</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Content management</p>
-              </div>
-            </div>
-            <Link
-              href="/admin/blog"
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm px-3 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-            >
-              View All
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {loading ? '...' : stats.blogs.total}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Posts</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {loading ? '...' : stats.blogs.active}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Featured</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Projects Stats */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.4 }}
-          className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Projects</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Portfolio showcase</p>
-              </div>
-            </div>
-            <Link
-              href="/admin/projects"
-              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium text-sm px-3 py-1 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
-            >
-              View All
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {loading ? '...' : stats.projects.total}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Projects</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                {loading ? '...' : stats.projects.active}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Completed</p>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Messages Stats */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.5 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
           className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200"
         >
           <div className="flex items-center justify-between mb-4">
@@ -273,7 +153,7 @@ export default function AdminPage() {
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {loading ? '...' : stats.messages?.active || 0}
+                {loading ? '...' : stats.messages?.unread || 0}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Unread</p>
             </div>

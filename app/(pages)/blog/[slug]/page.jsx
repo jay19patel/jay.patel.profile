@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { getBlogBySlug } from '@/app/actions/blogs';
 import { PageSection } from '@/components/customUi/PageSection';
 import { EmptyState } from '@/components/customUi/EmptyState';
 import Image from 'next/image';
@@ -19,15 +18,20 @@ export default function BlogDetailPage() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await getBlogBySlug(slug);
-        if (!response.success) {
-          toast.error('Failed to fetch blog post', {
-            description: response.error || 'Please try again later',
+        // Import blogs from JSON file
+        const blogsData = await import('@/data/blogs.json');
+        const foundBlog = blogsData.blogs.find(b => b.slug === slug);
+        
+        if (!foundBlog) {
+          toast.error('Blog post not found', {
+            description: 'The requested blog post does not exist',
             duration: 5000,
           });
+          setBlog(null);
           return;
         }
-        setBlog(response.data);
+        
+        setBlog(foundBlog);
       } catch (error) {
         console.error('Error fetching blog:', error);
         toast.error('Failed to fetch blog post', {
@@ -210,10 +214,34 @@ export default function BlogDetailPage() {
               </div>
               <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
                 <code className={`language-${section.language}`}>
-                  {section.code}
+                  {section.content}
                 </code>
               </pre>
             </div>
+          </div>
+        );
+
+      case 'youtube':
+        return (
+          <div key={index} className="space-y-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {section.title}
+            </h3>
+            <div className="aspect-video">
+              <iframe
+                src={`https://www.youtube.com/embed/${section.videoId}`}
+                title={section.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full rounded-lg"
+              />
+            </div>
+            {section.description && (
+              <p className="text-gray-600 dark:text-gray-400 text-sm italic">
+                {section.description}
+              </p>
+            )}
           </div>
         );
 
@@ -253,7 +281,7 @@ export default function BlogDetailPage() {
   // SEO Meta Data
   const blogMetadata = {
     title: blog.title,
-    description: blog.description || blog.subtitle,
+    description: blog.excerpt || blog.subtitle,
     image: blog.image,
     url: `https://jaypatel.dev/blog/${blog.slug}`,
     publishedDate: blog.publishedDate,
@@ -387,7 +415,7 @@ export default function BlogDetailPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="text-gray-600 dark:text-gray-400">
-              {blog.readTime} min read
+              {blog.readTime}
             </span>
           </div>
           <div className="flex items-center gap-2">

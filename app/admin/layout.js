@@ -4,7 +4,7 @@ import React from 'react'
 import { AdminAuthProvider, useAdminAuth } from '@/contexts/AdminAuthContext'
 import AdminLogin from '@/components/AdminLogin'
 import { ThemeProvider } from '@/components/ThemeProvider'
-import { Loader, LogOut, Shield, LayoutDashboard, BookOpen, FolderOpen, MessageSquare, Settings, Menu, X } from 'lucide-react'
+import { Loader, LogOut, Shield, LayoutDashboard, MessageSquare, Settings, Menu, X } from 'lucide-react'
 import { Button } from '@/components/customUi/Button'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -18,8 +18,6 @@ const AdminLayoutContent = ({ children }) => {
 
   const navigationItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Blog Posts', href: '/admin/blog', icon: BookOpen },
-    { name: 'Projects', href: '/admin/projects', icon: FolderOpen },
     { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
   ]
 

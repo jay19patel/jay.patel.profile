@@ -17,7 +17,12 @@ import {
   Zap,
   Heart,
   MapPin,
-  Calendar
+  Calendar,
+  Building2,
+  Clock,
+  Award,
+  ExternalLink,
+  CheckCircle
 } from "lucide-react"
 
 import { getTools } from '@/app/actions/tools'
@@ -29,10 +34,24 @@ export default function AboutPage() {
 
   const [skills, setTools] = useState([])
   const [contentCreatorStats, setSocialMedia] = useState([])
+  const [experiences, setExperiences] = useState([])
 
   useEffect(() => {
     getTools().then(setTools)
     getSocialMedia().then(setSocialMedia)
+    
+    // Fetch experiences from JSON file
+    const fetchExperiences = async () => {
+      try {
+        const experienceData = await import('@/data/experience.json')
+        setExperiences(experienceData.experiences || [])
+      } catch (error) {
+        console.error('Error loading experiences:', error)
+        setExperiences([])
+      }
+    }
+    
+    fetchExperiences()
   }, [])
 
   const interests = [
@@ -295,6 +314,160 @@ export default function AboutPage() {
                 Now I share my knowledge through content creation, helping others learn and grow in their coding journey.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Professional Experience Section */}
+        <div className="container mx-auto px-8 relative z-10">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+              <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">Professional Journey</span>
+              <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+              Work{" "}
+              <span className="text-blue-600 dark:text-blue-400 relative">
+                Experience
+                <div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" />
+              </span>
+            </h2>
+
+            <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+              Building innovative solutions and growing through challenging projects
+            </p>
+          </div>
+
+          {/* Experience Timeline */}
+          <div className="space-y-8">
+            {experiences.map((experience, index) => (
+              <motion.div
+                key={experience.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="relative"
+              >
+                {/* Timeline Line */}
+                {index < experiences.length - 1 && (
+                  <div className="absolute left-8 top-20 w-0.5 h-32 bg-gray-200 dark:bg-gray-700"></div>
+                )}
+                
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                  {/* Company Logo & Timeline Dot */}
+                  <div className="flex-shrink-0 relative">
+                    <div className="w-16 h-16 bg-white dark:bg-gray-800 border-4 border-blue-200 dark:border-blue-800 rounded-full overflow-hidden flex items-center justify-center relative z-10">
+                      <Image
+                        src={experience.companyLogo}
+                        alt={experience.company}
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
+                    </div>
+                    {experience.isCurrentJob && (
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Experience Content */}
+                  <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-2xl p-6 lg:p-8 border border-gray-200 dark:border-gray-700">
+                    {/* Header */}
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
+                            {experience.position}
+                          </h3>
+                          {experience.isCurrentJob && (
+                            <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full text-xs font-medium">
+                              Current
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="flex flex-wrap items-center gap-4 mb-3">
+                          <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                            <Building2 className="w-4 h-4" />
+                            <span className="font-medium">{experience.company}</span>
+                            <ExternalLink className="w-3 h-3 opacity-60" />
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                            <MapPin className="w-4 h-4" />
+                            <span className="text-sm">{experience.location} • {experience.workType}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-4">
+                          <Clock className="w-4 h-4" />
+                          <span className="text-sm">
+                            {new Date(experience.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - 
+                            {experience.isCurrentJob ? ' Present' : ` ${new Date(experience.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`} 
+                            <span className="ml-2 font-medium">({experience.duration})</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                      {experience.description}
+                    </p>
+
+                    {/* Key Responsibilities */}
+                    <div className="mb-6">
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        Key Responsibilities
+                      </h4>
+                      <div className="grid md:grid-cols-2 gap-2">
+                        {experience.responsibilities.slice(0, 6).map((responsibility, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                            <span className="text-sm text-gray-600 dark:text-gray-400">{responsibility}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Technologies */}
+                    <div className="mb-6">
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Technologies Used</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {experience.technologies.map((tech, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Key Achievements */}
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                        <Award className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                        Key Achievements
+                      </h4>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        {experience.achievements.map((achievement, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-3 bg-white/60 dark:bg-gray-700/60 rounded-lg">
+                            <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{achievement}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
 
