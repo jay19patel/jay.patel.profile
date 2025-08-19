@@ -24,7 +24,7 @@ export const PageSection = ({
 }) => {
   return (
     <section className='w-full px-4 py-6'>
-      <div className="space-y-8 max-w-9xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] p-6 md:p-12 transition-colors duration-300 overflow-hidden">
+      <div className="space-y-8 max-w-8xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] p-6 md:p-12 transition-colors duration-300 overflow-hidden">
         
         {showBreadcrumb && breadcrumbItems.length > 0 && (
           <div className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full shadow-inner border border-gray-200 dark:border-gray-600">

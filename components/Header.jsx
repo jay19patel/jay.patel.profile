@@ -26,7 +26,6 @@ const Header = () => {
   // Navigation menu items
   const menuItems = [
     { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
     { name: 'Services', href: '/services' },
     { name: 'Blog', href: '/blog' },
     { name: 'Contact', href: '/contact' }
@@ -43,7 +42,7 @@ const Header = () => {
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="max-w-9xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow-[0_3px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_3px_15px_rgba(0,0,0,0.2)] flex items-center justify-between px-6 py-2.5 relative transition-colors duration-300"
+        className="max-w-8xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow-[0_3px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_3px_15px_rgba(0,0,0,0.2)] flex items-center justify-between px-6 py-2.5 relative transition-colors duration-300"
       >
         
         {/* Logo Section */}

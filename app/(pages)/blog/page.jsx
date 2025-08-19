@@ -125,7 +125,7 @@ export default function BlogPage() {
     <PageSection {...headerProps}>
       <div className="space-y-8">
         {/* Search and Filter Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6">
           <div className="space-y-6">
             {/* Search Bar */}
             <div className="relative max-w-md mx-auto">
