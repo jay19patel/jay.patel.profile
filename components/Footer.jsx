@@ -34,7 +34,7 @@ const Footer = () => {
         whileInView={{ scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         viewport={{ once: true }}
-        className="max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-4 md:p-6 transition-colors duration-300"
+        className="max-w-9xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-4 md:p-6 transition-colors duration-300"
       >
         
         {/* Main Footer Content */}

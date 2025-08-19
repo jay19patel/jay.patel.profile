@@ -494,23 +494,42 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {interests.map((interest, index) => {
-              const IconComponent = interest.icon
-              return (
-                <div key={index} className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50 rounded-2xl p-6 text-center border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <IconComponent className="w-6 h-6 text-white" />
+          <div className="max-w-4xl mx-auto">
+            <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 text-center leading-relaxed">
+              When I'm not coding, I explore various interests that fuel my creativity and keep me motivated. 
+              Each of these areas contributes to my growth as both a developer and content creator.
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-3">
+              {interests.map((interest, index) => {
+                const IconComponent = interest.icon
+                return (
+                  <div 
+                    key={index} 
+                    className="group flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3 rounded-xl hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {interest.title}
+                      </h3>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300">
+                        {interest.desc}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    {interest.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">
-                    {interest.desc}
-                  </p>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+            
+            <div className="mt-8 text-center">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-800">
+                <Coffee className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <span className="text-sm text-gray-700 dark:text-gray-300">Always learning, always creating</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

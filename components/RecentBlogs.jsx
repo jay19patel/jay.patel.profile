@@ -2,15 +2,15 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Calendar, ArrowUpRight } from "lucide-react"
+import { Calendar, ArrowUpRight } from "lucide-react"
 
 function BlogCard({ blog, onClick, isActive }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       className={`cursor-pointer w-full max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 transition-all duration-500 hover:border-blue-300 dark:hover:border-blue-600 ${
         isActive 
           ? 'border-gray-200 dark:border-gray-700' 
@@ -127,22 +127,11 @@ export default function RecentBlogs() {
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % blogs.length)
-    }, 3000) // 3 seconds
+    }, 4000)
 
     return () => clearInterval(interval)
   }, [isAutoPlaying, blogs.length])
 
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % blogs.length)
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + blogs.length) % blogs.length)
-  }
-
-  const goToSlide = (index) => {
-    setCurrentIndex(index)
-  }
 
   if (isLoading) {
     return (
@@ -212,24 +201,6 @@ export default function RecentBlogs() {
             />
           </AnimatePresence>
 
-          {/* Navigation Arrows */}
-          {blogs.length > 1 && (
-            <>
-              <button
-                onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-200 z-10"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              
-              <button
-                onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-200 z-10"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </>
-          )}
         </div>
 
         {/* Indicators */}
@@ -249,18 +220,6 @@ export default function RecentBlogs() {
           </div>
         )}
 
-        {/* Progress Bar */}
-        {blogs.length > 1 && isAutoPlaying && (
-          <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 overflow-hidden">
-            <motion.div
-              className="h-full bg-blue-600 rounded-full"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 3, ease: "linear" }}
-              key={currentIndex}
-            />
-          </div>
-        )}
       </motion.div>
     </motion.section>
   )

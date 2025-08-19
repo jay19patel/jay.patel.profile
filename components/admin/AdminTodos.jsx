@@ -69,13 +69,28 @@ export default function AdminTodos() {
 
   const loadTodos = async () => {
     try {
-      const response = await fetch('/api/todos');
-      if (response.ok) {
-        const data = await response.json();
-        setTodos(data.todos || []);
-      } else {
-        toast.error('Failed to load todos');
-      }
+      // Import from JSON file
+      const announcementData = await import('@/data/announcements.json');
+      const currentTasks = announcementData.currentTasks || [];
+      
+      // Convert to the format expected by the component
+      const convertedTodos = currentTasks.map(task => ({
+        id: task.id.toString(),
+        title: task.title,
+        description: task.description,
+        category: task.category?.toLowerCase() || 'task',
+        priority: task.priority || 'medium',
+        dueDate: task.dueDate || '',
+        status: task.status === 'in_progress' ? 'ongoing' : task.status || 'pending',
+        progress: task.progress || 0,
+        completed: task.status === 'completed',
+        visible: true,
+        links: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }));
+      
+      setTodos(convertedTodos);
     } catch (error) {
       console.error('Error loading todos:', error);
       toast.error('Failed to load todos');

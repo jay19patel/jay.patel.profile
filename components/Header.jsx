@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/customUi/Button';
 import { useTheme } from './ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
+import AnimatedLogo from './AnimatedLogo';
 import { 
   Sheet, 
   SheetContent, 
@@ -42,7 +43,7 @@ const Header = () => {
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.4, delay: 0.2 }}
-        className="max-w-7xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow-[0_3px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_3px_15px_rgba(0,0,0,0.2)] flex items-center justify-between px-6 py-2.5 relative transition-colors duration-300"
+        className="max-w-9xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow-[0_3px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_3px_15px_rgba(0,0,0,0.2)] flex items-center justify-between px-6 py-2.5 relative transition-colors duration-300"
       >
         
         {/* Logo Section */}
@@ -53,20 +54,8 @@ const Header = () => {
           className="flex items-center space-x-3 flex-shrink-0"
         >
           <Link href="/" className="flex items-center space-x-3 hover:opacity-90 transition-opacity duration-200">
-            {/* Logo with gradient */}
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-0.5">
-              <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
-              </div>
-            </div>
-            
-            {/* Brand Text */}
-            <div className="flex items-center space-x-1">
-              <h5 className="text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Jay</h5>
-              <h5 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
-                Patel
-              </h5>
-            </div>
+            {/* Animated Brand Text */}
+            <AnimatedLogo />
           </Link>
         </motion.div>
 
@@ -163,12 +152,7 @@ const Header = () => {
                         <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <h5 className="text-lg font-bold text-gray-900">Jay</h5>
-                      <h5 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                        Patel
-                      </h5>
-                    </div>
+                    <AnimatedLogo className="text-lg" />
                   </div>
                 </div>
               </SheetHeader>
