@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
@@ -49,7 +50,7 @@ const TypewriterEffect = ({ words, loop = true, delayBetweenWords = 2000 }) => {
   }, [currentText, currentWordIndex, isDeleting, isPaused, words, loop, delayBetweenWords]);
 
   return (
-    <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+    <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
       {currentText}
       <span className="animate-pulse">|</span>
     </span>
@@ -64,49 +65,43 @@ const HeroSection = () => {
       id: 1,
       title: 'React.js',
       category: '⚛️ Frontend',
-      url: 'image-1.png',
-      gradient: 'from-blue-600 to-blue-800',
-      overlayColor: 'bg-blue-600/80 dark:bg-blue-700/90'
+      url: '/img-hero-1.webp',
+      gradient: 'from-blue-600 to-blue-800'
     },
     {
       id: 2,
       title: 'Next.js',
       category: '🚀 Full-Stack',
-      url: 'image-1.png',
-      gradient: 'from-gray-800 to-gray-900',
-      overlayColor: 'bg-gray-900/80 dark:bg-gray-800/90'
+      url: '/img-hero-1.webp',
+      gradient: 'from-gray-800 to-gray-900'
     },
     {
       id: 3,
       title: 'Node.js',
       category: '🔧 Backend',
-      url: 'image-1.png',
-      gradient: 'from-green-600 to-green-800',
-      overlayColor: 'bg-green-600/80 dark:bg-green-700/90'
+      url: '/img-hero-1.webp',
+      gradient: 'from-green-600 to-green-800'
     },
     {
       id: 4,
       title: 'Python',
       category: '🐍 Programming',
-      url: 'image-1.png',
-      gradient: 'from-yellow-600 to-yellow-800',
-      overlayColor: 'bg-yellow-600/80 dark:bg-yellow-700/90'
+      url: '/img-hero-1.webp',
+      gradient: 'from-yellow-600 to-yellow-800'
     },
     {
       id: 5,
       title: 'MongoDB',
       category: '📊 Database',
-      url: 'image-1.png',
-      gradient: 'from-green-500 to-green-700',
-      overlayColor: 'bg-green-600/80 dark:bg-green-700/90'
+      url: '/img-hero-1.webp',
+      gradient: 'from-green-500 to-green-700'
     },
     {
       id: 6,
       title: 'Django',
       category: '🎯 Framework',
-      url: 'image-1.png',
-      gradient: 'from-emerald-600 to-emerald-800',
-      overlayColor: 'bg-emerald-600/80 dark:bg-emerald-700/90'
+      url: '/img-hero-1.webp',
+      gradient: 'from-emerald-600 to-emerald-800'
     }
   ];
 
@@ -114,86 +109,32 @@ const HeroSection = () => {
     setIsVisible(true);
   }, []);
 
-  // Floating brand icons data - Left Side
-  const leftBrandIcons = [
-    { 
-      id: 1, 
-      element: <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg"><div className="w-6 h-6 bg-white rounded-md"></div></div>,
-      position: 'top-8 left-8', 
-      delay: '0s' 
-    },
-    { 
-      id: 2, 
-      element: <div className="w-10 h-10 bg-blue-600 rounded-lg transform rotate-12 shadow-lg"></div>,
-      position: 'top-16 left-32', 
-      delay: '0.5s' 
-    },
-    { 
-      id: 3, 
-      element: <div className="w-8 h-8 bg-green-500 rounded-full shadow-lg"></div>,
-      position: 'top-12 left-56', 
-      delay: '1s' 
-    },
-    { 
-      id: 4, 
-      element: <div className="w-14 h-14 bg-yellow-500 rounded-2xl flex items-center justify-center shadow-lg transform rotate-6"><div className="w-6 h-6 bg-white rounded-lg"></div></div>,
-      position: 'top-24 left-16', 
-      delay: '1.5s' 
-    },
-    { 
-      id: 5, 
-      element: <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-red-500 rounded-full shadow-lg"></div>,
-      position: 'top-36 left-40', 
-      delay: '2s' 
-    },
-  ];
-
-  // Floating brand icons data - Right Side (Mirrored)
-  const rightBrandIcons = [
-    { 
-      id: 6, 
-      element: <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg"><div className="w-6 h-6 bg-white rounded-md"></div></div>,
-      position: 'top-8 right-8', 
-      delay: '0s' 
-    },
-    { 
-      id: 7, 
-      element: <div className="w-10 h-10 bg-blue-600 rounded-lg transform -rotate-12 shadow-lg"></div>,
-      position: 'top-16 right-32', 
-      delay: '0.5s' 
-    },
-    { 
-      id: 8, 
-      element: <div className="w-8 h-8 bg-green-500 rounded-full shadow-lg"></div>,
-      position: 'top-12 right-56', 
-      delay: '1s' 
-    },
-    { 
-      id: 9, 
-      element: <div className="w-14 h-14 bg-yellow-500 rounded-2xl flex items-center justify-center shadow-lg transform -rotate-6"><div className="w-6 h-6 bg-white rounded-lg"></div></div>,
-      position: 'top-24 right-16', 
-      delay: '1.5s' 
-    },
-    { 
-      id: 10, 
-      element: <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-red-500 rounded-full shadow-lg"></div>,
-      position: 'top-36 right-40', 
-      delay: '2s' 
-    },
-  ];
-
-  // Combine both sides
-  const brandIcons = [...leftBrandIcons, ...rightBrandIcons];
 
   return (
     <motion.section 
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="w-full pt-6 max-w-8xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
+      className="w-full pt-6 max-w-8xl mx-auto bg-gray-800 border border-gray-700 rounded-2xl shadow-lg relative overflow-hidden"
     >
+      {/* Background Video */}
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/hero-intro.mp4" type="video/mp4" />
+        </video>
+        {/* Black tint overlay with reduced opacity */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        {/* Color blend overlay for proper text visibility */}
+        <div className="absolute inset-0 bg-gray-800/20"></div>
+      </div>
       {/* Animated background elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-10">
         <motion.div 
           animate={{ 
             scale: [1, 1.2, 1],
@@ -221,38 +162,9 @@ const HeroSection = () => {
         />
       </div>
 
-      
-      {/* Floating Brand Icons */}
-      <div className="absolute inset-0 pointer-events-none">
-        {brandIcons.map((brand, index) => (
-          <motion.div
-            key={brand.id}
-            initial={{ opacity: 0, y: 100, scale: 0 }}
-            animate={{ 
-              opacity: 0.6, 
-              y: 0, 
-              scale: 1,
-              y: [0, -10, 0]
-            }}
-            transition={{ 
-              duration: 0.8,
-              delay: index * 0.1,
-              y: {
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: index * 0.2
-              }
-            }}
-            className={`absolute ${brand.position}`}
-          >
-            {brand.element}
-          </motion.div>
-        ))}
-      </div>
 
         {/* Header Section */}
-        <div className="text-center mb-12 md:mb-16 px-4 md:px-6">
+        <div className="text-center mb-12 md:mb-16 px-4 md:px-6 relative z-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -264,7 +176,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
             >
               Building{" "}
               <span className="relative">
@@ -282,7 +194,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-gray-600 dark:text-gray-300 text-base sm:text-lg md:text-xl mb-8 max-w-4xl mx-auto leading-relaxed transition-colors duration-300 px-2"
+              className="text-gray-300 text-base sm:text-lg md:text-xl mb-8 max-w-4xl mx-auto leading-relaxed px-2"
             >
               Full-Stack Developer specializing in modern web technologies, creating scalable applications, 
               <br className="hidden md:block" />
@@ -297,16 +209,16 @@ const HeroSection = () => {
               className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8 px-2"
             >
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">50+</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Projects</div>
+                <div className="text-2xl md:text-3xl font-bold text-blue-400">50+</div>
+                <div className="text-sm text-gray-400">Projects</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400">3+</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
+                <div className="text-2xl md:text-3xl font-bold text-purple-400">3+</div>
+                <div className="text-sm text-gray-400">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-pink-600 dark:text-pink-400">10K+</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Content Views</div>
+                <div className="text-2xl md:text-3xl font-bold text-pink-400">10K+</div>
+                <div className="text-sm text-gray-400">Content Views</div>
               </div>
             </motion.div>
           </motion.div>
@@ -314,17 +226,20 @@ const HeroSection = () => {
 
         {/* Continuous Left to Right Infinite Carousel */}
         
-          <div className="infinite-scroll-container mb-8 overflow-hidden">
+          <div className="infinite-scroll-container overflow-hidden relative z-20">
             {/* First Set */}
             <div className="infinite-scroll-track">
               {carouselImages.map((image) => (
                 <div key={`first-${image.id}`} className={`carousel-item w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br ${image.gradient} rounded-2xl overflow-hidden flex-shrink-0 relative transform hover:scale-105 transition-transform duration-300`}>
-                  <img 
+                  <Image 
                     src={image.url}
                     alt={`${image.title} Technology`}
-                    className="w-full h-full object-cover"
+                    width={320}
+                    height={320}
+                    priority
+                    className="w-full h-full object-contain"
                   />
-                  <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-4 md:p-6`}>
+                  <div className="absolute inset-0 flex items-end p-4 md:p-6">
                     <div className="text-white">
                       <div className="text-xs md:text-sm opacity-80 mb-1">{image.category}</div>
                       <div className="font-bold text-lg md:text-xl">{image.title}</div>
@@ -335,12 +250,15 @@ const HeroSection = () => {
               {/* Duplicate Set for Infinite Effect */}
               {carouselImages.map((image) => (
                 <div key={`second-${image.id}`} className={`carousel-item w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br ${image.gradient} rounded-2xl overflow-hidden flex-shrink-0 relative transform hover:scale-105 transition-transform duration-300`}>
-                  <img 
+                  <Image 
                     src={image.url}
                     alt={`${image.title} Technology`}
-                    className="w-full h-full object-cover"
+                    width={320}
+                    height={320}
+                    priority
+                    className="w-full h-full object-contain"
                   />
-                  <div className={`absolute inset-0 ${image.overlayColor} flex items-end p-4 md:p-6`}>
+                  <div className="absolute inset-0 flex items-end p-4 md:p-6">
                     <div className="text-white">
                       <div className="text-xs md:text-sm opacity-80 mb-1">{image.category}</div>
                       <div className="font-bold text-lg md:text-xl">{image.title}</div>
