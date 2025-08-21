@@ -22,12 +22,12 @@ export async function getMessages(page = 1, limit = 10) {
   }
 }
 
-export async function toggleMessageRead(id, isRead) {
+export async function toggleMessageRead(id, updateData) {
   try {
     const res = await fetch(`/api/messages?id=${encodeURIComponent(id)}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ isRead })
+      body: JSON.stringify(updateData)
     });
     return await res.json();
   } catch (error) {

@@ -41,7 +41,7 @@ export default function MessagesAdminPage() {
     const newReadStatus = !message.isRead;
     toast.promise(
       async () => {
-        const { success, error } = await toggleMessageRead(message._id, newReadStatus);
+        const { success, error } = await toggleMessageRead(message._id, { isRead: newReadStatus });
         if (!success) throw new Error(error || 'Failed to update message status');
         await fetchMessages(pagination.page);
       },

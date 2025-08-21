@@ -19,7 +19,7 @@ import ToolkitTab from '@/components/admin/ToolkitTab';
 import SocialMediaTab from '@/components/admin/SocialMediaTab';
 import QnATab from '@/components/admin/QnATab';
 import ExperienceTab from '@/components/admin/ExperienceTab';
-import AdminTodos from '@/components/admin/AdminTodos';
+import AnnouncementsTab from '@/components/admin/AnnouncementsTab';
 
 export default function AdminPage() {
 
@@ -32,7 +32,8 @@ export default function AdminPage() {
     { id: 'social', label: 'Social Media', icon: <Users className="w-4 h-4" /> },
     { id: 'qna', label: 'Q&A', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'experience', label: 'Experience', icon: <Shield className="w-4 h-4" /> },
-    { id: 'todos', label: 'My Todos', icon: <CheckSquare className="w-4 h-4" /> },
+    { id: 'announcements', label: 'Announcements', icon: <CheckSquare className="w-4 h-4" /> },
+    { id: 'messages', label: 'Messages', icon: <MessageSquare className="w-4 h-4" /> },
   ];
 
 
@@ -111,55 +112,6 @@ export default function AdminPage() {
         </div>
       </motion.div>
 
-      {/* Stats Grid */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8 max-w-md mx-auto"
-      >
-        {/* Messages Stats */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Messages</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Contact inquiries</p>
-              </div>
-            </div>
-            <Link
-              href="/admin/messages"
-              className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium text-sm px-3 py-1 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
-            >
-              View All
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {loading ? '...' : stats.messages?.total || 0}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Messages</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {loading ? '...' : stats.messages?.unread || 0}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Unread</p>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
 
       {/* Portfolio Management Section */}
       <motion.div 
@@ -239,9 +191,76 @@ export default function AdminPage() {
                 <ExperienceTab />
               </div>
             )}
-            {activeTab === 'todos' && (
+            {activeTab === 'announcements' && (
               <div className="space-y-6">
-                <AdminTodos />
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Announcements</h3>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Manage announcements</span>
+                </div>
+                <AnnouncementsTab />
+              </div>
+            )}
+            {activeTab === 'messages' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Messages</h3>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">View message statistics</span>
+                </div>
+                
+                {/* Message Statistics */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <MessageSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                          {loading ? '...' : stats.messages?.total || 0}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Total Messages</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <CheckSquare className="w-5 h-5 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                          {loading ? '...' : (stats.messages?.total || 0) - (stats.messages?.unread || 0)}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Read Messages</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                        <MessageSquare className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                          {loading ? '...' : stats.messages?.unread || 0}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Unread Messages</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* View Messages Button */}
+                <div className="text-center">
+                  <button
+                    onClick={() => router.push('/admin/messages')}
+                    className="bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    View All Messages
+                  </button>
+                </div>
               </div>
             )}
           </div>

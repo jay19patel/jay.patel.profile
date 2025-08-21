@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { getMessages } from '@/app/actions/messages'
+import { getMessages } from '@/app/actions/admin'
 
 export default function Messages() {
   const [messages, setMessages] = useState([])

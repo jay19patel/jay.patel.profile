@@ -29,9 +29,7 @@ import { toast } from 'sonner';
 
 export default function AnnouncementsTab() {
   const [announcements, setAnnouncements] = useState([]);
-  const [currentTasks, setCurrentTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('announcements'); // 'announcements' or 'tasks'
   const [newItem, setNewItem] = useState({
     type: 'youtube',
     title: '',
@@ -52,25 +50,10 @@ export default function AnnouncementsTab() {
     { id: 'blog', label: 'Blog', icon: Edit3, color: 'indigo' }
   ];
 
-  const taskCategories = [
-    { id: 'Content Creation', label: 'Content Creation', icon: Youtube, color: 'red' },
-    { id: 'Speaking', label: 'Speaking', icon: Target, color: 'blue' },
-    { id: 'Development', label: 'Development', icon: Target, color: 'green' },
-    { id: 'Content Strategy', label: 'Content Strategy', icon: BookOpen, color: 'purple' },
-    { id: 'Personal', label: 'Personal', icon: Target, color: 'pink' },
-    { id: 'Open Source', label: 'Open Source', icon: Github, color: 'gray' }
-  ];
-
   const priorities = [
     { id: 'low', label: 'Low', color: 'gray' },
     { id: 'medium', label: 'Medium', color: 'yellow' },
     { id: 'high', label: 'High', color: 'red' }
-  ];
-
-  const taskStatuses = [
-    { id: 'todo', label: 'Todo', color: 'gray' },
-    { id: 'in_progress', label: 'In Progress', color: 'blue' },
-    { id: 'completed', label: 'Completed', color: 'green' }
   ];
 
   useEffect(() => {
@@ -82,7 +65,6 @@ export default function AnnouncementsTab() {
       setLoading(true);
       const data = await import('@/data/announcements.json');
       setAnnouncements(data.announcements || []);
-      setCurrentTasks(data.currentTasks || []);
     } catch (error) {
       console.error('Error loading data:', error);
       toast.error('Failed to load data');
@@ -91,14 +73,13 @@ export default function AnnouncementsTab() {
     }
   };
 
-  const saveData = async (updatedAnnouncements, updatedTasks) => {
+  const saveData = async (updatedAnnouncements) => {
     try {
       const response = await fetch('/api/announcements', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          announcements: updatedAnnouncements,
-          currentTasks: updatedTasks
+          announcements: updatedAnnouncements
         })
       });
       
@@ -120,98 +101,49 @@ export default function AnnouncementsTab() {
       return;
     }
 
-    if (activeTab === 'announcements') {
-      const announcement = {
-        id: Date.now(),
-        type: newItem.type,
-        title: newItem.title.trim(),
-        description: newItem.description.trim(),
-        link: newItem.link.trim(),
-        icon: getTypeIcon(newItem.type),
-        color: getTypeColor(newItem.type),
-        isActive: newItem.isActive,
-        priority: newItem.priority,
-        createdAt: new Date().toISOString().split('T')[0],
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 30 days from now
-      };
+    const announcement = {
+      id: Date.now(),
+      type: newItem.type,
+      title: newItem.title.trim(),
+      description: newItem.description.trim(),
+      link: newItem.link.trim(),
+      icon: getTypeIcon(newItem.type),
+      color: getTypeColor(newItem.type),
+      isActive: newItem.isActive,
+      priority: newItem.priority,
+      createdAt: new Date().toISOString().split('T')[0],
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 30 days from now
+    };
 
-      const updatedAnnouncements = [...announcements, announcement];
-      const saved = await saveData(updatedAnnouncements, currentTasks);
-      
-      if (saved) {
-        setAnnouncements(updatedAnnouncements);
-        resetForm();
-        toast.success('Announcement added successfully');
-      }
-    } else {
-      const task = {
-        id: Date.now(),
-        title: newItem.title.trim(),
-        description: newItem.description.trim(),
-        status: 'todo',
-        priority: newItem.priority,
-        dueDate: newItem.dueDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        progress: 0,
-        category: newItem.category || 'Development',
-        icon: getTaskIcon(newItem.category || 'Development')
-      };
-
-      const updatedTasks = [...currentTasks, task];
-      const saved = await saveData(announcements, updatedTasks);
-      
-      if (saved) {
-        setCurrentTasks(updatedTasks);
-        resetForm();
-        toast.success('Task added successfully');
-      }
+    const updatedAnnouncements = [...announcements, announcement];
+    const saved = await saveData(updatedAnnouncements);
+    
+    if (saved) {
+      setAnnouncements(updatedAnnouncements);
+      resetForm();
+      toast.success('Announcement added successfully');
     }
   };
 
-  const deleteItem = async (id, type) => {
-    if (type === 'announcement') {
-      const updatedAnnouncements = announcements.filter(item => item.id !== id);
-      const saved = await saveData(updatedAnnouncements, currentTasks);
-      
-      if (saved) {
-        setAnnouncements(updatedAnnouncements);
-        toast.success('Announcement deleted successfully');
-      }
-    } else {
-      const updatedTasks = currentTasks.filter(item => item.id !== id);
-      const saved = await saveData(announcements, updatedTasks);
-      
-      if (saved) {
-        setCurrentTasks(updatedTasks);
-        toast.success('Task deleted successfully');
-      }
+  const deleteItem = async (id) => {
+    const updatedAnnouncements = announcements.filter(item => item.id !== id);
+    const saved = await saveData(updatedAnnouncements);
+    
+    if (saved) {
+      setAnnouncements(updatedAnnouncements);
+      toast.success('Announcement deleted successfully');
     }
   };
 
-  const toggleActive = async (id, type) => {
-    if (type === 'announcement') {
-      const updatedAnnouncements = announcements.map(item =>
-        item.id === id ? { ...item, isActive: !item.isActive } : item
-      );
-      const saved = await saveData(updatedAnnouncements, currentTasks);
-      
-      if (saved) {
-        setAnnouncements(updatedAnnouncements);
-        toast.success('Announcement status updated');
-      }
-    } else {
-      const updatedTasks = currentTasks.map(item =>
-        item.id === id ? { 
-          ...item, 
-          status: item.status === 'completed' ? 'in_progress' : 'completed',
-          progress: item.status === 'completed' ? 80 : 100
-        } : item
-      );
-      const saved = await saveData(announcements, updatedTasks);
-      
-      if (saved) {
-        setCurrentTasks(updatedTasks);
-        toast.success('Task status updated');
-      }
+  const toggleActive = async (id) => {
+    const updatedAnnouncements = announcements.map(item =>
+      item.id === id ? { ...item, isActive: !item.isActive } : item
+    );
+    const saved = await saveData(updatedAnnouncements);
+    
+    if (saved) {
+      setAnnouncements(updatedAnnouncements);
+      toast.success('Announcement status updated');
     }
   };
 
@@ -237,10 +169,6 @@ export default function AnnouncementsTab() {
     return typeConfig ? typeConfig.color : 'blue';
   };
 
-  const getTaskIcon = (category) => {
-    const categoryConfig = taskCategories.find(c => c.id === category);
-    return categoryConfig ? categoryConfig.label.toLowerCase() : 'task';
-  };
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -264,9 +192,9 @@ export default function AnnouncementsTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Announcements & Tasks</h3>
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Announcements</h3>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Manage your announcements and current tasks displayed on the homepage
+            Manage your announcements displayed on the homepage
           </p>
         </div>
         <Button
@@ -274,91 +202,36 @@ export default function AnnouncementsTab() {
           className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           <Plus className="w-4 h-4 mr-2" />
-          Add {activeTab === 'announcements' ? 'Announcement' : 'Task'}
+          Add Announcement
         </Button>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-200 dark:border-gray-700">
-        <button
-          onClick={() => setActiveTab('announcements')}
-          className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-            activeTab === 'announcements'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-          }`}
-        >
-          Announcements ({announcements.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('tasks')}
-          className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-            activeTab === 'tasks'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-          }`}
-        >
-          Current Tasks ({currentTasks.length})
-        </button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {activeTab === 'announcements' ? (
-          <>
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {announcements.length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Announcements</div>
-            </div>
-            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {announcements.filter(a => a.isActive).length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Active</div>
-            </div>
-            <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {announcements.filter(a => a.priority === 'high').length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">High Priority</div>
-            </div>
-            <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {announcements.filter(a => a.type === 'youtube').length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">YouTube Videos</div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {currentTasks.length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Tasks</div>
-            </div>
-            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {currentTasks.filter(t => t.status === 'completed').length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
-            </div>
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                {currentTasks.filter(t => t.status === 'in_progress').length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
-            </div>
-            <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {currentTasks.filter(t => t.priority === 'high').length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">High Priority</div>
-            </div>
-          </>
-        )}
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            {announcements.length}
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">Total Announcements</div>
+        </div>
+        <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+            {announcements.filter(a => a.isActive).length}
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">Active</div>
+        </div>
+        <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+          <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+            {announcements.filter(a => a.priority === 'high').length}
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">High Priority</div>
+        </div>
+        <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+            {announcements.filter(a => a.type === 'youtube').length}
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">YouTube Videos</div>
+        </div>
       </div>
 
       {/* Add Form */}
@@ -371,7 +244,7 @@ export default function AnnouncementsTab() {
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6"
           >
             <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Add New {activeTab === 'announcements' ? 'Announcement' : 'Task'}
+              Add New Announcement
             </h4>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -382,24 +255,24 @@ export default function AnnouncementsTab() {
                 <Input
                   value={newItem.title}
                   onChange={(e) => setNewItem(prev => ({ ...prev, title: e.target.value }))}
-                  placeholder={activeTab === 'announcements' ? 'Announcement title...' : 'Task title...'}
+                  placeholder="Announcement title..."
                   className="w-full"
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {activeTab === 'announcements' ? 'Type' : 'Category'}
+                  Type
                 </label>
                 <select
-                  value={activeTab === 'announcements' ? newItem.type : newItem.category}
+                  value={newItem.type}
                   onChange={(e) => setNewItem(prev => ({ 
                     ...prev, 
-                    [activeTab === 'announcements' ? 'type' : 'category']: e.target.value 
+                    type: e.target.value 
                   }))}
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
-                  {(activeTab === 'announcements' ? announcementTypes : taskCategories).map(item => (
+                  {announcementTypes.map(item => (
                     <option key={item.id} value={item.id}>
                       {item.label}
                     </option>
@@ -421,73 +294,53 @@ export default function AnnouncementsTab() {
               />
             </div>
 
-            {activeTab === 'announcements' && (
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Link
-                </label>
-                <Input
-                  value={newItem.link}
-                  onChange={(e) => setNewItem(prev => ({ ...prev, link: e.target.value }))}
-                  placeholder="https://example.com"
-                  className="w-full"
-                />
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Priority
-                </label>
-                <select
-                  value={newItem.priority}
-                  onChange={(e) => setNewItem(prev => ({ ...prev, priority: e.target.value }))}
-                  className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                >
-                  {priorities.map(priority => (
-                    <option key={priority.id} value={priority.id}>
-                      {priority.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {activeTab === 'tasks' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Due Date
-                  </label>
-                  <Input
-                    type="date"
-                    value={newItem.dueDate}
-                    onChange={(e) => setNewItem(prev => ({ ...prev, dueDate: e.target.value }))}
-                    className="w-full"
-                  />
-                </div>
-              )}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Link
+              </label>
+              <Input
+                value={newItem.link}
+                onChange={(e) => setNewItem(prev => ({ ...prev, link: e.target.value }))}
+                placeholder="https://example.com"
+                className="w-full"
+              />
             </div>
 
-            {activeTab === 'announcements' && (
-              <div className="mb-4">
-                <label className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={newItem.isActive}
-                    onChange={(e) => setNewItem(prev => ({ ...prev, isActive: e.target.checked }))}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Active (show on homepage)
-                  </span>
-                </label>
-              </div>
-            )}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Priority
+              </label>
+              <select
+                value={newItem.priority}
+                onChange={(e) => setNewItem(prev => ({ ...prev, priority: e.target.value }))}
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                {priorities.map(priority => (
+                  <option key={priority.id} value={priority.id}>
+                    {priority.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={newItem.isActive}
+                  onChange={(e) => setNewItem(prev => ({ ...prev, isActive: e.target.checked }))}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Active (show on homepage)
+                </span>
+              </label>
+            </div>
 
             <div className="flex gap-3">
               <Button onClick={addItem} className="bg-blue-600 hover:bg-blue-700 text-white">
                 <Plus className="w-4 h-4 mr-2" />
-                Add {activeTab === 'announcements' ? 'Announcement' : 'Task'}
+                Add Announcement
               </Button>
               <Button onClick={resetForm} variant="outline">
                 Cancel
@@ -499,35 +352,35 @@ export default function AnnouncementsTab() {
 
       {/* Items List */}
       <div className="space-y-4">
-        {(activeTab === 'announcements' ? announcements : currentTasks).length === 0 ? (
+        {announcements.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
             <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No {activeTab === 'announcements' ? 'announcements' : 'tasks'} yet
+              No announcements yet
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Create your first {activeTab === 'announcements' ? 'announcement' : 'task'} to get started!
+              Create your first announcement to get started!
             </p>
           </div>
         ) : (
-          (activeTab === 'announcements' ? announcements : currentTasks).map((item) => (
+          announcements.map((item) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className={`bg-white dark:bg-gray-800 border rounded-lg p-6 transition-all duration-200 ${
-                (activeTab === 'announcements' ? item.isActive : item.status !== 'completed')
+                item.isActive
                   ? 'border-gray-200 dark:border-gray-700 hover:shadow-md' 
                   : 'border-gray-300 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-900/10'
               }`}
             >
               <div className="flex items-start gap-4">
                 <button
-                  onClick={() => toggleActive(item.id, activeTab === 'announcements' ? 'announcement' : 'task')}
+                  onClick={() => toggleActive(item.id)}
                   className="mt-1 flex-shrink-0"
                 >
-                  {(activeTab === 'announcements' ? item.isActive : item.status === 'completed') ? (
+                  {item.isActive ? (
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   ) : (
                     <Circle className="w-5 h-5 text-gray-400 hover:text-gray-600" />
@@ -542,7 +395,7 @@ export default function AnnouncementsTab() {
                     
                     <div className="flex items-center gap-2 ml-4 flex-shrink-0">
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300`}>
-                        {activeTab === 'announcements' ? item.type : item.category}
+                        {item.type}
                       </span>
                       
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
@@ -575,29 +428,15 @@ export default function AnnouncementsTab() {
                     </a>
                   )}
 
-                  {item.progress !== undefined && (
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Progress</span>
-                        <span className="text-xs font-bold text-gray-900 dark:text-white">{item.progress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="h-2 rounded-full bg-blue-500 transition-all duration-300"
-                          style={{ width: `${item.progress}%` }}
-                        />
-                      </div>
-                    </div>
-                  )}
 
                   <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                     <span>
-                      {activeTab === 'announcements' ? 'Created' : 'Due'}: {formatDate(item.createdAt || item.dueDate)}
+                      Created: {formatDate(item.createdAt)}
                     </span>
                     
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => deleteItem(item.id, activeTab === 'announcements' ? 'announcement' : 'task')}
+                        onClick={() => deleteItem(item.id)}
                         className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
