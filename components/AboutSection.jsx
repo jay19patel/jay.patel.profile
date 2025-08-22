@@ -76,7 +76,9 @@ const AboutSection = () => {
 
             {/* CTA */}
             <div className="pt-4 flex justify-center lg:justify-start">
-              <Button>More About Me</Button>
+              <Button onClick={() => {
+                  router.push('/about');
+                }}>More About Me</Button>
             </div>
           </div>
         </div>
