@@ -83,15 +83,17 @@ export default function AboutPage() {
       <div className="space-y-12">
         {/* Personal Intro Section */}
         <motion.section 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
           className="grid lg:grid-cols-3 gap-12 items-center"
         >
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
             className="flex justify-center items-center lg:col-span-1"
           >
             <div className="relative">
@@ -109,8 +111,9 @@ export default function AboutPage() {
               </motion.div>
               <motion.div 
                 initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.6 }}
+                whileInView={{ scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.8 }}
+                viewport={{ once: true }}
                 className="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full border-4 border-white dark:border-gray-700 flex items-center justify-center"
               >
                   <div className="w-4 h-4 bg-white rounded-full animate-pulse"></div>
@@ -119,14 +122,16 @@ export default function AboutPage() {
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
             className="lg:col-span-2 space-y-6 text-center lg:text-left"
           >
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              viewport={{ once: true }}
               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white"
             >
               Hello, I'm{' '}
@@ -136,8 +141,9 @@ export default function AboutPage() {
             </motion.h2>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              viewport={{ once: true }}
               className="flex flex-wrap justify-center lg:justify-start gap-3"
             >
                 <span className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-4 py-2 rounded-full text-sm font-medium">
@@ -151,8 +157,9 @@ export default function AboutPage() {
             </motion.div>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+              viewport={{ once: true }}
               className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed"
             >
                 A passionate developer and content creator who bridges the gap between technical expertise and creative storytelling. 
@@ -165,30 +172,66 @@ export default function AboutPage() {
         <div className="w-full h-px bg-gray-200 dark:bg-gray-700"></div>
 
         {/* Two Sides Section */}
-        <div className="container mx-auto px-8 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="container mx-auto px-8 relative z-10"
+        >
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center space-x-2 mb-4">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-center space-x-2 mb-6"
+            >
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
               <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">My Two Sides</span>
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
-            </div>
+            </motion.div>
 
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
+            >
               Developer &{" "}
               <span className="text-blue-600 dark:text-blue-400 relative">
                 Creator
                 <div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" />
               </span>
-            </h2>
+            </motion.h2>
 
-            <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              Bridging the gap between technical expertise and creative storytelling
-            </p>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
+            >
+              Bridging the gap between technical expertise and creative storytelling through innovative solutions and engaging content.
+            </motion.p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 gap-8"
+          >
             {/* Developer Side */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-8"
+            >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
                   <Code2 className="w-6 h-6 text-white" />
@@ -217,9 +260,15 @@ export default function AboutPage() {
                 <Zap className="w-4 h-4" />
                 <span className="text-sm font-medium">Always learning, always coding</span>
               </div>
-            </div>
+            </motion.div>
             {/* Content Creator Side */}
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-8">
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-8"
+            >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                   <Camera className="w-6 h-6 text-white" />
@@ -251,35 +300,71 @@ export default function AboutPage() {
                 <Heart className="w-4 h-4" />
                 <span className="text-sm font-medium">Building community through content</span>
               </div>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
 
         {/* My Journey Section */}
-        <div className="container mx-auto px-8 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="container mx-auto px-8 relative z-10"
+        >
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center space-x-2 mb-4">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-center space-x-2 mb-6"
+            >
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
               <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">My Journey</span>
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
-            </div>
+            </motion.div>
 
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
+            >
               From Beginner To{" "}
               <span className="text-blue-600 dark:text-blue-400 relative">
                 Educator
                 <div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" />
               </span>
-            </h2>
+            </motion.h2>
 
-            <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              From curious beginner to passionate developer and educator
-            </p>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
+            >
+              From curious beginner to passionate developer and educator, my journey has been filled with continuous learning and growth.
+            </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 text-center border border-green-200 dark:border-green-800">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 text-center border border-green-200 dark:border-green-800"
+            >
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <BookOpen className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
@@ -289,9 +374,15 @@ export default function AboutPage() {
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Started with curiosity about how websites work. Spent countless hours learning HTML, CSS, and JavaScript fundamentals.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 text-center border border-blue-200 dark:border-blue-800">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 text-center border border-blue-200 dark:border-blue-800"
+            >
               <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Code2 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
@@ -301,9 +392,15 @@ export default function AboutPage() {
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Graduated in 2023 and started building real projects. Mastered modern frameworks and began creating professional applications.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 text-center border border-purple-200 dark:border-purple-800">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+              viewport={{ once: true }}
+              className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 text-center border border-purple-200 dark:border-purple-800"
+            >
               <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-purple-600 dark:text-purple-400" />
               </div>
@@ -313,31 +410,55 @@ export default function AboutPage() {
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Now I share my knowledge through content creation, helping others learn and grow in their coding journey.
               </p>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
 
         {/* Professional Experience Section */}
-        <div className="container mx-auto px-8 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="container mx-auto px-8 relative z-10"
+        >
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center space-x-2 mb-4">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-center space-x-2 mb-6"
+            >
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
               <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">Professional Journey</span>
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
-            </div>
+            </motion.div>
 
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
+            >
               Work{" "}
               <span className="text-blue-600 dark:text-blue-400 relative">
                 Experience
                 <div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" />
               </span>
-            </h2>
+            </motion.h2>
 
-            <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              Building innovative solutions and growing through challenging projects
-            </p>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
+            >
+              Building innovative solutions and growing through challenging projects with cutting-edge technologies and passionate teams.
+            </motion.p>
           </div>
 
           {/* Experience Timeline */}
@@ -356,19 +477,13 @@ export default function AboutPage() {
                 )}
                 
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                  {/* Company Logo & Timeline Dot */}
+                  {/* Company Icon & Timeline Dot */}
                   <div className="flex-shrink-0 relative">
-                    <div className="w-16 h-16 bg-white dark:bg-gray-800 border-4 border-blue-200 dark:border-blue-800 rounded-full overflow-hidden flex items-center justify-center relative z-10">
-                      <Image
-                        src={experience.companyLogo}
-                        alt={experience.company}
-                        width={40}
-                        height={40}
-                        className="object-contain"
-                      />
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border-2 border-blue-200 dark:border-blue-700 rounded-xl flex items-center justify-center relative z-10 shadow-lg">
+                      <Building2 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                     </div>
                     {experience.isCurrentJob && (
-                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center">
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center shadow-md">
                         <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                       </div>
                     )}
@@ -384,7 +499,7 @@ export default function AboutPage() {
                             {experience.position}
                           </h3>
                           {experience.isCurrentJob && (
-                            <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full text-xs font-medium">
+                            <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full text-xs font-medium">
                               Current
                             </span>
                           )}
@@ -469,44 +584,85 @@ export default function AboutPage() {
               </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Interests & Hobbies */}
-        <div className="container mx-auto px-8 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="container mx-auto px-8 relative z-10"
+        >
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center space-x-2 mb-4">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-center space-x-2 mb-6"
+            >
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
               <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">What I Love</span>
               <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
-            </div>
+            </motion.div>
 
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
+            >
               Beyond{" "}
               <span className="text-blue-600 dark:text-blue-400 relative">
                 Coding
                 <div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" />
               </span>
-            </h2>
+            </motion.h2>
 
-            <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-              Beyond coding, here's what drives my passion
-            </p>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
+            >
+              Beyond coding, here's what drives my passion and keeps me motivated in my journey of continuous growth and learning.
+            </motion.p>
           </div>
 
-          <div className="max-w-4xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
             <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 text-center leading-relaxed">
               When I'm not coding, I explore various interests that fuel my creativity and keep me motivated. 
               Each of these areas contributes to my growth as both a developer and content creator.
             </p>
             
-            <div className="flex flex-wrap justify-center gap-3">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              viewport={{ once: true }}
+              className="flex flex-wrap justify-center gap-3"
+            >
               {interests.map((interest, index) => {
                 const IconComponent = interest.icon
                 return (
-                  <div 
-                    key={index} 
-                    className="group flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3 rounded-xl hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  <motion.div 
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 1 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -5, scale: 1.05 }}
+                    className="group flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3 rounded-xl hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg transition-all duration-300"
                   >
                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                       <IconComponent className="w-4 h-4 text-white" />
@@ -519,19 +675,25 @@ export default function AboutPage() {
                         {interest.desc}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 )
               })}
-            </div>
+            </motion.div>
             
-            <div className="mt-8 text-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+              viewport={{ once: true }}
+              className="mt-8 text-center"
+            >
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-800">
                 <Coffee className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Always learning, always creating</span>
               </div>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
     </PageSection>
   )

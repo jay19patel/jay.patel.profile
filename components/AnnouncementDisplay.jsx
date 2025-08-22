@@ -200,26 +200,48 @@ export default function AnnouncementDisplay() {
       className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
     >
       {/* Header */}
-      <div className="text-center mb-12">
-        <div className="flex items-center justify-center space-x-2 mb-4">
+      <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="flex items-center justify-center space-x-2 mb-6"
+        >
           <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
           <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">
             Current Updates
           </span>
           <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
-        </div>
+        </motion.div>
 
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
+        >
           What's <span className="text-blue-600 dark:text-blue-400 relative">Happening<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
-        </h2>
+        </motion.h2>
 
-        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-          Stay updated with my latest projects, announcements, and current tasks.
-        </p>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
+        >
+          Stay updated with my latest projects, announcements, and current tasks. Get real-time insights into my development journey and upcoming initiatives.
+        </motion.p>
       </div>
 
       {/* Auto-rotating Carousel */}
       <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        viewport={{ once: true }}
         className="relative"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}

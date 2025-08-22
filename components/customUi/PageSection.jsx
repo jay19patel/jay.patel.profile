@@ -1,4 +1,7 @@
+'use client'
+
 import React from 'react'
+import { motion } from 'framer-motion'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,7 +30,12 @@ export const PageSection = ({
       <div className="space-y-8 max-w-8xl mx-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-3xl shadow-[0_5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_5px_20px_rgba(0,0,0,0.3)] p-6 md:p-12 transition-colors duration-300 overflow-hidden">
         
         {showBreadcrumb && breadcrumbItems.length > 0 && (
-          <div className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full shadow-inner border border-gray-200 dark:border-gray-600">
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full shadow-inner border border-gray-200 dark:border-gray-600"
+          >
             <Breadcrumb>
               <BreadcrumbList className="flex items-center space-x-1">
                 {breadcrumbItems.map((item, index) => (
@@ -56,27 +64,47 @@ export const PageSection = ({
                 ))}
               </BreadcrumbList>
             </Breadcrumb>
-          </div>
+          </motion.div>
         )}
 
         {showHeader && (
-          <div className="relative py-4 md:py-8">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative py-4 md:py-8"
+          >
             {/* Background decorative elements */}
             <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/5 dark:to-purple-900/5 rounded-full blur-2xl opacity-40"></div>
+              <motion.div 
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 0.4 }}
+                transition={{ duration: 1.2, delay: 0.3 }}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/5 dark:to-purple-900/5 rounded-full blur-2xl"
+              />
             </div>
             
             <div className="relative grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Left Side - Text Content */}
               <div className="space-y-4 md:space-y-6 text-center lg:text-left">
-                <div className="flex items-center justify-center lg:justify-start space-x-4">
+                <motion.div 
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="flex items-center justify-center lg:justify-start space-x-4"
+                >
                   <div className="w-8 md:w-12 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
                   <span className="text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-widest text-xs md:text-sm">
                     {portfolioLabel}
                   </span>
-                </div>
+                </motion.div>
                 
-                <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                <motion.h1 
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
+                >
                   {headline.map((word, index) => (
                     <React.Fragment key={index}>
                       <span className={`${
@@ -89,38 +117,69 @@ export const PageSection = ({
                       {index < headline.length - 1 && <br />}
                     </React.Fragment>
                   ))}
-                </h1>
+                </motion.h1>
                 
               
               </div>
               
               {/* Right Side - Card Container */}
-              <div className="hidden lg:flex justify-center lg:justify-center items-center min-h-[320px] lg:min-h-[400px] p-4">
-                <div className="flex flex-col gap-4">
-                  <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-xl lg:max-w-none">
+              <motion.div 
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="hidden lg:flex justify-center lg:justify-center items-center min-h-[320px] lg:min-h-[400px] p-4"
+              >
+                <div className="flex flex-col gap-6">
+                  <motion.p 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                    className="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed max-w-xl lg:max-w-none"
+                  >
                     {description}
-                  </p>
+                  </motion.p>
                   
-                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-6">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1 }}
+                    className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-6"
+                  >
                     {stats.map((stat, index) => (
-                      <div key={index} className="flex items-center space-x-2">
+                      <motion.div 
+                        key={index} 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, delay: 1.2 + (index * 0.1) }}
+                        className="flex items-center space-x-2"
+                      >
                         <div className={`w-2 h-2 bg-${stat.color}-500 rounded-full animate-pulse`}></div>
                         <span className="text-sm text-gray-600 dark:text-gray-400">{stat.count} {stat.label}</span>
-                      </div>
+                      </motion.div>
                     ))}
-                  </div>
+                  </motion.div>
                 </div>
                 
                 <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                  <div className="w-72 h-72 lg:w-80 lg:h-80 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full blur-3xl"></div>
+                  <motion.div 
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 0.3 }}
+                    transition={{ duration: 1.5, delay: 0.8 }}
+                    className="w-72 h-72 lg:w-80 lg:h-80 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full blur-3xl"
+                  />
                 </div>
                 
                 <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-300 dark:via-blue-600 to-transparent transform -translate-y-1/2 lg:hidden"></div>
-              </div>
+              </motion.div>
             </div>
             
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 md:w-32 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
-          </div>
+            <motion.div 
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1, delay: 0.8 }}
+              className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 md:w-32 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
+            />
+          </motion.div>
         )}
 
         {children}

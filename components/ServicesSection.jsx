@@ -26,7 +26,7 @@ const ServicesSection = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="w-full max-w-7xl mx-auto py-16 lg:py-24"
+      className="w-full max-w-7xl mx-auto py-8 lg:py-8"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -37,7 +37,7 @@ const ServicesSection = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
                 className="flex items-center justify-center lg:justify-start space-x-2 text-blue-600 dark:text-blue-400"
               >

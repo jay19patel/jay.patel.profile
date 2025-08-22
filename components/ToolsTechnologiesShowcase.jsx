@@ -51,27 +51,52 @@ export default function ToolsTechnologiesShowcase() {
         <div className="absolute top-10 left-10 w-20 h-20 bg-blue-400/10 rounded-full blur-xl animate-pulse" />
         <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-400/10 rounded-full blur-xl animate-pulse delay-1000" />
       </div>
-      <div>
+      <div className="relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center space-x-2 mb-4">
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center space-x-2 mb-6"
+          >
             <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
             <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">Tools & Technologies</span>
             <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
-          </div>
+          </motion.div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
+          >
             My <span className="text-blue-600 dark:text-blue-400 relative">Toolkit<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
-          </h2>
+          </motion.h2>
 
-          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
-            Explore the tools and technologies I use to design, develop, and deploy modern digital experiences.
-          </p>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
+          >
+            Explore the tools and technologies I use to design, develop, and deploy modern digital experiences that drive innovation and deliver exceptional results.
+          </motion.p>
         </div>
-        <div className="space-y-4">
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          viewport={{ once: true }}
+          className="space-y-6"
+        >
           <MarqueeRow items={row1} />
           <MarqueeRow items={row2} reverse={true}/>
-        </div>
+        </motion.div>
       </div>
     </motion.section>
   );

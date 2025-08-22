@@ -1,10 +1,11 @@
 'use client'
 
 import React from 'react'
+import { motion } from 'framer-motion'
 import { PageSection } from '@/components/customUi/PageSection'
 import { Button } from '@/components/ui/button'
 import servicesData from '@/data/services.json'
-import { Button as CButton }     from '@/components/customUi/Button'
+import { Button as CButton } from '@/components/customUi/Button'
 const ServicesPage = () => {
   // Handle contact click
   const handleContactClick = () => {
@@ -31,24 +32,68 @@ const ServicesPage = () => {
 
   return (
     <PageSection {...headerProps}>
-      <div className="space-y-12">
+      <div className="space-y-16">
         {/* Services Introduction */}
-        <div className="text-center space-y-6 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-            What I Can Do For You
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-            I specialize in creating digital solutions that drive results. Whether you need a stunning website, 
-            powerful automation, or cutting-edge AI integration, I'm here to bring your vision to life with 
-            professional expertise and attention to detail.
-          </p>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="text-center space-y-8 max-w-4xl mx-auto"
+        >
+          <div className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-center space-x-2 mb-6"
+            >
+              <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+              <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">My Services</span>
+              <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+            </motion.div>
+
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white"
+            >
+              What I Can Do <span className="text-blue-600 dark:text-blue-400 relative">For You<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
+            </motion.h2>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto"
+            >
+              I specialize in creating digital solutions that drive results. Whether you need a stunning website, 
+              powerful automation, or cutting-edge AI integration, I'm here to bring your vision to life with 
+              professional expertise and attention to detail.
+            </motion.p>
+          </div>
+        </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {servicesData.services.map((service) => (
-            <article 
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+        >
+          {servicesData.services.map((service, index) => (
+            <motion.article 
               key={service.id}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 + (index * 0.1) }}
+              viewport={{ once: true }}
+              whileHover={{ y: -5, scale: 1.02 }}
               className="bg-white dark:bg-gray-800 rounded-2xl p-2 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500"
             >
               {/* Card Hero Section */}
@@ -129,55 +174,85 @@ const ServicesPage = () => {
                 </div>
 
               </footer>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
 
         {/* Contact Section */}
-        <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 rounded-3xl p-8 md:p-12 border border-gray-200 dark:border-gray-700 mt-16">
-          <div className="text-center space-y-6">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-              Ready to Start Your Project?
-            </h3>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Let's discuss your requirements and bring your ideas to life. I'm here to provide 
-              professional development services tailored to your specific needs.
-            </p>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 rounded-3xl p-8 md:p-12 border border-gray-200 dark:border-gray-700 mt-16"
+        >
+          <div className="text-center space-y-8">
+            <div className="space-y-6">
+              <motion.h3 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white"
+              >
+                Ready to Start Your <span className="text-blue-600 dark:text-blue-400 relative">Project?<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
+              </motion.h3>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true }}
+                className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed"
+              >
+                Let's discuss your requirements and bring your ideas to life. I'm here to provide 
+                professional development services tailored to your specific needs and deliver exceptional results.
+              </motion.p>
+            </div>
             
-            <div className="flex items-center justify-center pt-6">
-            <CButton>Contact Me</CButton>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-center pt-4"
+            >
+              <CButton className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+                Contact Me
+              </CButton>
+            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                  100%
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                  Client Satisfaction
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
-                  24/7
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                  Support Available
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
-                  Fast
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                  Delivery Guaranteed
-                </div>
-              </div>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8"
+            >
+              {[
+                { number: "100%", label: "Client Satisfaction", color: "blue" },
+                { number: "24/7", label: "Support Available", color: "purple" },
+                { number: "Fast", label: "Delivery Guaranteed", color: "green" }
+              ].map((stat, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1 + (index * 0.1) }}
+                  viewport={{ once: true }}
+                  className="text-center"
+                >
+                  <div className={`text-2xl md:text-3xl font-bold text-${stat.color}-600 dark:text-${stat.color}-400 mb-2`}>
+                    {stat.number}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </PageSection>
   )
