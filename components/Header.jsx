@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/customUi/Button';
 import { useTheme } from './ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
-import AnimatedLogo from './AnimatedLogo';
+import Image from 'next/image';
 import { 
   Sheet, 
   SheetContent, 
@@ -50,11 +50,23 @@ const Header = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex items-center space-x-3 flex-shrink-0"
+          className="flex items-center space-x-3 flex-shrink-0 ml-4"
         >
           <Link href="/" className="flex items-center space-x-3 hover:opacity-90 transition-opacity duration-200">
-            {/* Animated Brand Text */}
-            <AnimatedLogo />
+            {/* Logo Image */}
+            <div className="relative desktop-logo">
+              <Image 
+                src="/images/Logo-Main.png" 
+                alt="Logo" 
+                width={120} 
+                height={120}
+                className="h-10 w-auto object-contain"
+                style={{
+                  backgroundColor: 'transparent',
+                }}
+                priority
+              />
+            </div>
           </Link>
         </motion.div>
 
@@ -144,14 +156,22 @@ const Header = () => {
             >
               {/* Mobile Logo Header */}
               <SheetHeader className="border-b border-gray-200 pb-4 mb-6 pt-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-0.5">
-                      <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
-                      </div>
-                    </div>
-                    <AnimatedLogo className="text-lg" />
+                <div className="flex items-center justify-center w-full">
+                  <div className="relative">
+                    <Image 
+                      src="/images/Logo-Main-1.png" 
+                      alt="Logo" 
+                      width={120} 
+                      height={40}
+                      className="h-8 w-auto object-contain"
+                      style={{
+                        backgroundColor: 'transparent',
+                        mixBlendMode: 'normal',
+                        filter: 'none',
+                        maskImage: 'linear-gradient(to right, black, black)',
+                        WebkitMaskImage: 'linear-gradient(to right, black, black)'
+                      }}
+                    />
                   </div>
                 </div>
               </SheetHeader>
