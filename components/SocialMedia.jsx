@@ -1,115 +1,57 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Youtube, Instagram, Linkedin, Github, ExternalLink, Globe, Briefcase, Camera, Code } from "lucide-react"
 import { motion } from "framer-motion"
+import { getSocialMedia } from "@/app/actions/socialMedia"
+
+const iconMap = {
+  Youtube,
+  Instagram, 
+  Linkedin,
+  Github,
+  Globe,
+  Briefcase,
+  Camera,
+  Code,
+  ExternalLink
+}
 
 const SocialMedia = () => {
-  const socialPlatforms = [
-    {
-      id: 1,
-      name: "YouTube",
-      username: "@TechWithJay",
-      description: "Tech tutorials, coding walkthroughs, and web development tips for developers",
-      icon: Youtube,
-      bgColor: "bg-red-50",
-      darkBgColor: "dark:bg-red-900/20",
-      iconColor: "text-red-600 dark:text-red-400",
-      buttonColor: "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
-      followers: "2.5K+ Subscribers",
-      link: "https://youtube.com/@techwithcode"
-    },
-    {
-      id: 2,
-      name: "Instagram",
-      username: "@jay.codes",
-      description: "Behind-the-scenes coding, quick tips, and tech lifestyle content",
-      icon: Instagram,
-      bgColor: "bg-gradient-to-br from-purple-50 to-pink-50",
-      darkBgColor: "dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-pink-900/20",
-      iconColor: "text-purple-600 dark:text-purple-400",
-      buttonColor: "bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600",
-      followers: "1.8K+ Followers",
-      link: "https://instagram.com/jay.codes"
-    },
-    {
-      id: 3,
-      name: "LinkedIn",
-      username: "@jay-patel-dev",
-      description: "Professional insights, career tips, and industry discussions",
-      icon: Linkedin,
-      bgColor: "bg-blue-50",
-      darkBgColor: "dark:bg-blue-900/20",
-      iconColor: "text-blue-600 dark:text-blue-400",
-      buttonColor: "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
-      followers: "3.2K+ Connections",
-      link: "https://linkedin.com/in/jay-patel-dev"
-    },
-    {
-      id: 4,
-      name: "GitHub",
-      username: "@jay-patel",
-      description: "Open source projects, code repositories, and development contributions",
-      icon: Github,
-      bgColor: "bg-gray-50",
-      darkBgColor: "dark:bg-gray-900/20",
-      iconColor: "text-gray-800 dark:text-gray-200",
-      buttonColor: "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
-      followers: "500+ Repositories",
-      link: "https://github.com/jay-patel"
-    },
-    {
-      id: 5,
-      name: "Twitter",
-      username: "@jay_codes",
-      description: "Daily tech thoughts, quick tips, and engaging with the dev community",
-      icon: Globe,
-      bgColor: "bg-gray-50",
-      darkBgColor: "dark:bg-gray-900/20",
-      iconColor: "text-gray-800 dark:text-gray-200",
-      buttonColor: "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
-      followers: "1.2K+ Followers",
-      link: "https://twitter.com/jay_codes"
-    },
-    {
-      id: 6,
-      name: "Upwork",
-      username: "@jay-patel",
-      description: "Freelance projects, client work, and professional development services",
-      icon: Briefcase,
-      bgColor: "bg-green-50",
-      darkBgColor: "dark:bg-green-900/20",
-      iconColor: "text-green-600 dark:text-green-400",
-      buttonColor: "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700",
-      followers: "100% Success Rate",
-      link: "https://upwork.com/freelancers/jay-patel"
-    },
-    {
-      id: 7,
-      name: "Pinterest",
-      username: "@jaycodestech",
-      description: "Tech inspiration, coding aesthetics, and development workflow ideas",
-      icon: Camera,
-      bgColor: "bg-pink-50",
-      darkBgColor: "dark:bg-pink-900/20",
-      iconColor: "text-pink-600 dark:text-pink-400",
-      buttonColor: "bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600",
-      followers: "850+ Followers",
-      link: "https://pinterest.com/jaycodestech"
-    },
-    {
-      id: 8,
-      name: "Dev.to",
-      username: "@jaypatel",
-      description: "Technical articles, tutorials, and sharing knowledge with developers",
-      icon: Code,
-      bgColor: "bg-gray-50",
-      darkBgColor: "dark:bg-gray-900/20",
-      iconColor: "text-gray-800 dark:text-gray-200",
-      buttonColor: "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
-      followers: "950+ Followers",
-      link: "https://dev.to/jaypatel"
+  const [socialPlatforms, setSocialPlatforms] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchSocialMedia = async () => {
+      try {
+        const data = await getSocialMedia()
+        setSocialPlatforms(data)
+      } catch (error) {
+        console.error('Failed to fetch social media data:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    fetchSocialMedia()
+  }, [])
+
+  if (loading) {
+    return (
+      <motion.section 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="w-full py-16 max-w-8xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        </div>
+      </motion.section>
+    )
+  }
 
   return (
     <motion.section 
@@ -164,7 +106,7 @@ const SocialMedia = () => {
         {/* Social Media Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {socialPlatforms.map((platform, index) => {
-            const IconComponent = platform.icon
+            const IconComponent = iconMap[platform.icon] || Globe
             return (
               <motion.div 
                 key={platform.id} 

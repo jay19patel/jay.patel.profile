@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { MessageSquare, X, Send } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { MessageSquare, X, Send, User, Bot } from 'lucide-react'
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -22,7 +21,7 @@ const ChatBot = () => {
     setIsOpen(!isOpen)
     if (!isOpen) {
       // Add a welcome message when opening
-      setMessages([{ sender: 'bot', text: 'Hello! How can I help you today?' }])
+      setMessages([{ sender: 'bot', text: "Hi! I'm Jay Patel. How can I help you today?" }])
     } else {
         setMessages([])
         setInputValue('')
@@ -38,7 +37,7 @@ const ChatBot = () => {
     setInputValue('')
 
     setTimeout(() => {
-      setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: 'Thanks for your message!' }])
+      setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: "I'm Jay Patel. How can I help you?" }])
     }, 1000)
   }
 
@@ -62,11 +61,10 @@ const ChatBot = () => {
         {/* Header */}
         <div className="flex justify-between items-center p-4 bg-gray-100 dark:bg-gray-800 rounded-t-2xl border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src="/man.png" alt="Bot Avatar" />
-              <AvatarFallback>AI</AvatarFallback>
-            </Avatar>
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Chat with us</h3>
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">Chat with Jay</h3>
           </div>
           <button 
             onClick={toggleChat} 
@@ -83,19 +81,17 @@ const ChatBot = () => {
               key={index}
               className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
             >
-              <Avatar className="h-8 w-8 mt-1">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center mt-1 ${
+                msg.sender === 'user' 
+                  ? 'bg-gray-600 text-white' 
+                  : 'bg-blue-600 text-white'
+              }`}>
                 {msg.sender === 'user' ? (
-                  <>
-                    <AvatarImage src="/developer-image.jpg" alt="User Avatar" />
-                    <AvatarFallback>U</AvatarFallback>
-                  </>
+                  <User className="w-4 h-4" />
                 ) : (
-                  <>
-                    <AvatarImage src="/man.png" alt="Bot Avatar" />
-                    <AvatarFallback>AI</AvatarFallback>
-                  </>
+                  <Bot className="w-4 h-4" />
                 )}
-              </Avatar>
+              </div>
               <div
                 className={`max-w-[80%] p-3 rounded-2xl ${
                   msg.sender === 'user'

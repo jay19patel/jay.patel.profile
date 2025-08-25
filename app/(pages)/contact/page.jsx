@@ -101,7 +101,7 @@ export default function ContactPage() {
                     type="text"
                     name="name"
                     required
-                    placeholder="John Doe"
+                    placeholder="Enter your full name"
                     value={form.name}
                     onChange={handleChange}
                     className="h-12 text-lg border border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500"
@@ -117,7 +117,7 @@ export default function ContactPage() {
                     type="email"
                     name="email"
                     required
-                    placeholder="john@example.com"
+                    placeholder="Enter your email address"
                     value={form.email}
                     onChange={handleChange}
                     className="h-12 text-lg border border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500"

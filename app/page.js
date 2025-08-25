@@ -11,7 +11,7 @@ import AnnouncementDisplay from '@/components/AnnouncementDisplay'
 
 export default function Home() {
   return (
-    <main className='w-full flex flex-col items-center justify-center gap-12 sm:gap-16 lg:gap-20 px-4 sm:px-6 lg:px-8 py-8'>
+    <main className='w-full flex flex-col items-center justify-center gap-12 sm:gap-16 lg:gap-20 px-4 sm:px-4 lg:px-4 py-8'>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

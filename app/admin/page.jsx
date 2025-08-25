@@ -16,7 +16,6 @@ import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
 import { getMessages} from '@/app/actions/admin';
 import ToolkitTab from '@/components/admin/ToolkitTab';
-import SocialMediaTab from '@/components/admin/SocialMediaTab';
 import QnATab from '@/components/admin/QnATab';
 import ExperienceTab from '@/components/admin/ExperienceTab';
 import AnnouncementsTab from '@/components/admin/AnnouncementsTab';
@@ -29,7 +28,6 @@ export default function AdminPage() {
 
   const tabs = [
     { id: 'toolkit', label: 'My Toolkit', icon: <Settings className="w-4 h-4" /> },
-    { id: 'social', label: 'Social Media', icon: <Users className="w-4 h-4" /> },
     { id: 'qna', label: 'Q&A', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'experience', label: 'Experience', icon: <Shield className="w-4 h-4" /> },
     { id: 'announcements', label: 'Announcements', icon: <CheckSquare className="w-4 h-4" /> },
@@ -162,15 +160,6 @@ export default function AdminPage() {
                   <span className="text-sm text-gray-500 dark:text-gray-400">Manage your tech stack</span>
                 </div>
                 <ToolkitTab />
-              </div>
-            )}
-            {activeTab === 'social' && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Social Media</h3>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Manage social links</span>
-                </div>
-                <SocialMediaTab />
               </div>
             )}
             {activeTab === 'qna' && (
