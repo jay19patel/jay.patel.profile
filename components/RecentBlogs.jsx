@@ -132,6 +132,14 @@ export default function RecentBlogs() {
     return () => clearInterval(interval)
   }, [isAutoPlaying, blogs.length])
 
+  // Function to navigate to specific slide
+  const goToSlide = (index) => {
+    setCurrentIndex(index)
+    setIsAutoPlaying(false)
+    // Resume autoplay after 3 seconds of inactivity
+    setTimeout(() => setIsAutoPlaying(true), 3000)
+  }
+
 
   if (isLoading) {
     return (

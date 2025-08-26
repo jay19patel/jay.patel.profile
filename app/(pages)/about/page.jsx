@@ -280,18 +280,15 @@ export default function AboutPage() {
                 My goal is to make programming accessible and inspire others to start their tech careers. 
                 From quick tips to detailed walkthroughs, I love teaching through content.
               </p>
-              <div className="space-y-3 mb-6">
+              <div className="grid grid-cols-2 gap-3 mb-6">
                 {contentCreatorStats.map((stat, index) => {
                   // Lucide icon mapping
                   const iconMap = { Youtube, Instagram, Linkedin, Github };
                   const IconComponent = iconMap[stat.icon] || Users;
                   return (
-                    <div key={index} className="flex items-center justify-between p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <IconComponent className={`w-5 h-5 ${stat.iconColor || ''}`} />
-                        <span className="text-sm text-gray-600 dark:text-gray-300">{stat.name}</span>
-                      </div>
-                      <span className="font-semibold text-gray-900 dark:text-white">{stat.followers}</span>
+                    <div key={index} className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+                      <IconComponent className={`w-5 h-5 ${stat.iconColor || ''}`} />
+                      <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{stat.name}</span>
                     </div>
                   )
                 })}

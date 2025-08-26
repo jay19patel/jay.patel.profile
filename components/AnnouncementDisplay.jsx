@@ -89,15 +89,15 @@ const AnnouncementCard = ({ item, index, isActive }) => {
           </motion.h3>
         </div>
         
-        {/* Link button on the side */}
+        {/* Link button at bottom center */}
         {item.link && (
           <motion.a
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute top-1/2 right-6 -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-900 px-6 py-3 rounded-full font-medium transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-900 px-4 py-2 rounded-full font-medium transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 text-sm"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -109,7 +109,7 @@ const AnnouncementCard = ({ item, index, isActive }) => {
                item.type === 'blog' ? 'Read' :
                'View'}
             </span>
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className="w-3 h-3" />
           </motion.a>
         )}
       </div>
@@ -255,6 +255,23 @@ export default function AnnouncementDisplay() {
             isActive={true}
           />
         </AnimatePresence>
+
+        {/* Navigation Dots */}
+        {items.length > 1 && (
+          <div className="flex justify-center mt-8 gap-2">
+            {items.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  index === currentIndex
+                    ? 'bg-blue-600 scale-125'
+                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </motion.div>
     </motion.section>
   )

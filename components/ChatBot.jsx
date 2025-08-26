@@ -37,7 +37,7 @@ const ChatBot = () => {
     setInputValue('')
 
     setTimeout(() => {
-      setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: "I'm Jay Patel. How can I help you?" }])
+      setMessages(prevMessages => [...prevMessages, { sender: 'bot', text: "This service is under construction. Sorry for any inconvenience." }])
     }, 1000)
   }
 
