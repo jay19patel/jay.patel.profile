@@ -7,13 +7,16 @@ import { EmptyState } from '@/components/customUi/EmptyState';
 import Image from 'next/image';
 import Head from 'next/head';
 import { toast } from 'sonner';
-import { ExternalLink, AlertCircle } from 'lucide-react';
+import { ExternalLink, AlertCircle, Copy, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [copiedIndex, setCopiedIndex] = useState(null);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -45,6 +48,49 @@ export default function BlogDetailPage() {
 
     fetchBlog();
   }, [slug]);
+
+  // Copy code function
+  const copyCode = async (code, index) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedIndex(index);
+      toast.success('Code copied to clipboard!');
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (err) {
+      toast.error('Failed to copy code');
+    }
+  };
+
+  // Format and clean code content
+  const formatCode = (code) => {
+    // Remove extra whitespace from beginning and end
+    let formattedCode = code.trim();
+    
+    // Normalize line endings
+    formattedCode = formattedCode.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    
+    // Remove common leading whitespace while preserving relative indentation
+    const lines = formattedCode.split('\n');
+    if (lines.length > 1) {
+      const nonEmptyLines = lines.filter(line => line.trim().length > 0);
+      if (nonEmptyLines.length > 0) {
+        const minIndent = Math.min(...nonEmptyLines.map(line => {
+          const match = line.match(/^(\s*)/);
+          return match ? match[1].length : 0;
+        }));
+        
+        if (minIndent > 0) {
+          formattedCode = lines.map(line => {
+            if (line.trim().length === 0) return '';
+            return line.substring(minIndent);
+          }).join('\n');
+        }
+      }
+    }
+    
+    return formattedCode;
+  };
+
 
   // Parse content if it's a string
   const parseContent = (content) => {
@@ -203,20 +249,64 @@ export default function BlogDetailPage() {
         );
 
       case 'code':
+        const codeIndex = `code-${index}`;
+        const isCopied = copiedIndex === codeIndex;
         return (
           <div key={index} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
-            <div className="relative">
-              <div className="absolute top-3 right-3 px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded font-mono">
-                {section.language}
+            <div className="relative group">
+              {/* VS Code-like header */}
+              <div className="absolute top-0 left-0 right-0 bg-[#2d2d30] border-b border-[#3e3e42] px-4 py-2 rounded-t-lg flex items-center justify-between z-10">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <div className="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                    <div className="w-3 h-3 rounded-full bg-[#28ca42]"></div>
+                  </div>
+                  <span className="ml-2 text-[#cccccc] text-xs font-mono">
+                    {section.language}
+                  </span>
+                </div>
+                <button
+                  onClick={() => copyCode(formatCode(section.content), codeIndex)}
+                  className="flex items-center gap-1 px-2 py-1 bg-[#0e639c] hover:bg-[#1177bb] text-white text-xs rounded font-mono transition-all duration-200 opacity-0 group-hover:opacity-100"
+                  title="Copy code"
+                >
+                  {isCopied ? (
+                    <>
+                      <Check className="w-3 h-3" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Copy</span>
+                    </>
+                  )}
+                </button>
               </div>
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                <code className={`language-${section.language}`}>
-                  {section.content}
-                </code>
-              </pre>
+              
+              {/* Code block with professional syntax highlighting - no line numbers */}
+              <div className="bg-[#1e1e1e] rounded-lg overflow-hidden border border-[#333] shadow-2xl pt-12">
+                <SyntaxHighlighter
+                  language={section.language}
+                  style={vscDarkPlus}
+                  showLineNumbers={false}
+                  wrapLines={true}
+                  customStyle={{
+                    margin: 0,
+                    padding: '1rem',
+                    background: '#1e1e1e',
+                    fontSize: '14px',
+                    lineHeight: '1.5',
+                    fontFamily: "'Fira Code', 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace"
+                  }}
+                >
+                  {formatCode(section.content)}
+                </SyntaxHighlighter>
+              </div>
             </div>
           </div>
         );
