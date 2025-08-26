@@ -1,81 +1,29 @@
 "use client"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null)
+  const [galleryImages, setGalleryImages] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Simplified gallery images - only src, title, description, url
-  const galleryImages = [
-    {
-      src: "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      title: "Modern Web Development",
-      description: "Building responsive web applications with latest technologies",
-      url: "https://github.com"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&q=80",
-      title: "Data Analytics Dashboard",
-      description: "Interactive data visualization and business intelligence",
-      url: "https://analytics.example.com"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=550&q=80",
-      title: "Developer Workspace",
-      description: "Clean and productive development environment setup"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=350&q=80",
-      title: "Business Intelligence",
-      description: "Advanced analytics and reporting solutions",
-      url: "https://tableau.com"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=650&q=80",
-      title: "Mobile App Development",
-      description: "Cross-platform mobile application development",
-      url: "https://flutter.dev"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=500&h=400&q=80",
-      title: "UI/UX Design",
-      description: "User-centered design and interface development"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=600&q=80",
-      title: "Artificial Intelligence",
-      description: "Machine learning and AI-powered solutions",
-      url: "https://openai.com"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&h=400&q=80",
-      title: "Cloud Computing",
-      description: "Scalable cloud infrastructure and services",
-      url: "https://aws.amazon.com"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=580&q=80",
-      title: "Team Collaboration",
-      description: "Agile development and team productivity"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&h=350&q=80",
-      title: "Tech Innovation",
-      description: "Cutting-edge technology and innovation",
-      url: "https://techcrunch.com"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=400&h=650&q=80",
-      title: "Code Life",
-      description: "The daily life of a passionate developer"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&q=80",
-      title: "Developer Community",
-      description: "Building connections in the tech community",
-      url: "https://stackoverflow.com"
+  // Load gallery images from JSON file
+  useEffect(() => {
+    const fetchGalleryImages = async () => {
+      try {
+        const galleryData = await import('@/data/gallery.json')
+        // Filter only visible images
+        const visibleImages = galleryData.images.filter(image => image.visible)
+        setGalleryImages(visibleImages)
+      } catch (error) {
+        console.error('Error loading gallery:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
-  ]
+
+    fetchGalleryImages()
+  }, [])
 
   // Auto-detect type based on keywords in title/description
   const getAutoType = (title, description) => {
@@ -94,6 +42,14 @@ const Gallery = () => {
       case 'lifestyle': return 'bg-orange-500'
       default: return 'bg-gray-500'
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-7xl mx-auto py-16 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    )
   }
 
   return (
@@ -140,56 +96,51 @@ const Gallery = () => {
           viewport={{ once: true }}
           className="relative"
         >
-          {/* Scrollable Gallery Container */}
-          <div className="h-[600px] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-            <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 pr-2">
-              {galleryImages.map((image, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.6, 
-                    delay: index * 0.05 
-                  }}
-                  viewport={{ once: true }}
-                  className="relative group cursor-pointer mb-4 break-inside-avoid"
-                  onClick={() => setSelectedImage(image)}
-                >
-                  <div className="relative overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <img
-                      src={image.src}
-                      alt={image.title}
-                      className="w-full h-auto object-cover transition-all duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-white font-semibold text-sm mb-1">
-                              {image.title}
-                            </h3>
-                            <p className="text-gray-200 text-xs line-clamp-2">
-                              {image.description}
-                            </p>
-                          </div>
-                          <span className={`px-2 py-1 rounded-full text-xs text-white font-medium ${getTypeColor(getAutoType(image.title, image.description))} ml-2 flex-shrink-0`}>
-                            {getAutoType(image.title, image.description)}
-                          </span>
+          {/* Simple Gallery Container */}
+          <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+            {galleryImages.map((image, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.05 
+                }}
+                viewport={{ once: true }}
+                className="relative group cursor-pointer mb-4 break-inside-avoid"
+                onClick={() => setSelectedImage(image)}
+              >
+                <div className="relative overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <img
+                    src={image.src}
+                    alt={image.title}
+                    className="w-full h-auto object-cover transition-all duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-white font-semibold text-sm mb-1">
+                            {image.title}
+                          </h3>
+                          <p className="text-gray-200 text-xs line-clamp-2">
+                            {image.description}
+                          </p>
                         </div>
+                        <span className={`px-2 py-1 rounded-full text-xs text-white font-medium ${getTypeColor(getAutoType(image.title, image.description))} ml-2 flex-shrink-0`}>
+                          {getAutoType(image.title, image.description)}
+                        </span>
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-          
-          {/* Bottom Fade Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-gray-900 dark:via-gray-900/80 pointer-events-none"></div>
         </motion.div>
       </div>
 

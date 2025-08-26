@@ -9,7 +9,8 @@ import {
   Settings,
   Users,
   Shield,
-  CheckSquare
+  CheckSquare,
+  Images
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
@@ -19,6 +20,7 @@ import ToolkitTab from '@/components/admin/ToolkitTab';
 import QnATab from '@/components/admin/QnATab';
 import ExperienceTab from '@/components/admin/ExperienceTab';
 import AnnouncementsTab from '@/components/admin/AnnouncementsTab';
+import GalleryTab from '@/components/admin/GalleryTab';
 
 export default function AdminPage() {
 
@@ -31,6 +33,7 @@ export default function AdminPage() {
     { id: 'qna', label: 'Q&A', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'experience', label: 'Experience', icon: <Shield className="w-4 h-4" /> },
     { id: 'announcements', label: 'Announcements', icon: <CheckSquare className="w-4 h-4" /> },
+    { id: 'gallery', label: 'Gallery', icon: <Images className="w-4 h-4" /> },
     { id: 'messages', label: 'Messages', icon: <MessageSquare className="w-4 h-4" /> },
   ];
 
@@ -187,6 +190,15 @@ export default function AdminPage() {
                   <span className="text-sm text-gray-500 dark:text-gray-400">Manage announcements</span>
                 </div>
                 <AnnouncementsTab />
+              </div>
+            )}
+            {activeTab === 'gallery' && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Gallery</h3>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Manage gallery images</span>
+                </div>
+                <GalleryTab />
               </div>
             )}
             {activeTab === 'messages' && (
