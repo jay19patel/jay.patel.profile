@@ -8,10 +8,11 @@ import SocialMedia from '@/components/SocialMedia'
 import ToolsTechnologiesShowcase from '@/components/ToolsTechnologiesShowcase'
 import RecentBlogs from '@/components/RecentBlogs'
 import AnnouncementDisplay from '@/components/AnnouncementDisplay'
+import Gallery from '@/components/Gallery'
 
 export default function Home() {
   return (
-    <main className='w-full flex flex-col items-center justify-center gap-12 sm:gap-16 lg:gap-20 px-4 sm:px-4 lg:px-4 py-8'>
+    <main className='w-full flex flex-col items-center justify-center gap-12 px-4 sm:px-4 lg:px-4 py-8'>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -79,6 +80,16 @@ export default function Home() {
         className="w-full"
       >
         <RecentBlogs />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.1 }}
+        viewport={{ once: true }}
+        className="w-full"
+      >
+        <Gallery />
       </motion.div>
     </main>
   )

@@ -122,7 +122,11 @@
 
 
 :root {
-  --grid-color: rgba(165, 165, 165, 0.238);
+  --grid-color: rgba(165, 165, 165, 0.1);
+}
+
+.dark {
+  --grid-color: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -135,6 +139,19 @@ body {
   color: inherit;
   font-family: sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, var(--background) 0%, transparent 15%, transparent 85%, var(--background) 100%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Custom animations for orbital components */

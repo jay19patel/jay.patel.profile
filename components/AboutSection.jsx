@@ -4,6 +4,7 @@ import { Button } from "@/components/customUi/Button"
 import { ArrowRight, Check } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
+import CodeTerminal from "./CodeTerminal"
 
 const AboutSection = () => {
   const router = useRouter()
@@ -17,7 +18,51 @@ const AboutSection = () => {
       className="w-full max-w-7xl mx-auto py-8 lg:py-8"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* About Me Header Section */}
+        <div className="text-center mb-12">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center space-x-2 text-blue-600 dark:text-blue-400 mb-6"
+          >
+            <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+            <span className="text-sm font-medium tracking-wide uppercase">About Me</span>
+            <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+          </motion.div>
+
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-4"
+          >
+            Hi, I'm{" "}
+            <span className="text-blue-600 dark:text-blue-400 relative">
+              Jay Patel
+              <div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" />
+            </span>
+          </motion.h2>
+
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-gray-700 dark:text-gray-300 text-lg font-medium"
+          >
+            <strong className="text-gray-900 dark:text-gray-100">Software Developer</strong> from Valsad, Gujarat
+          </motion.p>
+        </div>
+
+        {/* Code Terminal Component */}
+        <CodeTerminal />
+        
+        {/* Original About Content - Hidden since we moved header up and button is in terminal */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center" style={{display: 'none'}}>
           {/* Image */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
