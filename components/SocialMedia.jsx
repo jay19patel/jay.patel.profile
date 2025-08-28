@@ -138,9 +138,6 @@ const SocialMedia = () => {
                       </span>
                     </div>
                     
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400 bg-white/50 dark:bg-gray-800/50 px-3 py-1 rounded-full">
-                      {platform.followers}
-                    </span>
                   </section>
 
                   {/* Platform Content */}

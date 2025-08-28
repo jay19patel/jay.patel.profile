@@ -74,7 +74,7 @@ export default function AboutPage() {
     stats: [
       { count: "2023", label: "Graduated", color: "green" },
       { count: "50+", label: "Projects Built", color: "blue" },
-      { count: "7K+", label: "Total Followers", color: "purple" }
+      { count: "24/7", label: "Learning", color: "purple" }
     ]
   }
 
@@ -286,9 +286,13 @@ export default function AboutPage() {
                   const iconMap = { Youtube, Instagram, Linkedin, Github };
                   const IconComponent = iconMap[stat.icon] || Users;
                   return (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                      <IconComponent className={`w-5 h-5 ${stat.iconColor || ''}`} />
-                      <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">{stat.name}</span>
+                    <div 
+                      key={index} 
+                      className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-white/70 dark:hover:bg-gray-800/70 transition-all duration-200 hover:scale-105 group"
+                      onClick={() => window.open(stat.link, '_blank', 'noopener,noreferrer')}
+                    >
+                      <IconComponent className={`w-5 h-5 ${stat.iconColor || ''} group-hover:scale-110 transition-transform duration-200`} />
+                      <span className="text-sm text-gray-600 dark:text-gray-300 font-medium group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-200">{stat.name}</span>
                     </div>
                   )
                 })}
@@ -458,36 +462,18 @@ export default function AboutPage() {
             </motion.p>
           </div>
 
-          {/* Experience Timeline */}
-          <div className="space-y-8">
+          {/* Experience Cards */}
+          <div className="space-y-6">
             {experiences.map((experience, index) => (
               <motion.div
                 key={experience.id}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="relative"
+                className="w-full"
               >
-                {/* Timeline Line */}
-                {index < experiences.length - 1 && (
-                  <div className="absolute left-8 top-20 w-0.5 h-32 bg-gray-200 dark:bg-gray-700"></div>
-                )}
-                
-                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                  {/* Company Icon & Timeline Dot */}
-                  <div className="flex-shrink-0 relative">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border-2 border-blue-200 dark:border-blue-700 rounded-xl flex items-center justify-center relative z-10 shadow-lg">
-                      <Building2 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    {experience.isCurrentJob && (
-                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full border-2 border-white dark:border-gray-900 flex items-center justify-center shadow-md">
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Experience Content */}
-                  <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-2xl p-6 lg:p-8 border border-gray-200 dark:border-gray-700">
+                {/* Experience Card */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-2xl p-6 lg:p-8 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300">
                     {/* Header */}
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
                       <div className="flex-1">
@@ -575,7 +561,6 @@ export default function AboutPage() {
                           </div>
                         ))}
                       </div>
-                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -626,7 +611,8 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
             >
-              Beyond coding, here's what drives my passion and keeps me motivated in my journey of continuous growth and learning.
+              When I'm not coding, I explore various interests that fuel my creativity and keep me motivated. 
+              Each of these areas contributes to my growth as both a developer and content creator.
             </motion.p>
           </div>
 
@@ -637,11 +623,6 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto"
           >
-            <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 text-center leading-relaxed">
-              When I'm not coding, I explore various interests that fuel my creativity and keep me motivated. 
-              Each of these areas contributes to my growth as both a developer and content creator.
-            </p>
-            
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

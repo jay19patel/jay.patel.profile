@@ -44,7 +44,6 @@ export default function SocialMediaTab() {
         darkBgColor: '',
         iconColor: '',
         buttonColor: '',
-        followers: '',
         link: '',
       },
     ]);
@@ -76,7 +75,7 @@ export default function SocialMediaTab() {
             Social Media Platforms
           </CardTitle>
           <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
-            Manage your social media links, followers, and descriptions
+            Manage your social media links and descriptions
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -139,17 +138,6 @@ export default function SocialMediaTab() {
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`followers-${idx}`} className="text-gray-900 dark:text-gray-200">Followers</Label>
-                    <Input 
-                      id={`followers-${idx}`} 
-                      name="followers" 
-                      value={platform.followers} 
-                      onChange={e => handleChange(idx, 'followers', e.target.value)} 
-                      placeholder="e.g. 1000"
-                      className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
-                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor={`link-${idx}`} className="text-gray-900 dark:text-gray-200">Link</Label>

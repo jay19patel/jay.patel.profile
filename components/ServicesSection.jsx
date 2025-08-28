@@ -3,20 +3,19 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/customUi/Button';
-import { Check, Users, Code, Palette, Video, Bot, Smartphone, FileText, Globe } from 'lucide-react';
+import { Check, Users, Code, Palette, Video, Bot, Smartphone, FileText, Globe, Cpu, BarChart3 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const ServicesSection = () => {
   const router = useRouter();
   
   const skillFeatures = [
-    { title: "Photo Banner Design & Creative Graphics", icon: Palette },
-    { title: "Software Development & Web Applications", icon: Code },
-    { title: "Content Creation & Video Production", icon: Video },
-    { title: "Automation & Workflow Optimization", icon: Bot },
-    { title: "Mobile App Development", icon: Smartphone },
-    { title: "Technical Writing & Documentation", icon: FileText },
-    { title: "All kinds of digital solutions and tech work", icon: Globe }
+    { title: "Web Software Development", icon: Code },
+    { title: "Automation & AI Integration", icon: Bot },
+    { title: "Photo, Video, Banner & Design", icon: Palette },
+    { title: "ERP & Frappe Development", icon: FileText },
+    { title: "School/College Projects", icon: Cpu },
+    { title: "IoT, Scripting & Data Science", icon: BarChart3 }
   ];
 
 
@@ -77,8 +76,8 @@ const ServicesSection = () => {
               viewport={{ once: true }}
               className="text-gray-600 dark:text-gray-400 text-base"
             >
-              Specializing in <strong>Web Development, Mobile Apps, Creative Design, 
-              Content Creation, Automation</strong>, and more.
+              Specializing in <strong>Web Software Development, Automation & AI Integration, 
+              Creative Design, ERP Solutions, IoT Projects, Data Science</strong>, and more.
             </motion.p>
 
             <motion.p
@@ -98,8 +97,10 @@ const ServicesSection = () => {
               viewport={{ once: true }}
               className="flex items-center space-x-4 pt-4"
             >
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold">
-                Get Started
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold"
+                onClick={() => router.push('/services')}
+              >
+                My Services
               </Button>
               
               <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">

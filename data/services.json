@@ -2,123 +2,134 @@
   "services": [
     {
       "id": 1,
-      "title": "Website Development",
+      "title": "Web Software Development",
       "category": "Web Development",
-      "description": "Complete end-to-end website development from concept to deployment. I create responsive, modern, and user-friendly websites using latest technologies.",
+      "description": "Complete web applications and software solutions built with modern technologies. From simple websites to complex web platforms, I deliver scalable and maintainable code.",
       "features": [
-        "Responsive Design for all devices",
-        "Modern UI/UX with professional aesthetics",
-        "SEO optimized structure",
-        "Fast loading and performance optimized",
-        "Cross-browser compatibility",
-                "Content Management System integration"
+        "Full-stack web application development",
+        "Responsive and mobile-first design",
+        "Database design and integration",
+        "API development and third-party integrations",
+        "User authentication and authorization",
+        "Performance optimization and SEO",
+        "Modern frameworks (React, Next.js, Node.js)",
+        "Version control and deployment setup"
       ],
-      "pricing": "₹15,000",
+      "pricing": "₹25,000",
       "pricingUnit": "/project",
-      "deliveryTime": "7-14 days",
-      "bgColor": "bg-orange-50",
-      "darkBgColor": "dark:bg-orange-900/30",
-      "iconColor": "text-orange-600"
-    },
-    {
-      "id": 2,
-      "title": "Landing Page Design",
-      "category": "Web Design",
-      "description": "High-converting landing pages designed to capture leads and drive conversions. Perfect for marketing campaigns and business promotions.",
-      "features": [
-        "Conversion-focused design",
-        "A/B testing ready layouts",
-        "Mobile-first approach",
-        "Fast loading speed",
-        "Lead capture forms",
-                "Analytics integration"
-      ],
-      "pricing": "₹8,000",
-      "pricingUnit": "/page",
-      "deliveryTime": "3-7 days",
       "bgColor": "bg-blue-50",
       "darkBgColor": "dark:bg-blue-900/30",
       "iconColor": "text-blue-600"
     },
     {
-      "id": 3,
-      "title": "Automation Scripts",
-      "category": "Automation",
-      "description": "Custom automation solutions to streamline your business processes. From data processing to workflow automation, I've got you covered.",
+      "id": 2,
+      "title": "Automation & AI Integration",
+      "category": "Automation & AI",
+      "description": "Streamline your business processes with custom automation solutions and AI integrations. From simple scripts to complex AI-powered systems.",
       "features": [
-        "Process automation and optimization",
-        "Data scraping and processing",
+        "Business process automation",
+        "AI chatbot development and integration",
+        "Data scraping and processing automation",
         "Email and notification automation",
-        "File management automation",
-        "API integrations",
-                "Scheduled task automation"
+        "API integrations and workflows",
+        "Machine Learning model implementation",
+        "Natural Language Processing solutions",
+        "Custom AI tools and applications"
       ],
-      "pricing": "₹5,000",
-      "pricingUnit": "/script",
-      "deliveryTime": "2-5 days",
-      "bgColor": "bg-green-50",
-      "darkBgColor": "dark:bg-green-900/30",
-      "iconColor": "text-green-600"
-    },
-    {
-      "id": 4,
-      "title": "AI Integration",
-      "category": "Artificial Intelligence",
-      "description": "Integrate cutting-edge AI capabilities into your applications. From chatbots to machine learning models, enhance your digital presence with AI.",
-      "features": [
-        "AI Chatbot development",
-        "Machine Learning model integration",
-        "Natural Language Processing",
-        "Computer Vision solutions",
-        "Generative AI implementations",
-                "Custom AI model training"
-      ],
-      "pricing": "₹20,000",
-      "pricingUnit": "/integration",
-      "deliveryTime": "10-21 days",
+      "pricing": "₹15,000",
+      "pricingUnit": "/solution",
       "bgColor": "bg-purple-50",
       "darkBgColor": "dark:bg-purple-900/30",
       "iconColor": "text-purple-600"
     },
     {
-      "id": 5,
-      "title": "E-commerce Solutions",
-      "category": "E-commerce",
-      "description": "Complete e-commerce platforms with payment integration, inventory management, and admin panels. Perfect for online businesses.",
+      "id": 3,
+      "title": "Photo, Video, Banner & Design",
+      "category": "Creative Design",
+      "description": "Professional graphic design services including photos, videos, banners, and complete brand identity. Creative solutions that make your brand stand out.",
       "features": [
-        "Product catalog management",
-        "Secure payment gateway integration",
-        "Order management system",
-        "Inventory tracking",
-        "Customer dashboard",
-                "Admin panel with analytics"
+        "Logo design and brand identity",
+        "Social media graphics and banners",
+        "Photo editing and enhancement",
+        "Video editing and motion graphics",
+        "Website banners and promotional materials",
+        "Print design (brochures, flyers, cards)",
+        "UI/UX design for web and mobile",
+        "Creative consultation and concepts"
       ],
-      "pricing": "₹25,000",
-      "pricingUnit": "/platform",
-      "deliveryTime": "14-30 days",
-      "bgColor": "bg-indigo-50",
-      "darkBgColor": "dark:bg-indigo-900/30",
-      "iconColor": "text-indigo-600"
-    },
-    {
-      "id": 6,
-      "title": "ERP & Frappe Support",
-      "category": "Enterprise Solutions",
-      "description": "Comprehensive ERP solutions and Frappe framework support for business automation and management systems.",
-      "features": [
-        "Frappe framework development",
-        "ERPNext customization and setup",
-        "Business process automation",
-        "Custom app development",
-        "System integration and migration",
-                "Training and ongoing support"
-      ],
-      "pricing": "₹5,000",
-      "pricingUnit": "/month",
-      "deliveryTime": "Ongoing",
+      "pricing": "₹8,000",
+      "pricingUnit": "/design package",
       "bgColor": "bg-pink-50",
       "darkBgColor": "dark:bg-pink-900/30",
       "iconColor": "text-pink-600"
+    },
+    {
+      "id": 4,
+      "title": "ERP & Frappe Development",
+      "category": "Enterprise Solutions",
+      "description": "Comprehensive ERP solutions using Frappe framework and ERPNext. Custom business applications and enterprise resource planning systems.",
+      "features": [
+        "ERPNext installation and configuration",
+        "Custom Frappe app development",
+        "Business process automation",
+        "Custom doctypes and forms",
+        "Workflow and approval systems",
+        "Report generation and analytics",
+        "System integration and data migration",
+        "Training and ongoing support"
+      ],
+      "pricing": "₹30,000",
+      "pricingUnit": "/project",
+      "bgColor": "bg-green-50",
+      "darkBgColor": "dark:bg-green-900/30",
+      "iconColor": "text-green-600"
+    },
+    {
+      "id": 5,
+      "title": "School/College Projects",
+      "category": "Academic Help",
+      "description": "Custom academic projects and IoT solutions for students and educational institutions. From simple assignments to complex IoT systems with hardware integration.",
+      "features": [
+        "Academic project development and guidance",
+        "IoT device programming and integration",
+        "Arduino and Raspberry Pi projects",
+        "Sensor data collection and monitoring",
+        "Smart home and automation systems",
+        "Project documentation and reports",
+        "Hardware selection and setup guidance",
+        "Real-time data visualization dashboards"
+      ],
+      "pricing": "₹12,000",
+      "pricingUnit": "/project",
+      "bgColor": "bg-orange-50",
+      "darkBgColor": "dark:bg-orange-900/30",
+      "iconColor": "text-orange-600"
+    },
+    {
+      "id": 6,
+      "title": "IoT, Scripting & Data Science",
+      "category": "IoT & Data Science",
+      "description": "Advanced IoT solutions combined with data science capabilities. Custom scripting, data pipelines, filtering, and analysis for intelligent IoT systems.",
+      "features": [
+        "IoT system architecture and development",
+        "Python/Node.js scripting and automation",
+        "Data pipeline creation and management",
+        "Real-time data filtering and processing",
+        "Machine learning for IoT data analysis",
+        "Data visualization and reporting",
+        "Cloud IoT platform integration (AWS, Azure)",
+        "Predictive analytics and insights"
+      ],
+      "pricing": "₹20,000",
+      "pricingUnit": "/solution",
+      "bgColor": "bg-indigo-50",
+      "darkBgColor": "dark:bg-indigo-900/30",
+      "iconColor": "text-indigo-600"
     }
-  ]
-} 
+  ],
+  "pricingNote": {
+    "title": "Pricing Information",
+    "description": "All prices are base estimates and may vary based on project complexity, specific requirements, and additional features. Final pricing will be discussed after understanding your exact needs.",
+    "disclaimer": "💡 Prices are flexible and can be adjusted based on your requirements and project scope."
+  }
+}
