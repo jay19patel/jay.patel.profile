@@ -2,6 +2,8 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { LoadingProvider } from '@/contexts/LoadingContext';
+import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import ChatBot from '@/components/ChatBot';
 import { Toaster } from 'sonner';
 
@@ -112,13 +114,16 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex-grow w-full pt-20 pb-6">
-            {children}
-          </main>
-          <Footer />
-          <ChatBot />
-          <Toaster richColors closeButton position="top-right" />
+          <LoadingProvider>
+            <AnimatedBlobBackground />
+            <Header />
+            <main className="flex-grow w-full pt-20 pb-6">
+              {children}
+            </main>
+            <Footer />
+            <ChatBot />
+            <Toaster richColors closeButton position="top-right" />
+          </LoadingProvider>
         </ThemeProvider>
       </body>
     </html>
