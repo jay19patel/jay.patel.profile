@@ -9,10 +9,13 @@ import ToolsTechnologiesShowcase from '@/components/ToolsTechnologiesShowcase'
 import RecentBlogs from '@/components/RecentBlogs'
 import AnnouncementDisplay from '@/components/AnnouncementDisplay'
 import Gallery from '@/components/Gallery'
+import AnimatedBlobBackground from '@/components/AnimatedBlobBackground'
 
 export default function Home() {
   return (
-    <main className='w-full flex flex-col items-center justify-center gap-12 px-4 sm:px-4 lg:px-4 py-8'>
+    <>
+      <AnimatedBlobBackground />
+      <main className='w-full flex flex-col items-center justify-center gap-12 px-4 sm:px-4 lg:px-4 py-8'>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -92,5 +95,6 @@ export default function Home() {
         <Gallery />
       </motion.div>
     </main>
+    </>
   )
 }
