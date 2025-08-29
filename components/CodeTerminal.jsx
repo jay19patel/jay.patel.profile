@@ -1,11 +1,8 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Button } from "@/components/customUi/Button"
-import { useRouter } from "next/navigation"
 
 const CodeTerminal = () => {
-  const router = useRouter()
   const [currentLine, setCurrentLine] = useState(0)
   const [currentChar, setCurrentChar] = useState(0)
   const [displayedCode, setDisplayedCode] = useState([])
@@ -97,7 +94,7 @@ const CodeTerminal = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="w-full max-w-4xl mx-auto mb-6"
+      className="w-full"
     >
       {/* Terminal Window */}
       <div className="bg-gray-900 rounded-lg shadow-2xl overflow-hidden border border-gray-700">
@@ -115,7 +112,7 @@ const CodeTerminal = () => {
         </div>
 
         {/* Terminal Content */}
-        <div className="p-6 font-mono text-base min-h-[400px] bg-gray-900">
+        <div className="p-6 font-mono text-sm min-h-[480px] bg-gray-900 flex flex-col justify-center">
           <div className="space-y-1">
             {displayedCode.map((line, index) => (
               <motion.div
@@ -154,23 +151,6 @@ const CodeTerminal = () => {
         </div>
       </div>
 
-      {/* Decorative Code Elements and Button */}
-      <div className="mt-6 flex flex-col items-center space-y-6">
-
-        {/* More About Me Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 2 }}
-        >
-          <Button 
-            onClick={() => router.push('/about')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-          >
-            More About Me
-          </Button>
-        </motion.div>
-      </div>
     </motion.div>
   )
 }

@@ -42,7 +42,7 @@ const SocialMedia = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full py-16 max-w-8xl mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
+        className="w-full py-8 sm:py-16 max-w-8xl mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex items-center justify-center min-h-[400px]">
@@ -59,7 +59,7 @@ const SocialMedia = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="w-full py-16 max-w-8xl mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
+      className="w-full py-8 sm:py-16 max-w-8xl mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
     >
       {/* Animated background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -69,7 +69,7 @@ const SocialMedia = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 sm:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ const SocialMedia = () => {
         </div>
 
         {/* Social Media Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {socialPlatforms.map((platform, index) => {
             const IconComponent = iconMap[platform.icon] || Globe
             return (
@@ -118,9 +118,9 @@ const SocialMedia = () => {
                 className="group"
                 onClick={() => window.open(platform.link, '_blank')}
               >
-                <article className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 h-full flex flex-col transition-colors duration-200 cursor-pointer">
-                  {/* Platform Header */}
-                  <section className={`${platform.bgColor} ${platform.darkBgColor} rounded-xl p-6 mb-4 text-center`}>
+                <article className="bg-white dark:bg-gray-800 rounded-lg p-4 lg:p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 h-full flex flex-col transition-colors duration-200 cursor-pointer">
+                  {/* Desktop Layout */}
+                  <section className={`${platform.bgColor} ${platform.darkBgColor} rounded-xl p-4 lg:p-6 mb-4 text-center hidden sm:block`}>
                     <div className="flex justify-center mb-4">
                       <div className="w-16 h-16 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-md">
                         <IconComponent className={`w-8 h-8 ${platform.iconColor}`} />
@@ -137,12 +137,28 @@ const SocialMedia = () => {
                         {platform.username}
                       </span>
                     </div>
-                    
+                  </section>
+
+                  {/* Mobile Layout - Compact */}
+                  <section className="sm:hidden mb-4">
+                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50/50 dark:bg-gray-700/50">
+                      <div className={`w-10 h-10 rounded-full ${platform.bgColor} ${platform.darkBgColor} flex items-center justify-center shadow-sm`}>
+                        <IconComponent className={`w-5 h-5 ${platform.iconColor}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                          {platform.name}
+                        </h3>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                          {platform.username}
+                        </p>
+                      </div>
+                    </div>
                   </section>
 
                   {/* Platform Content */}
                   <div className="flex-grow space-y-4">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed sm:line-clamp-3 overflow-hidden">
                       {platform.description}
                     </p>
                   </div>
