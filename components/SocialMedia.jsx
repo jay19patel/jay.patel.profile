@@ -104,7 +104,7 @@ const SocialMedia = () => {
         </div>
 
         {/* Social Media Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {socialPlatforms.map((platform, index) => {
             const IconComponent = iconMap[platform.icon] || Globe
             return (
@@ -119,30 +119,27 @@ const SocialMedia = () => {
                 onClick={() => window.open(platform.link, '_blank')}
               >
                 <article className="bg-white dark:bg-gray-800 rounded-lg p-4 lg:p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 h-full flex flex-col transition-colors duration-200 cursor-pointer">
-                  {/* Desktop Layout */}
-                  <section className={`${platform.bgColor} ${platform.darkBgColor} rounded-xl p-4 lg:p-6 mb-4 text-center hidden sm:block`}>
-                    <div className="flex justify-center mb-4">
-                      <div className="w-16 h-16 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-md">
-                        <IconComponent className={`w-8 h-8 ${platform.iconColor}`} />
+                  {/* Desktop/Web - Compact Layout */}
+                  <section className={`mb-4 hidden sm:block ${platform.bgColor} ${platform.darkBgColor} rounded-xl p-4`}>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm flex-shrink-0">
+                        <IconComponent className={`w-6 h-6 ${platform.iconColor}`} />
                       </div>
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                      {platform.name}
-                    </h3>
-                    
-                    {/* Username Pill */}
-                    <div className="mb-3">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${platform.iconColor} bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-600`}>
-                        {platform.username}
-                      </span>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">
+                          {platform.name}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                          {platform.username}
+                        </p>
+                      </div>
                     </div>
                   </section>
 
-                  {/* Mobile Layout - Compact */}
-                  <section className="sm:hidden mb-4">
-                    <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50/50 dark:bg-gray-700/50">
-                      <div className={`w-10 h-10 rounded-full ${platform.bgColor} ${platform.darkBgColor} flex items-center justify-center shadow-sm`}>
+                  {/* Mobile - Original Layout */}
+                  <section className={`sm:hidden mb-4 ${platform.bgColor} ${platform.darkBgColor} rounded-lg p-3`}>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
                         <IconComponent className={`w-5 h-5 ${platform.iconColor}`} />
                       </div>
                       <div className="flex-1 min-w-0">
