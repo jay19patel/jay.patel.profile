@@ -126,7 +126,7 @@
 }
 
 .dark {
-  --grid-color: rgba(255, 255, 255, 0.1);
+  --grid-color: rgba(165, 165, 165, 0.1);
 }
 
 body {

@@ -6,7 +6,7 @@ export default function AnimatedBlobBackground() {
       <svg 
         preserveAspectRatio="xMidYMid slice" 
         viewBox="10 10 80 80"
-        className="absolute inset-0 w-full h-full opacity-20"
+        className="absolute inset-0 w-full h-full opacity-10"
       >
         <defs>
           <style>{`
