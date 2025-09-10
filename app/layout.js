@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <body className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300" style={{ scrollBehavior: 'smooth' }}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
