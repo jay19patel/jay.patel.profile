@@ -10,7 +10,7 @@ import RecentBlogs from '@/components/RecentBlogs'
 import AnnouncementDisplay from '@/components/AnnouncementDisplay'
 import Gallery from '@/components/Gallery'
 import LoadingWrapper from '@/components/LoadingWrapper'
-
+import TextMarque from '@/components/TextMarque'
 export default function Home() {
   return (
     <>
@@ -35,6 +35,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="w-full"
           >
+            <TextMarque text="Developer • Content Creator • Problem Solver • Tech Enthusiast • " />
             <AboutSection />
           </motion.div>
         </LoadingWrapper>

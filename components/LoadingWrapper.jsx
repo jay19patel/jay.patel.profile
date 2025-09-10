@@ -30,7 +30,7 @@ export default function LoadingWrapper({
     return (
       <div className="fixed inset-0 z-50 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center">
         <div className="text-center space-y-4">
-          <AnimatedLoader size="8rem" />
+          <AnimatedLoader size="4rem" />
           <div className="text-white text-lg font-medium">Loading...</div>
         </div>
       </div>
