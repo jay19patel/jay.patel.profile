@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/customUi/Button';
 import { useTheme } from './ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
+import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 import Image from 'next/image';
 import { 
   Sheet, 
@@ -119,17 +120,9 @@ const Header = () => {
           </button>
 
           {/* Theme Toggle Button */}
-          <button 
-            onClick={toggleTheme}
-            className="w-11 h-11 bg-white dark:bg-gray-800 border border-gray-200/50 dark:border-gray-700/50 rounded-full flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)] transition-all duration-200 group"
-            aria-label="Toggle theme"
-          >
-            {theme === 'light' ? (
-              <Moon size={18} className="text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-100 transition-colors" />
-            ) : (
-              <Sun size={18} className="text-yellow-500 group-hover:text-yellow-600 transition-colors" />
-            )}
-          </button>
+          <AnimatedThemeToggler
+            className="w-11 h-11 bg-white dark:bg-gray-800 border border-gray-200/50 dark:border-gray-700/50 rounded-full flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)] transition-all duration-200 group text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-100"
+          />
 
           {/* CTA Button - Hidden on mobile */}
           <div className="hidden lg:block">
@@ -213,17 +206,10 @@ const Header = () => {
                   </button>
 
                   {/* Theme Toggle */}
-                  <button 
-                    onClick={toggleTheme}
-                    className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 font-medium text-sm border border-gray-200/50 dark:border-gray-600/50"
-                  >
-                    {theme === 'light' ? (
-                      <Moon size={16} className="text-gray-500 dark:text-gray-400" />
-                    ) : (
-                      <Sun size={16} className="text-yellow-500" />
-                    )}
+                  <div className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 font-medium text-sm border border-gray-200/50 dark:border-gray-600/50">
+                    <AnimatedThemeToggler className="text-gray-500 dark:text-gray-400 w-4 h-4" />
                     <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-                  </button>
+                  </div>
 
                   {/* CTA Button */}
                   <div className="pt-2 pb-6">
