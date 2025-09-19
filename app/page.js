@@ -12,72 +12,152 @@ import TextMarque from '@/components/TextMarque'
 
 export default function Home() {
   return (
+<<<<<<< HEAD
     <main className='w-full flex flex-col items-center justify-center gap-12 px-4 sm:px-4 lg:px-4 py-8'>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
+=======
+    <main className='w-full flex flex-col items-center justify-center gap-16 px-4 sm:px-6 lg:px-8 py-8'>
+      {/* Hero Section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+>>>>>>> origin/v.3
         className="w-full"
       >
         <HeroSection />
       </motion.div>
+<<<<<<< HEAD
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
         viewport={{ once: true }}
+=======
+      
+      {/* About Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, margin: "-100px" }}
+>>>>>>> origin/v.3
         className="w-full"
       >
         <TextMarque text="Developer • Content Creator • Problem Solver • Tech Enthusiast • " />
         <AboutSection />
       </motion.div>
+<<<<<<< HEAD
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1 }}
         viewport={{ once: true }}
+=======
+      
+      {/* Services Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, margin: "-100px" }}
+>>>>>>> origin/v.3
         className="w-full"
       >
         <ServicesSection />
       </motion.div>
+<<<<<<< HEAD
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1 }}
         viewport={{ once: true }}
+=======
+      
+      {/* Tools Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        className="w-full"
+      >
+        <ToolsTechnologiesShowcase />
+      </motion.div>
+      
+      {/* Announcements */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, margin: "-100px" }}
+>>>>>>> origin/v.3
         className="w-full"
       >
         <AnnouncementDisplay />
       </motion.div>
+<<<<<<< HEAD
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1 }}
         viewport={{ once: true }}
+=======
+      
+      {/* Social Media */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, margin: "-100px" }}
+>>>>>>> origin/v.3
         className="w-full"
       >
         <SocialMedia />
       </motion.div>
+<<<<<<< HEAD
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1 }}
         viewport={{ once: true }}
+=======
+      
+      {/* Blogs */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, margin: "-100px" }}
+>>>>>>> origin/v.3
         className="w-full"
       >
         <RecentBlogs />
       </motion.div>
+<<<<<<< HEAD
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1 }}
         viewport={{ once: true }}
+=======
+      
+      {/* Gallery */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        viewport={{ once: true, margin: "-100px" }}
+>>>>>>> origin/v.3
         className="w-full"
       >
         <Gallery />
