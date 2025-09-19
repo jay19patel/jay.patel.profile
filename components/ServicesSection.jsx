@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/customUi/Button';
 import { Check, Users, Code, Palette, Video, Bot, Smartphone, FileText, Globe, Cpu, BarChart3 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { MagicCard } from '@/components/ui/magic-card';
+import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 
 const ServicesSection = () => {
   const router = useRouter();
@@ -126,8 +128,14 @@ const ServicesSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-gray-200/50 dark:border-gray-700/50 shadow-lg"
           >
+            <MagicCard
+              className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-lg"
+              gradientColor="#3b82f6"
+              gradientOpacity={0.1}
+              gradientFrom="#3b82f6"
+              gradientTo="#8b5cf6"
+            >
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
               My core services include
             </h3>
@@ -148,14 +156,15 @@ const ServicesSection = () => {
                       <IconComponent className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <p className="text-gray-900 dark:text-white font-medium text-sm">
+                      <AnimatedShinyText className="text-gray-900 dark:text-white font-medium text-sm">
                         {feature.title}
-                      </p>
+                      </AnimatedShinyText>
                     </div>
                   </motion.div>
                 );
               })}
             </div>
+            </MagicCard>
           </motion.div>
         </div>
       </div>

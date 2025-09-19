@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './customUi/Button';
+import { NumberTicker } from '@/components/ui/number-ticker';
 
 const TypewriterEffect = ({ words, loop = true, delayBetweenWords = 2000 }) => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -161,15 +161,36 @@ const HeroSection = () => {
               className="flex flex-wrap gap-4 sm:gap-6 md:gap-8 mb-4 sm:mb-6 md:mb-8"
             >
               <div className="text-left">
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400">50+</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400">
+                  <NumberTicker
+                    value={50}
+                    startValue={0}
+                    className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400"
+                    delay={0.5}
+                  />+
+                </div>
                 <div className="text-xs sm:text-sm md:text-base text-gray-400">Projects</div>
               </div>
               <div className="text-left">
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">3+</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">
+                  <NumberTicker
+                    value={3}
+                    startValue={0}
+                    className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400"
+                    delay={0.8}
+                  />+
+                </div>
                 <div className="text-xs sm:text-sm md:text-base text-gray-400">Years Exp</div>
               </div>
               <div className="text-left">
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-400">10K+</div>
+                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-400">
+                  <NumberTicker
+                    value={10}
+                    startValue={0}
+                    className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-400"
+                    delay={1.1}
+                  />K+
+                </div>
                 <div className="text-xs sm:text-sm md:text-base text-gray-400">Views</div>
               </div>
             </motion.div>

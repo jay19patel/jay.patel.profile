@@ -27,8 +27,7 @@ const Header = () => {
   const menuItems = [
     { name: 'Home', href: '/' },
     { name: 'Services', href: '/services' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/contact' }
+    { name: 'Blog', href: '/blog' }
   ];
 
   return (
@@ -134,8 +133,8 @@ const Header = () => {
 
           {/* CTA Button - Hidden on mobile */}
           <div className="hidden lg:block">
-          <Link href="/#about">
-            <Button>About Me</Button>
+          <Link href="/contact">
+            <Button>Contact</Button>
           </Link>
           </div>
 
