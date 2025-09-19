@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Youtube, Instagram, Linkedin, Github, ExternalLink, Globe, Briefcase, Camera, Code } from "lucide-react"
-import { motion } from "framer-motion"
 import { getSocialMedia } from "@/app/actions/socialMedia"
 import { MagicCard } from "@/components/ui/magic-card"
 
@@ -35,47 +34,23 @@ const SocialMedia = () => {
   }, [])
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-      className="w-full py-8 sm:py-16 max-w-8xl mx-auto"
-    >
+    <section className="w-full py-8 sm:py-16 max-w-8xl mx-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-center space-x-2 mb-6"
-          >
+          <div className="flex items-center justify-center space-x-2 mb-6">
             <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
             <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">Social Media</span>
             <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
-          </motion.div>
+          </div>
 
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
-          >
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
             Connect With Me <span className="text-blue-600 dark:text-blue-400 relative">Everywhere<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
-          </motion.h2>
+          </h2>
 
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto"
-          >
+          <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto">
             Follow my journey across different platforms for diverse content, tutorials, and behind-the-scenes insights into my development process.
-          </motion.p>
+          </p>
         </div>
 
         {/* Social Media Grid */}
@@ -83,18 +58,13 @@ const SocialMedia = () => {
           {socialPlatforms.map((platform, index) => {
             const IconComponent = iconMap[platform.icon] || Globe
             return (
-              <motion.div 
-                key={platform.id} 
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.6 + (index * 0.1) }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group"
+              <div
+                key={platform.id}
+                className="group cursor-pointer hover:scale-105 transition-transform duration-200"
                 onClick={() => window.open(platform.link, '_blank')}
               >
                 <MagicCard
-                  className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg p-4 lg:p-6 shadow-lg h-full flex flex-col transition-colors duration-200 cursor-pointer"
+                  className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg p-4 lg:p-6 shadow-lg h-full flex flex-col transition-colors duration-200"
                   gradientColor="#3b82f6"
                   gradientOpacity={0.08}
                   gradientFrom="#3b82f6"
@@ -141,13 +111,13 @@ const SocialMedia = () => {
                     </p>
                   </div>
                 </MagicCard>
-              </motion.div>
+              </div>
             )
           })}
         </div>
 
       </div>
-    </motion.section>
+    </section>
   )
 }
 
