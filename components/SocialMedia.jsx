@@ -19,7 +19,6 @@ const iconMap = {
 
 const SocialMedia = () => {
   const [socialPlatforms, setSocialPlatforms] = useState([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchSocialMedia = async () => {
@@ -28,46 +27,21 @@ const SocialMedia = () => {
         setSocialPlatforms(data)
       } catch (error) {
         console.error('Failed to fetch social media data:', error)
-      } finally {
-        setLoading(false)
       }
     }
 
     fetchSocialMedia()
   }, [])
 
-  if (loading) {
-    return (
-      <motion.section 
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="w-full py-8 sm:py-16 max-w-8xl mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
-      >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          </div>
-        </div>
-      </motion.section>
-    )
-  }
-
   return (
-    <motion.section 
+    <motion.section
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="w-full py-8 sm:py-16 max-w-8xl mx-auto bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-lg relative overflow-hidden transition-colors duration-300"
+      className="w-full py-8 sm:py-16 max-w-8xl mx-auto"
     >
-      {/* Animated background elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-blue-400/10 rounded-full blur-xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-400/10 rounded-full blur-xl animate-pulse delay-1000" />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-16">
           <motion.div

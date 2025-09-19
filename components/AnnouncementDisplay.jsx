@@ -119,41 +119,37 @@ const AnnouncementCard = ({ item, index, isActive }) => {
 
 export default function AnnouncementDisplay() {
   const [items, setItems] = useState([])
-  const [loading, setLoading] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
   useEffect(() => {
     async function fetchData() {
       try {
-        setLoading(true)
         const announcementData = await import('@/data/announcements.json')
-        
+
         // Combine announcements and current tasks
         const announcements = (announcementData.announcements || [])
           .filter(item => item.isActive)
           .map(item => ({ ...item, type: item.type || 'announcement' }))
-        
+
         const tasks = (announcementData.currentTasks || [])
           .filter(task => task.status === 'in_progress' || task.status === 'todo')
           .map(task => ({ ...task, type: 'task' }))
-        
+
         const combined = [...announcements, ...tasks]
           .sort((a, b) => {
             const dateA = new Date(a.createdAt || a.dueDate || '2024-01-01')
             const dateB = new Date(b.createdAt || b.dueDate || '2024-01-01')
             return dateB - dateA
           })
-        
+
         setItems(combined)
       } catch (error) {
         console.error('Error fetching announcements:', error)
         setItems([])
-      } finally {
-        setLoading(false)
       }
     }
-    
+
     fetchData()
   }, [])
 
@@ -167,21 +163,6 @@ export default function AnnouncementDisplay() {
     return () => clearInterval(interval)
   }, [isAutoPlaying, items.length])
 
-
-  if (loading) {
-    return (
-      <section className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
-            Latest Updates
-          </h2>
-        </div>
-        <div className="flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </section>
-    )
-  }
 
   if (items.length === 0) {
     return (

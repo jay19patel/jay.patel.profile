@@ -134,8 +134,8 @@ const Header = () => {
 
           {/* CTA Button - Hidden on mobile */}
           <div className="hidden lg:block">
-          <Link href="/about">
-            <Button>About Us</Button>
+          <Link href="/#about">
+            <Button>About Me</Button>
           </Link>
           </div>
 
@@ -229,8 +229,8 @@ const Header = () => {
                   {/* CTA Button */}
                   <div className="pt-2 pb-6">
                     <div className="w-full">
-                      <Link href="/about" className="w-full">
-                        <Button className='w-full items-center'>About Us</Button>
+                      <Link href="/#about" className="w-full">
+                        <Button className='w-full items-center'>About Me</Button>
                       </Link>
                     </div>
                   </div>

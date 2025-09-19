@@ -5,7 +5,6 @@ import { motion } from 'framer-motion'
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [galleryImages, setGalleryImages] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
 
   // Load gallery images from JSON file
   useEffect(() => {
@@ -17,8 +16,6 @@ const Gallery = () => {
         setGalleryImages(visibleImages)
       } catch (error) {
         console.error('Error loading gallery:', error)
-      } finally {
-        setIsLoading(false)
       }
     }
 
@@ -44,13 +41,6 @@ const Gallery = () => {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="w-full max-w-7xl mx-auto py-16 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
 
   return (
     <motion.section 

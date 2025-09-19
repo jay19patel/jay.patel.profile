@@ -96,7 +96,6 @@ function BlogCard({ blog, onClick, isActive }) {
 
 export default function RecentBlogs() {
   const [blogs, setBlogs] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const router = useRouter()
@@ -104,7 +103,6 @@ export default function RecentBlogs() {
   useEffect(() => {
     async function fetchBlogs() {
       try {
-        setIsLoading(true)
         // Import blogs from JSON file and get latest 5
         const blogsData = await import('@/data/blogs.json')
         const sortedBlogs = (blogsData.blogs || [])
@@ -114,8 +112,6 @@ export default function RecentBlogs() {
       } catch (e) {
         console.error("Failed to fetch blogs:", e)
         setBlogs([])
-      } finally {
-        setIsLoading(false)
       }
     }
     fetchBlogs()
@@ -140,21 +136,6 @@ export default function RecentBlogs() {
     setTimeout(() => setIsAutoPlaying(true), 3000)
   }
 
-
-  if (isLoading) {
-    return (
-      <section className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
-            Latest Articles
-          </h2>
-        </div>
-        <div className="flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </section>
-    )
-  }
 
   if (blogs.length === 0) {
     return (

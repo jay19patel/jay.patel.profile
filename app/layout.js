@@ -1,11 +1,7 @@
 import './globals.css';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { LoadingProvider } from '@/contexts/LoadingContext';
-import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
-import ChatBot from '@/components/ChatBot';
-import { Toaster } from 'sonner';
+import { LoadingScreenProvider } from '@/contexts/LoadingScreenContext';
+import LayoutContent from '@/components/LayoutContent';
 
 export const metadata = {
   title: {
@@ -114,16 +110,11 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <LoadingProvider>
-            <AnimatedBlobBackground />
-            <Header />
-            <main className="flex-grow w-full pt-20 pb-6">
+          <LoadingScreenProvider>
+            <LayoutContent>
               {children}
-            </main>
-            <Footer />
-            <ChatBot />
-            <Toaster richColors closeButton position="top-right" />
-          </LoadingProvider>
+            </LayoutContent>
+          </LoadingScreenProvider>
         </ThemeProvider>
       </body>
     </html>
