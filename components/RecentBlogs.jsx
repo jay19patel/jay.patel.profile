@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Calendar, ArrowUpRight } from "lucide-react"
+import { MagicCard } from "@/components/ui/magic-card"
 
 function BlogCard({ blog, onClick, isActive }) {
   return (
@@ -11,13 +12,16 @@ function BlogCard({ blog, onClick, isActive }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className={`cursor-pointer w-full max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 transition-all duration-500 hover:border-blue-300 dark:hover:border-blue-600 ${
-        isActive 
-          ? 'border-gray-200 dark:border-gray-700' 
-          : 'border-gray-200 dark:border-gray-700'
-      }`}
+      className="cursor-pointer w-full max-w-5xl mx-auto"
       onClick={onClick}
     >
+      <MagicCard
+        className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-6 shadow-lg transition-all duration-500"
+        gradientColor="#3b82f6"
+        gradientOpacity={0.1}
+        gradientFrom="#3b82f6"
+        gradientTo="#8b5cf6"
+      >
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
         {/* Blog Image */}
         <div className="order-2 lg:order-1 lg:col-span-2">
@@ -90,6 +94,7 @@ function BlogCard({ blog, onClick, isActive }) {
           </div>
         </div>
       </div>
+      </MagicCard>
     </motion.div>
   )
 }

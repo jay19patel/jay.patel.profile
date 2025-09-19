@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Youtube, Instagram, Linkedin, Github, ExternalLink, Globe, Briefcase, Camera, Code } from "lucide-react"
 import { motion } from "framer-motion"
 import { getSocialMedia } from "@/app/actions/socialMedia"
+import { MagicCard } from "@/components/ui/magic-card"
 
 const iconMap = {
   Youtube,
@@ -92,7 +93,13 @@ const SocialMedia = () => {
                 className="group"
                 onClick={() => window.open(platform.link, '_blank')}
               >
-                <article className="bg-white dark:bg-gray-800 rounded-lg p-4 lg:p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 h-full flex flex-col transition-colors duration-200 cursor-pointer">
+                <MagicCard
+                  className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-lg p-4 lg:p-6 shadow-lg h-full flex flex-col transition-colors duration-200 cursor-pointer"
+                  gradientColor="#3b82f6"
+                  gradientOpacity={0.08}
+                  gradientFrom="#3b82f6"
+                  gradientTo="#8b5cf6"
+                >
                   {/* Desktop/Web - Compact Layout */}
                   <section className={`mb-4 hidden sm:block ${platform.bgColor} ${platform.darkBgColor} rounded-xl p-4`}>
                     <div className="flex items-center space-x-4">
@@ -133,7 +140,7 @@ const SocialMedia = () => {
                       {platform.description}
                     </p>
                   </div>
-                </article>
+                </MagicCard>
               </motion.div>
             )
           })}

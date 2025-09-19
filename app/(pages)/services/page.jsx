@@ -6,6 +6,7 @@ import { PageSection } from '@/components/customUi/PageSection'
 import { Button } from '@/components/ui/button'
 import servicesData from '@/data/services.json'
 import { Button as CButton } from '@/components/customUi/Button'
+import { MagicCard } from '@/components/ui/magic-card'
 const ServicesPage = () => {
   // Handle contact click
   const handleContactClick = () => {
@@ -87,15 +88,22 @@ const ServicesPage = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
         >
           {servicesData.services.map((service, index) => (
-            <motion.article 
+            <motion.article
               key={service.id}
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.6 + (index * 0.1) }}
               viewport={{ once: true }}
               whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-2 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500"
+              className="group"
             >
+              <MagicCard
+                className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl p-2 shadow-lg hover:shadow-xl transition-all duration-300"
+                gradientColor="#3b82f6"
+                gradientOpacity={0.08}
+                gradientFrom="#3b82f6"
+                gradientTo="#8b5cf6"
+              >
               {/* Card Hero Section */}
               <section className={`${service.bgColor} ${service.darkBgColor} rounded-xl p-6 mb-4`}>
                 <header className="flex justify-between items-center mb-6">
@@ -165,6 +173,7 @@ const ServicesPage = () => {
                 </div>
 
               </footer>
+              </MagicCard>
             </motion.article>
           ))}
         </motion.div>

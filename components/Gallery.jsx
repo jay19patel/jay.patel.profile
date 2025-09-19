@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { MagicCard } from '@/components/ui/magic-card'
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null)
@@ -101,7 +102,13 @@ const Gallery = () => {
                 className="relative group cursor-pointer mb-4 break-inside-avoid"
                 onClick={() => setSelectedImage(image)}
               >
-                <div className="relative overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                <MagicCard
+                  className="relative overflow-hidden rounded-lg bg-gray-200/90 dark:bg-gray-800/90 backdrop-blur-md shadow-lg hover:shadow-xl transition-all duration-300"
+                  gradientColor="#3b82f6"
+                  gradientOpacity={0.06}
+                  gradientFrom="#3b82f6"
+                  gradientTo="#8b5cf6"
+                >
                   <img
                     src={image.src}
                     alt={image.title}
@@ -127,7 +134,7 @@ const Gallery = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </MagicCard>
               </motion.div>
             ))}
           </div>
