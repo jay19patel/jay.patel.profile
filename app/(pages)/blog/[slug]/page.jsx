@@ -7,16 +7,23 @@ import { EmptyState } from '@/components/customUi/EmptyState';
 import Image from 'next/image';
 import Head from 'next/head';
 import { toast } from 'sonner';
-import { ExternalLink, AlertCircle, Copy, Check } from 'lucide-react';
+import { ExternalLink, AlertCircle, Copy, Check, Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [activeSection, setActiveSection] = useState('');
+  const [tableOfContents, setTableOfContents] = useState([]);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [shouldPreserveScroll, setShouldPreserveScroll] = useState(true);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -35,6 +42,29 @@ export default function BlogDetailPage() {
         }
         
         setBlog(foundBlog);
+
+        // Generate table of contents
+        const parsedContent = parseContent(foundBlog.content);
+        const toc = [];
+
+        if (parsedContent?.introduction) {
+          toc.push({ id: 'introduction', title: 'Introduction' });
+        }
+
+        if (parsedContent?.sections) {
+          parsedContent.sections.forEach((section, index) => {
+            if (section.title) {
+              const id = `section-${index}`;
+              toc.push({ id, title: section.title });
+            }
+          });
+        }
+
+        if (parsedContent?.conclusion) {
+          toc.push({ id: 'conclusion', title: 'Conclusion' });
+        }
+
+        setTableOfContents(toc);
       } catch (error) {
         console.error('Error fetching blog:', error);
         toast.error('Failed to fetch blog post', {
@@ -48,6 +78,106 @@ export default function BlogDetailPage() {
 
     fetchBlog();
   }, [slug]);
+
+  // Save scroll position before sheet opens
+  const handleSheetOpen = () => {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    setScrollPosition(currentScroll);
+    setIsSheetOpen(true);
+    setShouldPreserveScroll(true);
+
+    // Prevent any body scroll behavior
+    document.body.style.overflow = 'hidden';
+    console.log('Sheet opened, saved scroll position:', currentScroll);
+  };
+
+  // Restore scroll position after sheet closes (only if no TOC selection was made)
+  const handleSheetClose = () => {
+    setIsSheetOpen(false);
+
+    // Restore body scroll
+    document.body.style.overflow = 'unset';
+
+    if (shouldPreserveScroll) {
+      console.log('Restoring scroll position to:', scrollPosition);
+      // Multiple attempts to ensure scroll position is restored
+      const restoreScroll = () => {
+        window.scrollTo({
+          top: scrollPosition,
+          left: 0,
+          behavior: 'instant'
+        });
+      };
+
+      // Immediate restore
+      restoreScroll();
+
+      // Backup restore after animation
+      requestAnimationFrame(() => {
+        restoreScroll();
+        setTimeout(restoreScroll, 50);
+        setTimeout(restoreScroll, 150);
+        setTimeout(restoreScroll, 300);
+      });
+    } else {
+      console.log('Not preserving scroll, TOC selection was made');
+    }
+
+    // Reset for next time
+    setShouldPreserveScroll(true);
+  };
+
+  // Handle TOC selection with navigation to section (close sheet and scroll)
+  const handleTOCSelect = (sectionId) => {
+    console.log('TOC item selected:', sectionId);
+    // Close the sheet first
+    setIsSheetOpen(false);
+    // Restore body scroll
+    document.body.style.overflow = 'unset';
+    // Scroll to section after sheet closes
+    setTimeout(() => {
+      scrollToSection(sectionId);
+    }, 300); // Wait for sheet close animation
+  };
+
+  // Scroll to section
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 100; // Account for fixed header
+      const elementPosition = element.offsetTop - offset;
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+      setActiveSection(sectionId);
+    }
+  };
+
+  // Track active section on scroll and show floating button
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = tableOfContents.map(item => document.getElementById(item.id)).filter(Boolean);
+      const scrollPosition = window.scrollY + 150;
+
+      // Show floating button when content is loaded and has TOC
+      setShowFloatingButton(tableOfContents.length > 0);
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(section.id);
+          break;
+        }
+      }
+    };
+
+    // Also set initial visibility
+    setShowFloatingButton(tableOfContents.length > 0);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [tableOfContents]);
 
   // Copy code function
   const copyCode = async (code, index) => {
@@ -104,12 +234,46 @@ export default function BlogDetailPage() {
     return content;
   };
 
+  // Table of Contents Component
+  const TableOfContents = ({ mobile = false }) => (
+    <div className={`${mobile ? 'p-6' : 'sticky top-24 h-fit max-h-[calc(100vh-6rem)] overflow-y-auto'}`}>
+      <div className="space-y-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
+          Table of Contents
+        </h3>
+        <nav className="space-y-2">
+          {tableOfContents.map((item, index) => (
+            <button
+              key={item.id}
+              onClick={() => handleTOCSelect(item.id)}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
+                activeSection === item.id
+                  ? 'text-purple-600 dark:text-purple-400 underline bg-purple-50 dark:bg-purple-900/20 border-l-2 border-purple-500'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800'
+              }`}
+            >
+              <div className="flex items-start gap-2">
+                <span className="text-xs font-mono text-gray-400 mt-0.5 flex-shrink-0">
+                  {(index + 1).toString().padStart(2, '0')}
+                </span>
+                <span className="line-clamp-2">{item.title}</span>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+
   // Render section content based on type
   const renderSection = (section, index) => {
     switch (section.type) {
       case 'text':
         return (
-          <div key={index} className="prose prose-lg dark:prose-invert max-w-none">
+          <div key={index} id={`section-${index}`} className="prose prose-lg dark:prose-invert max-w-none">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               {section.title}
             </h3>
@@ -121,7 +285,7 @@ export default function BlogDetailPage() {
 
       case 'bullets':
         return (
-          <div key={index} className="space-y-4">
+          <div key={index} id={`section-${index}`} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
@@ -138,7 +302,7 @@ export default function BlogDetailPage() {
 
       case 'table':
         return (
-          <div key={index} className="space-y-4">
+          <div key={index} id={`section-${index}`} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
@@ -177,7 +341,7 @@ export default function BlogDetailPage() {
 
       case 'note':
         return (
-          <div key={index} className="space-y-4">
+          <div key={index} id={`section-${index}`} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
@@ -194,7 +358,7 @@ export default function BlogDetailPage() {
 
       case 'links':
         return (
-          <div key={index} className="space-y-4">
+          <div key={index} id={`section-${index}`} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
@@ -226,7 +390,7 @@ export default function BlogDetailPage() {
 
       case 'image':
         return (
-          <div key={index} className="space-y-4">
+          <div key={index} id={`section-${index}`} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
@@ -252,7 +416,7 @@ export default function BlogDetailPage() {
         const codeIndex = `code-${index}`;
         const isCopied = copiedIndex === codeIndex;
         return (
-          <div key={index} className="space-y-4">
+          <div key={index} id={`section-${index}`} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
@@ -313,7 +477,7 @@ export default function BlogDetailPage() {
 
       case 'youtube':
         return (
-          <div key={index} className="space-y-4">
+          <div key={index} id={`section-${index}`} className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
               {section.title}
             </h3>
@@ -432,17 +596,18 @@ export default function BlogDetailPage() {
         />
       </Head>
       
-      <PageSection 
+      <PageSection
         showHeader={false}
         showBreadcrumb={true}
         breadcrumbItems={breadcrumbItems}
       >
-        <motion.article 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto space-y-8"
-        >
+        <div className="max-w-4xl mx-auto">
+              <motion.article
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-8"
+              >
         {/* Featured Image */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
@@ -549,7 +714,7 @@ export default function BlogDetailPage() {
         >
           {/* Introduction */}
           {parsedContent?.introduction && (
-            <div className="prose prose-lg dark:prose-invert max-w-none">
+            <div id="introduction" className="prose prose-lg dark:prose-invert max-w-none">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Introduction
               </h2>
@@ -564,7 +729,7 @@ export default function BlogDetailPage() {
 
           {/* Conclusion */}
           {parsedContent?.conclusion && (
-            <div className="prose prose-lg dark:prose-invert max-w-none">
+            <div id="conclusion" className="prose prose-lg dark:prose-invert max-w-none">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Conclusion
               </h2>
@@ -575,7 +740,35 @@ export default function BlogDetailPage() {
           )}
         </motion.div>
 
-        </motion.article>
+              </motion.article>
+        </div>
+
+        {/* Floating TOC Button with Text - Left Side (Blog Detail Only) */}
+        {showFloatingButton && (
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            className="fixed bottom-6 left-6 z-50"
+          >
+            <Sheet open={isSheetOpen} onOpenChange={(open) => open ? handleSheetOpen() : handleSheetClose()}>
+              <SheetTrigger asChild>
+                <button className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group flex items-center gap-2">
+                  <Menu className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium">Table of Content</span>
+                </button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-80">
+                <SheetHeader>
+                  <SheetTitle>Table of Contents</SheetTitle>
+                </SheetHeader>
+                <div className="flex-1 overflow-auto">
+                  <TableOfContents mobile={true} />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </motion.div>
+        )}
       </PageSection>
     </>
   );

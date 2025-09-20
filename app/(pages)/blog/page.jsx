@@ -4,8 +4,9 @@ import { useRouter } from 'next/navigation';
 import { PageSection } from '@/components/customUi/PageSection';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Search, Calendar, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { Search, Calendar, ChevronLeft, ChevronRight, ArrowUpRight, Menu, Filter } from 'lucide-react';
 import { MagicCard } from '@/components/ui/magic-card';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
@@ -14,6 +15,8 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [blogsPerPage] = useState(10);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -77,16 +80,142 @@ export default function BlogPage() {
     setCurrentPage(1);
   }, [selectedCategory, searchTerm]);
 
+  // Save scroll position before sheet opens
+  const handleSheetOpen = () => {
+    setScrollPosition(window.pageYOffset || document.documentElement.scrollTop);
+    setIsSheetOpen(true);
+  };
+
+  // Restore scroll position after sheet closes
+  const handleSheetClose = () => {
+    setIsSheetOpen(false);
+    // Use requestAnimationFrame to ensure DOM is updated before scrolling
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          left: 0,
+          behavior: 'instant'
+        });
+      }, 100);
+    });
+  };
+
+  // Handle category selection with scroll preservation
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    // Close sheet immediately when category is selected
+    if (isSheetOpen) {
+      handleSheetClose();
+    }
+  };
+
+  // Handle search with scroll preservation
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+
   // Handle card click to navigate to blog detail
   const handleCardClick = (blogSlug) => {
     router.push(`/blog/${blogSlug}`);
   };
 
+  // Search and Filter Sidebar Component
+  const SearchFilterSidebar = ({ mobile = false }) => (
+    <div className={`${mobile ? 'p-6' : 'sticky top-24 h-fit max-h-[calc(100vh-6rem)] overflow-y-auto'} space-y-6`}>
+      <div className="space-y-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+          <Search className="w-5 h-5" />
+          Search & Filter
+        </h3>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search articles..."
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm"
+          />
+        </div>
+
+        {/* Search Results Info */}
+        {searchTerm && (
+          <div className="text-sm text-gray-600 dark:text-gray-400 bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+            {filteredBlogs.length} article{filteredBlogs.length !== 1 ? 's' : ''} found for "{searchTerm}"
+          </div>
+        )}
+      </div>
+
+      {/* Category Filters */}
+      <div className="space-y-4">
+        <h4 className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+          <Filter className="w-4 h-4" />
+          Categories
+        </h4>
+        <div className="space-y-2">
+          {categories.map((category) => {
+            const postCount = category === 'All'
+              ? blogs.length
+              : blogs.filter(p => p.category === category).length;
+
+            return (
+              <button
+                key={category}
+                onClick={() => handleCategorySelect(category)}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
+                  selectedCategory === category
+                    ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 underline border-l-4 border-purple-500'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{category}</span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    selectedCategory === category
+                      ? 'bg-purple-200 dark:bg-purple-800 text-purple-700 dark:text-purple-300'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                  }`}>
+                    {postCount}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="space-y-4">
+        <h4 className="font-medium text-gray-900 dark:text-white">Quick Actions</h4>
+        <div className="space-y-2">
+          <Button
+            onClick={() => {
+              handleSearchChange('');
+              handleCategorySelect('All');
+            }}
+            variant="outline"
+            size="sm"
+            className="w-full text-sm"
+          >
+            Clear All Filters
+          </Button>
+          <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+            <div>Showing {currentBlogs.length} of {filteredBlogs.length} articles</div>
+            <div>Page {currentPage} of {totalPages}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   // BlogCard component matching RecentBlogs design
   function BlogCard({ blog, onClick }) {
     return (
       <div
-        className="cursor-pointer w-full max-w-5xl mx-auto hover:scale-105 transition-transform duration-200"
+        className="cursor-pointer w-full max-w-5xl mx-auto"
         onClick={onClick}
       >
         <MagicCard
@@ -228,56 +357,35 @@ export default function BlogPage() {
   // If blogs are available
   return (
     <PageSection {...headerProps}>
-      <div className="space-y-8">
-        {/* Search and Filter Section */}
-        <div className="space-y-6">
-          {/* Search Bar */}
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search articles..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-            />
-          </div>
-
-          {/* Category Filters */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {categories.map((category) => {
-              const postCount = category === 'All'
-                ? blogs.length
-                : blogs.filter(p => p.category === category).length;
-
-              return (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    selectedCategory === category
-                      ? 'bg-blue-600 text-white shadow-lg transform scale-105'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {category}
-                  <span className={`ml-1 text-xs ${
-                    selectedCategory === category ? 'text-blue-200' : 'text-gray-500 dark:text-gray-400'
-                  }`}>
-                    ({postCount})
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Search Results Info */}
-          {searchTerm && (
-            <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              {filteredBlogs.length} article{filteredBlogs.length !== 1 ? 's' : ''} found for "{searchTerm}"
-            </div>
-          )}
+      <div className="max-w-7xl mx-auto">
+        {/* Mobile Filter Button */}
+        <div className="lg:hidden mb-6">
+          <Sheet open={isSheetOpen} onOpenChange={(open) => open ? handleSheetOpen() : handleSheetClose()}>
+            <SheetTrigger asChild>
+              <button className="flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm">
+                <Filter className="w-3 h-3" />
+                Filter
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-80">
+              <SheetHeader>
+                <SheetTitle>Search & Filter</SheetTitle>
+              </SheetHeader>
+              <div className="flex-1 overflow-auto">
+                <SearchFilterSidebar mobile={true} />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar - 25% */}
+          <div className="hidden lg:block lg:col-span-1 lg:order-1">
+            <SearchFilterSidebar />
+          </div>
+
+          {/* Main Content - 75% */}
+          <div className="lg:col-span-3 lg:order-2 space-y-8 min-h-screen">
 
         {/* Blog Cards Vertical Layout */}
         <div className="space-y-8">
@@ -361,63 +469,8 @@ export default function BlogPage() {
           </div>
         )}
 
-        {/* Stats Section */}
-        {filteredBlogs.length > 0 && (
-          <MagicCard
-            className="bg-gradient-to-br from-blue-50/90 to-indigo-50/90 dark:from-blue-900/30 dark:to-indigo-900/30 backdrop-blur-md rounded-2xl p-8 shadow-lg"
-            gradientColor="#3b82f6"
-            gradientOpacity={0.06}
-            gradientFrom="#3b82f6"
-            gradientTo="#8b5cf6"
-          >
-            <div className="text-center space-y-6">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Blog Overview
-              </h3>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
-                    {filteredBlogs.length}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {searchTerm || selectedCategory !== 'All' ? 'Found' : 'Total'} Posts
-                  </div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">
-                    {filteredBlogs.filter(blog => blog.featured).length}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Featured
-                  </div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1">
-                    {categories.length - 1}
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Categories
-                  </div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">
-                    {filteredBlogs.length > 0 ? Math.round(filteredBlogs.reduce((sum, blog) => {
-                      const timeMatch = blog.readTime?.match(/\d+/);
-                      return sum + (timeMatch ? parseInt(timeMatch[0]) : 0);
-                    }, 0) / filteredBlogs.length) : 0}m
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Avg Read Time
-                  </div>
-                </div>
-              </div>
-            </div>
-          </MagicCard>
-        )}
+          </div>
+        </div>
       </div>
     </PageSection>
   );
