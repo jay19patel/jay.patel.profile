@@ -14,15 +14,21 @@ export const useLoadingScreen = () => {
 }
 
 export const LoadingScreenProvider = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [hasShownLoading, setHasShownLoading] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
-    // Show loading animation on every page load/route change
-    setIsLoading(true)
-    setHasShownLoading(false)
-  }, [pathname])
+    // Check if this is the first visit (no session storage flag)
+    const hasVisitedBefore = sessionStorage.getItem('hasVisitedWebsite')
+
+    if (!hasVisitedBefore) {
+      // First time visitor - show loading screen
+      setIsLoading(true)
+      setHasShownLoading(false)
+      sessionStorage.setItem('hasVisitedWebsite', 'true')
+    }
+  }, []) // Remove pathname dependency to only run once
 
   const handleLoadingComplete = () => {
     setIsLoading(false)
