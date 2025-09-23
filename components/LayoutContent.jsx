@@ -6,6 +6,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground'
 import ChatBot from '@/components/ChatBot'
+import { ScrollProgress } from '@/components/ui/scroll-progress'
 import { Toaster } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -28,6 +29,8 @@ const LayoutContent = ({ children }) => {
             transition={{ duration: 0.5 }}
             className="min-h-screen flex flex-col"
           >
+            {/* Scroll Progress Bar */}
+            <ScrollProgress />
             <AnimatedBlobBackground />
             <Header />
             <main className="flex-grow w-full pt-20 pb-6">

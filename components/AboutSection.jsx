@@ -222,7 +222,7 @@ const AboutSection = () => {
                   <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Core Technologies</h4>
                   <div className="flex flex-wrap gap-2">
                     {skills.map((tool, index) => (
-                      <span key={index} className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-full text-xs text-gray-700 dark:text-gray-300">
+                      <span key={index} className="flex items-center gap-2 bg-gray-200/50  dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-full text-xs text-gray-700 dark:text-gray-300">
                         {tool.icon && (
                           <img src={tool.icon} alt={tool.name} className="w-4 h-4" />
                         )}
@@ -265,7 +265,7 @@ const AboutSection = () => {
                     return (
                       <div
                         key={index}
-                        className="flex items-center gap-3 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-white/70 dark:hover:bg-gray-800/70"
+                        className="flex items-center gap-3 p-3 bg-gray-200/50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-white/70 dark:hover:bg-gray-800/70"
                         onClick={() => window.open(stat.link, '_blank', 'noopener,noreferrer')}
                       >
                         <IconComponent className={`w-5 h-5 ${stat.iconColor || ''}`} />
@@ -392,7 +392,7 @@ const AboutSection = () => {
                           {experience.technologies.map((tech, idx) => (
                             <span
                               key={idx}
-                              className="px-3 py-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300"
+                              className="px-3 py-1 bg-gray-200/50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-xs font-medium text-gray-700 dark:text-gray-300"
                             >
                               {tech}
                             </span>

@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 const LoadingScreenContext = createContext()
 
@@ -15,21 +16,22 @@ export const useLoadingScreen = () => {
 export const LoadingScreenProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [hasShownLoading, setHasShownLoading] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
-    // Check if we've already shown the loading screen in this session
-    const hasShown = sessionStorage.getItem('hasShownLoadingScreen')
-    if (hasShown) {
-      setIsLoading(false)
-      setHasShownLoading(true)
-    }
-  }, [])
+    // Show loading animation on every page load/route change
+    setIsLoading(true)
+    setHasShownLoading(false)
+  }, [pathname])
 
   const handleLoadingComplete = () => {
     setIsLoading(false)
     setHasShownLoading(true)
-    // Remember that we've shown the loading screen for this session
-    sessionStorage.setItem('hasShownLoadingScreen', 'true')
+  }
+
+  const triggerLoading = () => {
+    setIsLoading(true)
+    setHasShownLoading(false)
   }
 
   return (
@@ -38,6 +40,7 @@ export const LoadingScreenProvider = ({ children }) => {
         isLoading,
         hasShownLoading,
         handleLoadingComplete,
+        triggerLoading,
       }}
     >
       {children}
