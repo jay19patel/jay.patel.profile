@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams } from 'next/navigation';
 import { PageSection } from '@/components/customUi/PageSection';
 import { EmptyState } from '@/components/customUi/EmptyState';
@@ -18,6 +19,7 @@ export default function BlogDetailPage() {
   const [blog, setBlog] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [tableOfContents, setTableOfContents] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -78,6 +80,11 @@ export default function BlogDetailPage() {
 
     fetchBlog();
   }, [slug]);
+
+  // Ensure portal renders only on client to avoid hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Save scroll position before sheet opens
   const handleSheetOpen = () => {
@@ -184,10 +191,10 @@ export default function BlogDetailPage() {
     try {
       await navigator.clipboard.writeText(code);
       setCopiedIndex(index);
-      toast.success('Code copied to clipboard!');
       setTimeout(() => setCopiedIndex(null), 2000);
     } catch (err) {
-      toast.error('Failed to copy code');
+      // Suppress toast; optionally log error for debugging
+      console.error('Failed to copy code:', err);
     }
   };
 
@@ -743,31 +750,34 @@ export default function BlogDetailPage() {
               </motion.article>
         </div>
 
-        {/* Floating TOC Button with Text - Left Side (Blog Detail Only) */}
-        {showFloatingButton && (
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="fixed bottom-6 left-6 z-50"
-          >
-            <Sheet open={isSheetOpen} onOpenChange={(open) => open ? handleSheetOpen() : handleSheetClose()}>
-              <SheetTrigger asChild>
-                <button className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group flex items-center gap-2">
-                  <Menu className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-medium">Table of Content</span>
-                </button>
-              </SheetTrigger>
+        {/* Floating TOC Button - Top Center (Blog Detail Only, via Portal to body) */}
+        {isMounted && showFloatingButton && createPortal(
+          (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed bottom-6 left-6 z-[1000]"
+            >
+              <Sheet open={isSheetOpen} onOpenChange={(open) => open ? handleSheetOpen() : handleSheetClose()}>
+                <SheetTrigger asChild>
+                <button className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 px-3 md:px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group flex items-center gap-2">
+                    <Menu className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span className="hidden md:inline text-sm font-medium">Table of Content</span>
+                  </button>
+                </SheetTrigger>
               <SheetContent side="left" className="w-80">
-                <SheetHeader>
-                  <SheetTitle>Table of Contents</SheetTitle>
-                </SheetHeader>
-                <div className="flex-1 overflow-auto">
-                  <TableOfContents mobile={true} />
-                </div>
-              </SheetContent>
-            </Sheet>
-          </motion.div>
+                  <SheetHeader>
+                    <SheetTitle>Table of Contents</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex-1 overflow-auto">
+                    <TableOfContents mobile={true} />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </motion.div>
+          ),
+          document.body
         )}
       </PageSection>
     </>

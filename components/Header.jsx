@@ -148,6 +148,8 @@ const Header = () => {
             >
               {/* Mobile Logo Header */}
               <SheetHeader className="border-b border-gray-200 pb-4 mb-6 pt-2">
+                {/* Accessible title for dialog (visually hidden) */}
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <div className="flex items-center justify-center w-full">
                   <div className="relative">
                     <Image 

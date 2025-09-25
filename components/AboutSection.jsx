@@ -171,7 +171,7 @@ const AboutSection = () => {
 
           {/* Two Sides Section */}
           <div
-            className="container mx-auto px-8 relative z-10"
+            className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
           >
             {/* Header */}
             <div className="text-center mb-16">
@@ -286,7 +286,7 @@ const AboutSection = () => {
 
           {/* Professional Experience Section */}
           <div
-            className="container mx-auto px-8 relative z-10"
+            className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
           >
             {/* Header */}
             <div className="text-center mb-16">

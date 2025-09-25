@@ -128,9 +128,7 @@ const Gallery = () => {
                             {image.description}
                           </p>
                         </div>
-                        <span className={`px-2 py-1 rounded-full text-xs text-white font-medium ${getTypeColor(getAutoType(image.title, image.description))} ml-2 flex-shrink-0`}>
-                          {getAutoType(image.title, image.description)}
-                        </span>
+                        {/* Removed hover pill tag on mobile and desktop */}
                       </div>
                     </div>
                   </div>

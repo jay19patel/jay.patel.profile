@@ -34,7 +34,7 @@ export const PageSection = ({
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full shadow-inner border border-gray-200 dark:border-gray-600"
+            className="inline-flex items-center px-3 md:px-4 py-1.5 md:py-2 bg-gray-100 dark:bg-gray-700 rounded-full shadow-inner border border-gray-200 dark:border-gray-600 max-w-full"
           >
             <Breadcrumb>
               <BreadcrumbList className="flex items-center space-x-1">
@@ -43,12 +43,12 @@ export const PageSection = ({
                     <BreadcrumbItem>
                       {item.href ? (
                         <BreadcrumbLink asChild>
-                          <Link href={item.href} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium transition-colors">
+                          <Link href={item.href} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-xs md:text-sm font-medium transition-colors">
                             {item.label}
                           </Link>
                         </BreadcrumbLink>
                       ) : (
-                        <BreadcrumbPage className="text-gray-900 dark:text-white text-sm font-semibold">
+                        <BreadcrumbPage className="text-gray-900 dark:text-white text-xs md:text-sm font-semibold max-w-[60vw] sm:max-w-[70vw] md:max-w-none truncate">
                           {item.label}
                         </BreadcrumbPage>
                       )}
