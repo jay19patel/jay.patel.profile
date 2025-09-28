@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { Plus, Edit, Trash2, Eye, EyeOff, Save, X } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -112,9 +111,7 @@ const GalleryTab = () => {
 
       {/* Add Image Form */}
       {showAddForm && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -194,17 +191,14 @@ const GalleryTab = () => {
               Cancel
             </button>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Gallery Images List */}
       <div className="space-y-4">
-        {galleryImages.map((image, index) => (
-          <motion.div
+        {galleryImages.map((image) => (
+          <div
             key={image.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
             className={`bg-white dark:bg-gray-800 p-4 rounded-lg border ${
               image.visible ? 'border-green-200 dark:border-green-700' : 'border-gray-200 dark:border-gray-700'
             }`}
@@ -296,7 +290,7 @@ const GalleryTab = () => {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 

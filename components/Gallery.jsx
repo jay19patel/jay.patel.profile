@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MagicCard } from '@/components/ui/magic-card'
+import { PixelImage } from '@/components/ui/pixel-image'
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null)
@@ -119,16 +120,24 @@ const Gallery = () => {
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
+                      <div className="w-full">
+                        <div className="mb-2">
                           <h3 className="text-white font-semibold text-sm mb-1">
                             {image.title}
                           </h3>
-                          <p className="text-gray-200 text-xs line-clamp-2">
+                        </div>
+                        <div className="mb-2">
+                          <p className="text-gray-200 text-xs leading-relaxed">
                             {image.description}
                           </p>
                         </div>
-                        {/* Removed hover pill tag on mobile and desktop */}
+                        {image.url && (
+                          <div className="mt-2">
+                            <span className="text-blue-300 text-xs underline cursor-pointer hover:text-blue-200 transition-colors">
+                              View Project →
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -156,11 +165,16 @@ const Gallery = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative">
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.title}
-                className="w-full h-auto object-contain max-h-[70vh]"
-              />
+              <div className="w-full h-auto max-h-[70vh] flex items-center justify-center">
+                <PixelImage
+                  src={selectedImage.src}
+                  customGrid={{ rows: 8, cols: 8 }}
+                  grayscaleAnimation={true}
+                  pixelFadeInDuration={600}
+                  maxAnimationDelay={800}
+                  colorRevealDelay={1200}
+                />
+              </div>
               
               {/* Close Button */}
               <button
@@ -173,28 +187,40 @@ const Gallery = () => {
             
             {/* Image Info */}
             <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    {selectedImage.url ? (
-                      <h3 
-                        onClick={() => window.open(selectedImage.url, '_blank')}
-                        className="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer transition-colors underline-offset-2 hover:underline"
-                      >
-                        {selectedImage.title}
-                      </h3>
-                    ) : (
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                        {selectedImage.title}
-                      </h3>
-                    )}
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              <div className="mb-4">
+                <div className="mb-3">
+                  {selectedImage.url ? (
+                    <h3
+                      onClick={() => window.open(selectedImage.url, '_blank')}
+                      className="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer transition-colors underline-offset-2 hover:underline"
+                    >
+                      {selectedImage.title}
+                    </h3>
+                  ) : (
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {selectedImage.title}
+                    </h3>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-base">
                     {selectedImage.description}
                   </p>
                 </div>
+                {selectedImage.url && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => window.open(selectedImage.url, '_blank')}
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      Visit Project
+                      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
               </div>
-              
             </div>
           </motion.div>
         </motion.div>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
   Trash2, 
@@ -26,6 +25,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { getAnnouncements, saveAnnouncements } from '@/app/actions/announcements';
 
 export default function AnnouncementsTab() {
   const [announcements, setAnnouncements] = useState([]);
@@ -63,8 +63,12 @@ export default function AnnouncementsTab() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const data = await import('@/data/announcements.json');
-      setAnnouncements(data.announcements || []);
+      const result = await getAnnouncements();
+      if (result.success) {
+        setAnnouncements(result.data.announcements || []);
+      } else {
+        throw new Error(result.error);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
       toast.error('Failed to load data');
@@ -75,18 +79,12 @@ export default function AnnouncementsTab() {
 
   const saveData = async (updatedAnnouncements) => {
     try {
-      const response = await fetch('/api/announcements', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          announcements: updatedAnnouncements
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to save data');
+      const result = await saveAnnouncements(updatedAnnouncements);
+
+      if (!result.success) {
+        throw new Error(result.error);
       }
-      
+
       return true;
     } catch (error) {
       console.error('Error saving data:', error);
@@ -235,12 +233,9 @@ export default function AnnouncementsTab() {
       </div>
 
       {/* Add Form */}
-      <AnimatePresence>
+      <div>
         {showForm && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+          <div
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6"
           >
             <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -346,9 +341,9 @@ export default function AnnouncementsTab() {
                 Cancel
               </Button>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </div>
 
       {/* Items List */}
       <div className="space-y-4">
@@ -364,11 +359,8 @@ export default function AnnouncementsTab() {
           </div>
         ) : (
           announcements.map((item) => (
-            <motion.div
+            <div
               key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
               className={`bg-white dark:bg-gray-800 border rounded-lg p-6 transition-all duration-200 ${
                 item.isActive
                   ? 'border-gray-200 dark:border-gray-700 hover:shadow-md' 
@@ -445,7 +437,7 @@ export default function AnnouncementsTab() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))
         )}
       </div>

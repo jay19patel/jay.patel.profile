@@ -8,7 +8,6 @@ import { Loader, LogOut, Shield, LayoutDashboard, MessageSquare, Settings, Menu,
 import { Button } from '@/components/customUi/Button'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 
 const AdminLayoutContent = ({ children }) => {
@@ -42,16 +41,11 @@ const AdminLayoutContent = ({ children }) => {
       <div className="flex flex-col min-w-0">
 
         {/* Page Content */}
-        <motion.main
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 min-h-0"
-        >
+        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 min-h-0">
           <div className="h-full">
             {children}
           </div>
-        </motion.main>
+        </main>
       </div>
     </div>
   )

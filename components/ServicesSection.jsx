@@ -1,9 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/customUi/Button';
-import { Check, Users, Code, Palette, Video, Bot, Smartphone, FileText, Globe, Cpu, BarChart3 } from 'lucide-react';
+import { Users, Code, Palette, Bot, FileText, Cpu, BarChart3 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { MagicCard } from '@/components/ui/magic-card';
 import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';

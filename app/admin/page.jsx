@@ -2,13 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { 
+import {
   MessageSquare,
   Settings,
-  Users,
-  Shield,
   CheckSquare,
   Images
 } from 'lucide-react';
@@ -18,7 +14,6 @@ import { AdminPageWrapper } from '@/components/customUi/AdminPageWrapper';
 import { getMessages} from '@/app/actions/admin';
 import ToolkitTab from '@/components/admin/ToolkitTab';
 import QnATab from '@/components/admin/QnATab';
-import ExperienceTab from '@/components/admin/ExperienceTab';
 import AnnouncementsTab from '@/components/admin/AnnouncementsTab';
 import GalleryTab from '@/components/admin/GalleryTab';
 
@@ -31,7 +26,6 @@ export default function AdminPage() {
   const tabs = [
     { id: 'toolkit', label: 'My Toolkit', icon: <Settings className="w-4 h-4" /> },
     { id: 'qna', label: 'Q&A', icon: <MessageSquare className="w-4 h-4" /> },
-    { id: 'experience', label: 'Experience', icon: <Shield className="w-4 h-4" /> },
     { id: 'announcements', label: 'Announcements', icon: <CheckSquare className="w-4 h-4" /> },
     { id: 'gallery', label: 'Gallery', icon: <Images className="w-4 h-4" /> },
     { id: 'messages', label: 'Messages', icon: <MessageSquare className="w-4 h-4" /> },
@@ -86,19 +80,9 @@ export default function AdminPage() {
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6"
-    >
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
       {/* Header Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="mb-8"
-      >
+      <div className="mb-8">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -111,16 +95,11 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
 
       {/* Portfolio Management Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700"
-      >
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
         {/* Section Header */}
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
@@ -172,15 +151,6 @@ export default function AdminPage() {
                   <span className="text-sm text-gray-500 dark:text-gray-400">Manage FAQ content</span>
                 </div>
                 <QnATab />
-              </div>
-            )}
-            {activeTab === 'experience' && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Experience</h3>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Manage work history</span>
-                </div>
-                <ExperienceTab />
               </div>
             )}
             {activeTab === 'announcements' && (
@@ -266,7 +236,7 @@ export default function AdminPage() {
             )}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 } 

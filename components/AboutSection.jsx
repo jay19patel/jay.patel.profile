@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
-import Image from "next/image"
 import { MagicCard } from "@/components/ui/magic-card"
+import { PixelImage } from "@/components/ui/pixel-image"
 import { NumberTicker } from "@/components/ui/number-ticker"
 import {
   Code2,
@@ -123,21 +123,23 @@ const AboutSection = () => {
           <section
             className="grid lg:grid-cols-3 gap-12 items-center"
           >
-            <div              className="flex justify-center items-center lg:col-span-1"
-            >
+            <div className="flex justify-center items-center lg:col-span-1">
               <div className="relative">
-                <div                >
-                  <Image
+                <div className="relative w-72 h-72 bg-white dark:bg-gray-800 shadow-xl overflow-hidden">
+                  {/* Corner borders */}
+                  <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-blue-600 dark:border-blue-400"></div>
+                  <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-blue-600 dark:border-blue-400"></div>
+                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-blue-600 dark:border-blue-400"></div>
+                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-blue-600 dark:border-blue-400"></div>
+
+                  <PixelImage
                     src="/developer-image.jpg"
-                    alt="Jay Patel"
-                    width={280}
-                    height={280}
-                    className="rounded-full shadow-xl border-4 border-white dark:border-gray-700"
+                    customGrid={{ rows: 8, cols: 8 }}
+                    grayscaleAnimation={true}
+                    pixelFadeInDuration={1200}
+                    maxAnimationDelay={1200}
+                    colorRevealDelay={1800}
                   />
-                </div>
-                <div                  className="absolute bottom-2 right-2 w-12 h-12 bg-green-500 rounded-full border-4 border-white dark:border-gray-700 flex items-center justify-center"
-                >
-                    <div className="w-4 h-4 bg-white rounded-full animate-pulse"></div>
                 </div>
               </div>
             </div>

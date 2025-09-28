@@ -56,11 +56,6 @@ const TypewriterEffect = ({ words, loop = true, delayBetweenWords = 2000 }) => {
   );
 };
 const HeroSection = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
 
   return (
@@ -131,16 +126,16 @@ const HeroSection = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-3 sm:mb-4 md:mb-6"
             >
-              Building{" "}
+              Creating{" "}
               <span className="relative">
-                <TypewriterEffect 
-                  words={['Amazing', 'Scalable', 'Modern', 'Beautiful']} 
+                <TypewriterEffect
+                  words={['Epic', 'Viral', 'Mind-Blowing', 'Game-Changing', 'Awesome']}
                   loop={true}
                   delayBetweenWords={2000}
                 />
               </span>
               <br />
-              Digital Experiences
+              Code & Content ✨
             </motion.h1>
             
             <motion.p 
@@ -149,49 +144,73 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 md:mb-8 leading-relaxed max-w-2xl"
             >
-              Full-Stack Developer specializing in modern web technologies, creating scalable applications, 
-              and sharing knowledge through engaging content creation.
+              Hey there! 👋 I'm a Full-Stack Developer who codes by day and creates content by night!
+              From building jaw-dropping web apps to making tech tutorials that actually make sense.
+              Let's turn your wild ideas into digital reality! 🚀
             </motion.p>
 
-            {/* Stats Section */}
+            {/* Love & Support Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-wrap gap-4 sm:gap-6 md:gap-8 mb-4 sm:mb-6 md:mb-8"
+              className="mb-4 sm:mb-6 md:mb-8"
             >
-              <div className="text-left">
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400">
-                  <NumberTicker
-                    value={50}
-                    startValue={0}
-                    className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400"
-                    delay={0.5}
-                  />+
-                </div>
-                <div className="text-xs sm:text-sm md:text-base text-gray-400">Projects</div>
-              </div>
-              <div className="text-left">
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">
-                  <NumberTicker
-                    value={3}
-                    startValue={0}
-                    className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400"
-                    delay={0.8}
-                  />+
-                </div>
-                <div className="text-xs sm:text-sm md:text-base text-gray-400">Years Exp</div>
-              </div>
-              <div className="text-left">
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-400">
-                  <NumberTicker
-                    value={10}
-                    startValue={0}
-                    className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-400"
-                    delay={1.1}
-                  />K+
-                </div>
-                <div className="text-xs sm:text-sm md:text-base text-gray-400">Views</div>
+              <div className="font-extrabold text-xl sm:text-2xl md:text-3xl [text-wrap:balance] bg-clip-text text-transparent bg-gradient-to-r from-slate-200/60 to-50% to-slate-200">
+                Loved by{" "}
+                <span className="text-pink-400 inline-flex flex-col h-[calc(theme(fontSize.xl)*theme(lineHeight.tight))] sm:h-[calc(theme(fontSize.2xl)*theme(lineHeight.tight))] md:h-[calc(theme(fontSize.3xl)*theme(lineHeight.tight))] overflow-hidden">
+                  <ul className="block animate-text-slide text-left leading-tight [&_li]:block">
+                    <li>
+                      <NumberTicker
+                        value={150}
+                        startValue={0}
+                        className="text-pink-400 inline"
+                        delay={0.5}
+                      />+ Amazing People
+                    </li>
+                    <li>
+                      <NumberTicker
+                        value={200}
+                        startValue={0}
+                        className="text-pink-400 inline"
+                        delay={0.7}
+                      />+ Happy Clients
+                    </li>
+                    <li>
+                      <NumberTicker
+                        value={100}
+                        startValue={0}
+                        className="text-pink-400 inline"
+                        delay={0.9}
+                      />+ Tech Enthusiasts
+                    </li>
+                    <li>
+                      <NumberTicker
+                        value={180}
+                        startValue={0}
+                        className="text-pink-400 inline"
+                        delay={1.1}
+                      />+ Creative Minds
+                    </li>
+                    <li>
+                      <NumberTicker
+                        value={120}
+                        startValue={0}
+                        className="text-pink-400 inline"
+                        delay={1.3}
+                      />+ Startup Founders
+                    </li>
+                    <li aria-hidden="true">
+                      <NumberTicker
+                        value={150}
+                        startValue={0}
+                        className="text-pink-400 inline"
+                        delay={1.5}
+                      />+ Amazing People
+                    </li>
+                  </ul>
+                </span>
+                {" "}❤️
               </div>
             </motion.div>
 
