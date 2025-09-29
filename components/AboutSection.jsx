@@ -28,13 +28,13 @@ import { getTools } from '@/app/actions/tools'
 import { getSocialMedia } from '@/app/actions/socialMedia'
 
 const AboutSection = () => {
-  const [skills, setTools] = useState([])
-  const [contentCreatorStats, setSocialMedia] = useState([])
+  const [skills, setSkills] = useState([])
+  const [contentCreatorStats, setContentCreatorStats] = useState([])
   const [experiences, setExperiences] = useState([])
 
   useEffect(() => {
-    getTools().then(setTools)
-    getSocialMedia().then(setSocialMedia)
+    getTools().then(setSkills)
+    getSocialMedia().then(setContentCreatorStats)
 
     // Fetch experiences from JSON file
     const fetchExperiences = async () => {
