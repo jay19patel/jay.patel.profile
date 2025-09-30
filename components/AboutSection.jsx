@@ -87,19 +87,9 @@ const AboutSection = () => {
               className="flex flex-wrap justify-center gap-8 mt-8"
             >
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  <NumberTicker
-                    value={2023}
-                    startValue={2020}
-                    className="text-2xl font-bold text-green-600 dark:text-green-400"
-                  />
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Graduated</div>
-              </div>
-              <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                   <NumberTicker
-                    value={50}
+                    value={20}
                     startValue={0}
                     className="text-2xl font-bold text-blue-600 dark:text-blue-400"
                   />+

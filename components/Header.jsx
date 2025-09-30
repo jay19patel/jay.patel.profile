@@ -9,11 +9,12 @@ import { Button } from '@/components/customUi/Button';
 import { useTheme } from './ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
+import SearchComponent from '@/components/SearchComponent';
 import Image from 'next/image';
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetHeader, 
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
   SheetTitle,
   SheetTrigger,
   SheetClose
@@ -111,13 +112,10 @@ const Header = () => {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="flex items-center space-x-3 flex-shrink-0"
         >
-          {/* Search Button - Hidden on mobile */}
-          <button 
-            className="hidden lg:flex w-11 h-11 bg-white border border-gray-200/50 rounded-full items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)] transition-all duration-200 group"
-            aria-label="Search"
-          >
-            <Search size={18} className="text-gray-600 group-hover:text-gray-800 transition-colors" />
-          </button>
+          {/* Search Component - Hidden on mobile */}
+          <div className="hidden lg:block">
+            <SearchComponent />
+          </div>
 
           {/* Theme Toggle Button */}
           <AnimatedThemeToggler
@@ -202,10 +200,9 @@ const Header = () => {
                 {/* Action Buttons */}
                 <div className="space-y-3">
                   {/* Search */}
-                  <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-all duration-200 font-medium text-sm border border-gray-200/50">
-                    <Search size={16} className="text-gray-500" />
-                    <span>Search</span>
-                  </button>
+                  <div className="w-full">
+                    <SearchComponent isMobile={true} />
+                  </div>
 
                   {/* Theme Toggle */}
                   <div className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 font-medium text-sm border border-gray-200/50 dark:border-gray-600/50">

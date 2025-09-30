@@ -81,16 +81,17 @@ const Gallery = () => {
         </motion.div>
 
         {/* Fixed Height Gallery Container with Scroll */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
           className="relative"
         >
-          {/* Simple Gallery Container */}
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-            {galleryImages.map((image, index) => (
+          {galleryImages.length > 0 ? (
+            /* Simple Gallery Container */
+            <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+              {galleryImages.map((image, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -143,8 +144,25 @@ const Gallery = () => {
                   </div>
                 </MagicCard>
               </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            /* Empty State */
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-12 h-12 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Something Amazing is Cooking! 🍳
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+                I'm working on some incredible visual content to showcase here.
+                Stay tuned for an amazing collection of projects and creative work!
+              </p>
+            </div>
+          )}
         </motion.div>
       </div>
 

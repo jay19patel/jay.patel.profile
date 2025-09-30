@@ -106,20 +106,19 @@ export default function RecentBlogs() {
   const router = useRouter()
 
   useEffect(() => {
-    async function fetchBlogs() {
+    async function loadBlogs() {
       try {
-        // Import blogs from JSON file and get latest 5
-        const blogsData = await import('@/data/blogs.json')
-        const sortedBlogs = (blogsData.blogs || [])
-          .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
-          .slice(0, 5)
-        setBlogs(sortedBlogs)
+        // Import API utility
+        const { fetchBlogs } = await import('@/lib/api')
+        // Fetch latest 5 blogs
+        const blogs = await fetchBlogs(5)
+        setBlogs(blogs)
       } catch (e) {
-        console.error("Failed to fetch blogs:", e)
+        console.error("Failed to fetch blogs:", e.message)
         setBlogs([])
       }
     }
-    fetchBlogs()
+    loadBlogs()
   }, [])
 
   // Auto-play carousel
@@ -144,9 +143,57 @@ export default function RecentBlogs() {
 
   if (blogs.length === 0) {
     return (
-      <section className="w-full py-16 max-w-6xl mx-auto text-center">
-        <p className="text-gray-600 dark:text-gray-400">No articles available at the moment.</p>
-      </section>
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      >
+        {/* Header */}
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="flex items-center justify-center space-x-2 mb-6"
+          >
+            <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+            <span className="text-sm font-medium tracking-wide uppercase text-blue-600 dark:text-blue-400">Latest Articles</span>
+            <div className="w-8 h-px bg-blue-600 dark:bg-blue-400" />
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white"
+          >
+            My <span className="text-blue-600 dark:text-blue-400 relative">Insights<div className="absolute -bottom-1 left-0 w-full h-1 bg-yellow-400 rounded" /></span>
+          </motion.h2>
+        </div>
+
+        {/* Empty State */}
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full flex items-center justify-center mb-6">
+            <svg className="w-12 h-12 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Something Is Building For You! 🚀
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+            I'm crafting some amazing articles and insights to share with you.
+            Come back soon for exciting content about development, tech trends, and more!
+          </p>
+          <div className="mt-6 text-sm text-blue-600 dark:text-blue-400 font-medium">
+            Coming Soon...
+          </div>
+        </div>
+      </motion.section>
     )
   }
 
