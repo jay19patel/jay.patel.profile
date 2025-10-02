@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { getBlogBySlug } from '@/lib/api';
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
@@ -30,11 +31,9 @@ export default function BlogDetailPage() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        // Import blogs from JSON file
-        const blogsData = await import('@/data/blogs.json');
-        const foundBlog = blogsData.blogs.find(b => b.slug === slug);
-        
-        if (!foundBlog) {
+        const data = await getBlogBySlug(slug);
+        const apiBlog = data?.blog || data || null;
+        if (!apiBlog) {
           toast.error('Blog post not found', {
             description: 'The requested blog post does not exist',
             duration: 5000,
@@ -42,11 +41,11 @@ export default function BlogDetailPage() {
           setBlog(null);
           return;
         }
-        
-        setBlog(foundBlog);
 
-        // Generate table of contents
-        const parsedContent = parseContent(foundBlog.content);
+        setBlog(apiBlog);
+
+        // Generate table of contents from content or text
+        const parsedContent = parseContent(apiBlog.content || apiBlog.text || '');
         const toc = [];
 
         if (parsedContent?.introduction) {
@@ -537,7 +536,7 @@ export default function BlogDetailPage() {
     { label: blog.title }
   ];
 
-  const parsedContent = parseContent(blog.content);
+  const parsedContent = parseContent(blog.content || blog.text || '');
 
   // SEO Meta Data
   const blogMetadata = {
@@ -545,7 +544,7 @@ export default function BlogDetailPage() {
     description: blog.excerpt || blog.subtitle,
     image: blog.image,
     url: `https://jaypatel.dev/blog/${blog.slug}`,
-    publishedDate: blog.publishedDate,
+    publishedDate: blog.publishedDate || blog.created_at,
     author: blog.author,
     tags: blog.tags
   };

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, ArrowUpRight, Calendar, Clock } from 'lucide-react'
-import { searchContent } from '@/lib/api'
+import { getBlogsList } from '@/lib/api'
 
 export default function SearchComponent({ isMobile = false }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -23,8 +23,9 @@ export default function SearchComponent({ isMobile = false }) {
       setIsSearching(true)
       debounceRef.current = setTimeout(async () => {
         try {
-          const searchResults = await searchContent(query, 8)
-          setResults(searchResults)
+          // Use getBlogsList with search parameter for consistent API usage
+          const { blogs: searchResults } = await getBlogsList(8, query.trim(), null)
+          setResults(Array.isArray(searchResults) ? searchResults : [])
           setHasSearched(true)
         } catch (error) {
           console.error('Search error:', error)

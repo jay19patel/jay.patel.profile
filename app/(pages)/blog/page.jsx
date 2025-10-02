@@ -1,30 +1,45 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageSection } from '@/components/customUi/PageSection';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Search, Calendar, ChevronLeft, ChevronRight, ArrowUpRight, Menu, Filter } from 'lucide-react';
+import { Search, Calendar, ChevronLeft, ChevronRight, ArrowUpRight, Menu, Filter, X, Loader2 } from 'lucide-react';
 import { MagicCard } from '@/components/ui/magic-card';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { getBlogsList, searchContent } from '@/lib/api';
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [availableCategories, setAvailableCategories] = useState(['All']);
+  const [originalCategoryCounts, setOriginalCategoryCounts] = useState([]); // Store original counts permanently
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchInput, setSearchInput] = useState(''); // Separate input state for typing
   const [currentPage, setCurrentPage] = useState(1);
   const [blogsPerPage] = useState(10);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const router = useRouter();
+  
+  const searchInputRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
+  // Initial load - fetch all blogs and store original category counts
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        // Import blogs from JSON file
-        const blogsData = await import('@/data/blogs.json');
-        setBlogs(blogsData.blogs || []);
+        const { blogs: apiBlogs, available_categories } = await getBlogsList(50);
+        setBlogs(Array.isArray(apiBlogs) ? apiBlogs : []);
+        
+        // Store original category counts - NEVER change these
+        if (Array.isArray(available_categories) && available_categories.length > 0) {
+          const categoryNames = available_categories.map(cat => cat.name || cat);
+          setAvailableCategories(['All', ...categoryNames]);
+          setOriginalCategoryCounts(available_categories);
+        }
       } catch (error) {
         console.error('Error fetching blogs:', error);
         toast.error('Failed to fetch blog posts', {
@@ -39,35 +54,136 @@ export default function BlogPage() {
     fetchBlogs();
   }, []);
 
-  // Get unique categories from blogs data
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(blogs.map(blog => blog.category))];
-    return ['All', ...uniqueCategories];
-  }, [blogs]);
-
-  // Filter blogs based on selected category and search term
-  const filteredBlogs = useMemo(() => {
-    let filtered = blogs;
-
-    // Filter by category
-    if (selectedCategory !== 'All') {
-      filtered = filtered.filter(blog => blog.category === selectedCategory);
+  // Handle search with button click - Manual search trigger
+  const handleSearchClick = async () => {
+    // Validate search input
+    if (searchInput.trim().length > 0 && searchInput.trim().length < 2) {
+      toast.error('Please enter at least 2 characters to search', {
+        duration: 3000,
+      });
+      return;
     }
 
-    // Filter by search term
-    if (searchTerm.trim()) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(blog =>
-        blog.title.toLowerCase().includes(searchLower) ||
-        blog.subtitle?.toLowerCase().includes(searchLower) ||
-        blog.excerpt.toLowerCase().includes(searchLower) ||
-        blog.tags?.some(tag => tag.toLowerCase().includes(searchLower)) ||
-        blog.author.toLowerCase().includes(searchLower)
+    // Cancel previous request if exists
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    setIsSearching(true);
+    setSearchTerm(searchInput.trim()); // Set actual search term
+
+    try {
+      abortControllerRef.current = new AbortController();
+      
+      const categoryFilter = selectedCategory === 'All' ? null : selectedCategory;
+      const searchFilter = searchInput.trim() || null;
+      
+      const { blogs: results } = await getBlogsList(
+        50, 
+        searchFilter,
+        categoryFilter
       );
+      
+      if (Array.isArray(results)) {
+        setBlogs(results);
+      }
+      
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('Search error:', error);
+        toast.error('Search failed', {
+          description: 'Please try again later',
+          duration: 3000,
+        });
+      }
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Handle category change - triggers immediate API call
+  const handleCategoryChange = async (category) => {
+    setSelectedCategory(category);
+    
+    // Cancel previous request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
 
-    return filtered;
-  }, [selectedCategory, searchTerm, blogs]);
+    setIsSearching(true);
+
+    try {
+      abortControllerRef.current = new AbortController();
+      
+      const categoryFilter = category === 'All' ? null : category;
+      const searchFilter = searchTerm || null;
+      
+      const { blogs: results } = await getBlogsList(
+        50,
+        searchFilter,
+        categoryFilter
+      );
+      
+      if (Array.isArray(results)) {
+        setBlogs(results);
+      }
+      
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('Category filter error:', error);
+        toast.error('Filter failed', {
+          description: 'Please try again later',
+          duration: 3000,
+        });
+      }
+    } finally {
+      setIsSearching(false);
+    }
+
+    // Close sheet if open
+    if (isSheetOpen) {
+      handleSheetClose();
+    }
+  };
+
+  // Clear all filters and reset
+  const handleClearFilters = async () => {
+    setSearchInput('');
+    setSearchTerm('');
+    setSelectedCategory('All');
+    setIsSearching(true);
+
+    try {
+      const { blogs: apiBlogs } = await getBlogsList(50);
+      setBlogs(Array.isArray(apiBlogs) ? apiBlogs : []);
+    } catch (error) {
+      console.error('Error resetting data:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Handle Enter key press in search input
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchClick();
+    }
+  };
+
+  // Get category count - always show original counts
+  const getCategoryCount = (categoryName) => {
+    if (categoryName === 'All') {
+      return originalCategoryCounts.reduce((sum, cat) => sum + (cat.count || 0), 0);
+    }
+    const categoryData = originalCategoryCounts.find(cat => cat.name === categoryName);
+    return categoryData ? categoryData.count : 0;
+  };
+
+  // Use available categories from API response
+  const categories = availableCategories;
+
+  // No need to filter blogs as API handles all filtering
+  const filteredBlogs = blogs;
 
   // Pagination logic
   const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
@@ -89,7 +205,6 @@ export default function BlogPage() {
   // Restore scroll position after sheet closes
   const handleSheetClose = () => {
     setIsSheetOpen(false);
-    // Use requestAnimationFrame to ensure DOM is updated before scrolling
     requestAnimationFrame(() => {
       setTimeout(() => {
         window.scrollTo({
@@ -99,20 +214,6 @@ export default function BlogPage() {
         });
       }, 100);
     });
-  };
-
-  // Handle category selection with scroll preservation
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    // Close sheet immediately when category is selected
-    if (isSheetOpen) {
-      handleSheetClose();
-    }
-  };
-
-  // Handle search with scroll preservation
-  const handleSearchChange = (value) => {
-    setSearchTerm(value);
   };
 
   // Handle card click to navigate to blog detail
@@ -129,22 +230,58 @@ export default function BlogPage() {
           Search & Filter
         </h3>
 
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search articles..."
-            value={searchTerm}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm"
-          />
+        {/* Search Bar with Button */}
+        <div className="space-y-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search articles..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
+              className="w-full pl-10 pr-10 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm"
+            />
+            {searchInput && (
+              <button
+                onClick={() => {
+                  setSearchInput('');
+                  if (searchTerm) {
+                    handleClearFilters();
+                  }
+                }}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          
+          {/* Search Button */}
+          <Button
+            onClick={handleSearchClick}
+            disabled={isSearching}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            {isSearching ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Searching...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Search className="w-4 h-4" />
+                Search
+              </span>
+            )}
+          </Button>
         </div>
 
         {/* Search Results Info */}
-        {searchTerm && (
+        {searchTerm && !isSearching && (
           <div className="text-sm text-gray-600 dark:text-gray-400 bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
-            {filteredBlogs.length} article{filteredBlogs.length !== 1 ? 's' : ''} found for "{searchTerm}"
+            <span>{filteredBlogs.length} article{filteredBlogs.length !== 1 ? 's' : ''} found for "{searchTerm}"</span>
           </div>
         )}
       </div>
@@ -157,19 +294,18 @@ export default function BlogPage() {
         </h4>
         <div className="space-y-2">
           {categories.map((category) => {
-            const postCount = category === 'All'
-              ? blogs.length
-              : blogs.filter(p => p.category === category).length;
+            const postCount = getCategoryCount(category);
 
             return (
               <button
                 key={category}
-                onClick={() => handleCategorySelect(category)}
+                onClick={() => handleCategoryChange(category)}
+                disabled={isSearching}
                 className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
                   selectedCategory === category
                     ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 underline border-l-4 border-purple-500'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
-                }`}
+                } ${isSearching ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <div className="flex items-center justify-between">
                   <span>{category}</span>
@@ -192,10 +328,8 @@ export default function BlogPage() {
         <h4 className="font-medium text-gray-900 dark:text-white">Quick Actions</h4>
         <div className="space-y-2">
           <Button
-            onClick={() => {
-              handleSearchChange('');
-              handleCategorySelect('All');
-            }}
+            onClick={handleClearFilters}
+            disabled={isSearching}
             variant="outline"
             size="sm"
             className="w-full text-sm"
@@ -204,7 +338,7 @@ export default function BlogPage() {
           </Button>
           <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
             <div>Showing {currentBlogs.length} of {filteredBlogs.length} articles</div>
-            <div>Page {currentPage} of {totalPages}</div>
+            <div>Page {currentPage} of {totalPages || 1}</div>
           </div>
         </div>
       </div>
@@ -228,21 +362,21 @@ export default function BlogPage() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
             {/* Blog Image */}
             <div className="order-2 lg:order-1 lg:col-span-2">
-              {blog.image && (
-                <div className="relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 aspect-[4/3]">
+              <div className="relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 aspect-[4/3]">
+                {blog.image ? (
                   <img
-                    src={blog.image || "/placeholder.svg"}
+                    src={blog.image}
                     alt={blog.title}
                     className="object-cover w-full h-full"
                     loading="lazy"
                   />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-blue-500 text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-lg">
-                      {blog.category}
-                    </span>
-                  </div>
+                ) : null}
+                <div className="absolute top-3 left-3">
+                  <span className="bg-blue-500 text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-lg">
+                    {blog.category || 'General'}
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Content */}
@@ -251,8 +385,8 @@ export default function BlogPage() {
               <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                 <Calendar className="w-3 h-3" />
                 <span>
-                  {blog.publishedDate
-                    ? new Date(blog.publishedDate).toLocaleDateString("en-US", {
+                  {blog.publishedDate || blog.created_at || blog.date
+                    ? new Date(blog.publishedDate || blog.created_at || blog.date).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
@@ -317,7 +451,7 @@ export default function BlogPage() {
     technologies: ["Tech", "Development", "AI/ML", "Web Dev", "Mobile", "Cloud"],
     stats: [
       { count: `${filteredBlogs.length}`, label: `${selectedCategory === 'All' ? 'Total Posts' : selectedCategory + ' Posts'}`, color: "blue" },
-      { count: `${currentPage}/${totalPages}`, label: "Page", color: "purple" },
+      { count: `${currentPage}/${totalPages || 1}`, label: "Page", color: "purple" },
       { count: `${currentBlogs.length}`, label: "Showing", color: "green" }
     ],
     centerIcon: (
@@ -338,7 +472,7 @@ export default function BlogPage() {
   }
 
   // If no blogs are available
-  if (blogs.length === 0) {
+  if (blogs.length === 0 && !searchTerm && selectedCategory === 'All') {
     return (
       <PageSection {...headerProps}>
         <div className="w-full h-64 flex flex-col items-center justify-center text-center space-y-4">
@@ -388,13 +522,18 @@ export default function BlogPage() {
           <div className="lg:col-span-3 lg:order-2 space-y-8 min-h-screen">
 
         {/* Blog Cards Vertical Layout */}
-        <div className="space-y-8">
+        <div className="space-y-8 relative">
+          {/* Loading overlay */}
+          {isSearching && (
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-blue-500 animate-pulse rounded-full opacity-60 z-10"></div>
+          )}
+          
           {currentBlogs.length > 0 ? (
             currentBlogs.map((blog, index) => (
               <BlogCard
-                key={blog.id || index}
+                key={blog._id || blog.id || index}
                 blog={blog}
-                onClick={() => handleCardClick(blog.slug)}
+                onClick={() => handleCardClick(blog.slug || blog._id)}
               />
             ))
           ) : (
@@ -410,10 +549,7 @@ export default function BlogPage() {
                 }
               </p>
               <Button
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('All');
-                }}
+                onClick={handleClearFilters}
                 className="mt-4"
               >
                 {searchTerm ? "Clear Search" : "View All Posts"}
@@ -474,4 +610,4 @@ export default function BlogPage() {
       </div>
     </PageSection>
   );
-} 
+}
