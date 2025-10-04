@@ -1,25 +1,20 @@
 'use server';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const dataPath = path.join(process.cwd(), 'data', 'tools.json');
+import { readJsonFile, writeJsonFile } from '@/lib/server-utils';
 
 export async function getTools() {
   try {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
+    return await readJsonFile('tools.json');
   } catch (error) {
     console.error('Error fetching tools:', error);
-    throw new Error('Failed to fetch tools data');
+    return [];
   }
 }
 
 export async function updateTools(toolsData) {
   try {
-    await fs.writeFile(dataPath, JSON.stringify(toolsData, null, 2));
-    return { success: true };
+    return await writeJsonFile('tools.json', toolsData);
   } catch (error) {
     console.error('Error saving tools:', error);
     throw new Error('Failed to update tools data');
   }
-} 
+}

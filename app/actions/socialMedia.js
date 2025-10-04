@@ -1,25 +1,20 @@
 'use server';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const dataPath = path.join(process.cwd(), 'data', 'socialMedia.json');
+import { readJsonFile, writeJsonFile } from '@/lib/server-utils';
 
 export async function getSocialMedia() {
   try {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
+    return await readJsonFile('socialMedia.json');
   } catch (error) {
     console.error('Error fetching social media:', error);
-    throw new Error('Failed to fetch social media data');
+    return [];
   }
 }
 
 export async function updateSocialMedia(socialMediaData) {
   try {
-    await fs.writeFile(dataPath, JSON.stringify(socialMediaData, null, 2));
-    return { success: true };
+    return await writeJsonFile('socialMedia.json', socialMediaData);
   } catch (error) {
     console.error('Error saving social media:', error);
     throw new Error('Failed to update social media data');
   }
-} 
+}

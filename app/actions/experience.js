@@ -1,23 +1,18 @@
 'use server';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const dataPath = path.join(process.cwd(), 'data', 'experience.json');
+import { readJsonFile, writeJsonFile } from '@/lib/server-utils';
 
 export async function getExperience() {
   try {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
+    return await readJsonFile('experience.json');
   } catch (error) {
     console.error('Error fetching experience:', error);
-    throw new Error('Failed to fetch experience data');
+    return [];
   }
 }
 
 export async function updateExperience(experienceData) {
   try {
-    await fs.writeFile(dataPath, JSON.stringify(experienceData, null, 2));
-    return { success: true };
+    return await writeJsonFile('experience.json', experienceData);
   } catch (error) {
     console.error('Error saving experience:', error);
     throw new Error('Failed to update experience data');

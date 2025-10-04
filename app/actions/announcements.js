@@ -1,23 +1,18 @@
 'use server';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const dataPath = path.join(process.cwd(), 'data', 'announcements.json');
+import { readJsonFile, writeJsonFile } from '@/lib/server-utils';
 
 export async function getAnnouncements() {
   try {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
+    return await readJsonFile('announcements.json');
   } catch (error) {
     console.error('Error fetching announcements:', error);
-    throw new Error('Failed to fetch announcements data');
+    return [];
   }
 }
 
 export async function updateAnnouncements(announcementsData) {
   try {
-    await fs.writeFile(dataPath, JSON.stringify(announcementsData, null, 2));
-    return { success: true };
+    return await writeJsonFile('announcements.json', announcementsData);
   } catch (error) {
     console.error('Error saving announcements:', error);
     throw new Error('Failed to update announcements data');

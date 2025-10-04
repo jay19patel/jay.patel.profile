@@ -1,23 +1,18 @@
 'use server';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const dataPath = path.join(process.cwd(), 'data', 'gallery.json');
+import { readJsonFile, writeJsonFile } from '@/lib/server-utils';
 
 export async function getGallery() {
   try {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
+    return await readJsonFile('gallery.json');
   } catch (error) {
     console.error('Error fetching gallery:', error);
-    throw new Error('Failed to fetch gallery data');
+    return { images: [] };
   }
 }
 
 export async function updateGallery(galleryData) {
   try {
-    await fs.writeFile(dataPath, JSON.stringify(galleryData, null, 2));
-    return { success: true };
+    return await writeJsonFile('gallery.json', galleryData);
   } catch (error) {
     console.error('Error saving gallery:', error);
     throw new Error('Failed to update gallery data');

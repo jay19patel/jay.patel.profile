@@ -1,25 +1,20 @@
 'use server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { readJsonFile, writeJsonFile } from '@/lib/server-utils';
 
-const dataPath = path.join(process.cwd(), 'data', 'qna.json');
-
-export async function getQnA() {
+export async function getQna() {
   try {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
+    return await readJsonFile('qna.json');
   } catch (error) {
-    console.error('Error fetching QNA:', error);
-    throw new Error('Failed to fetch QnA data');
+    console.error('Error fetching QnA:', error);
+    return [];
   }
 }
 
-export async function updateQnA(qnaData) {
+export async function updateQna(qnaData) {
   try {
-    await fs.writeFile(dataPath, JSON.stringify(qnaData, null, 2));
-    return { success: true };
+    return await writeJsonFile('qna.json', qnaData);
   } catch (error) {
-    console.error('Error saving QNA:', error);
+    console.error('Error saving QnA:', error);
     throw new Error('Failed to update QnA data');
   }
-} 
+}

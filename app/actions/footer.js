@@ -1,23 +1,18 @@
 'use server';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const dataPath = path.join(process.cwd(), 'data', 'footer.json');
+import { readJsonFile, writeJsonFile } from '@/lib/server-utils';
 
 export async function getFooter() {
   try {
-    const data = await fs.readFile(dataPath, 'utf-8');
-    return JSON.parse(data);
+    return await readJsonFile('footer.json');
   } catch (error) {
     console.error('Error fetching footer:', error);
-    throw new Error('Failed to fetch footer data');
+    return { company: {}, sections: [], socialMedia: [] };
   }
 }
 
 export async function updateFooter(footerData) {
   try {
-    await fs.writeFile(dataPath, JSON.stringify(footerData, null, 2));
-    return { success: true };
+    return await writeJsonFile('footer.json', footerData);
   } catch (error) {
     console.error('Error saving footer:', error);
     throw new Error('Failed to update footer data');
