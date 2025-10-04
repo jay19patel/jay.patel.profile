@@ -1,13 +1,30 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { PageSection } from '@/components/customUi/PageSection'
 import { Button } from '@/components/ui/button'
-import servicesData from '@/data/services.json'
+import { getServices } from '@/app/actions/services'
 import { Button as CButton } from '@/components/customUi/Button'
 import { MagicCard } from '@/components/ui/magic-card'
 const ServicesPage = () => {
+  const [servicesData, setServicesData] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const data = await getServices()
+        setServicesData(data)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error loading services:', error)
+        setLoading(false)
+      }
+    }
+    fetchServices()
+  }, [])
+
   // Handle contact click
   const handleContactClick = () => {
     window.open('mailto:your-email@example.com', '_blank', 'noopener,noreferrer')
@@ -30,6 +47,16 @@ const ServicesPage = () => {
       { count: "24/7", label: "Support Available", color: "purple" }
     ]
   };
+
+  if (loading) {
+    return (
+      <PageSection {...headerProps}>
+        <div className="flex justify-center items-center py-16">
+          <div className="text-gray-600 dark:text-gray-400">Loading services...</div>
+        </div>
+      </PageSection>
+    )
+  }
 
   return (
     <PageSection {...headerProps}>

@@ -25,7 +25,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { getAnnouncements, saveAnnouncements } from '@/app/actions/announcements';
+import { getAnnouncements, updateAnnouncements } from '@/app/actions/announcements';
 
 export default function AnnouncementsTab() {
   const [announcements, setAnnouncements] = useState([]);
@@ -64,11 +64,7 @@ export default function AnnouncementsTab() {
     try {
       setLoading(true);
       const result = await getAnnouncements();
-      if (result.success) {
-        setAnnouncements(result.data.announcements || []);
-      } else {
-        throw new Error(result.error);
-      }
+      setAnnouncements(result.announcements || []);
     } catch (error) {
       console.error('Error loading data:', error);
       toast.error('Failed to load data');
@@ -79,12 +75,7 @@ export default function AnnouncementsTab() {
 
   const saveData = async (updatedAnnouncements) => {
     try {
-      const result = await saveAnnouncements(updatedAnnouncements);
-
-      if (!result.success) {
-        throw new Error(result.error);
-      }
-
+      await updateAnnouncements({ announcements: updatedAnnouncements });
       return true;
     } catch (error) {
       console.error('Error saving data:', error);

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MagicCard } from '@/components/ui/magic-card'
 import { PixelImage } from '@/components/ui/pixel-image'
+import { getGallery } from '@/app/actions/gallery'
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null)
@@ -12,7 +13,7 @@ const Gallery = () => {
   useEffect(() => {
     const fetchGalleryImages = async () => {
       try {
-        const galleryData = await import('@/data/gallery.json')
+        const galleryData = await getGallery()
         // Filter only visible images
         const visibleImages = galleryData.images.filter(image => image.visible)
         setGalleryImages(visibleImages)

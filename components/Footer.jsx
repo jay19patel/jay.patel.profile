@@ -4,10 +4,22 @@ import Link from 'next/link';
 import { Github, Twitter, Instagram, ArrowUp, Linkedin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import footerData from '@/data/footer.json';
+import { getFooter } from '@/app/actions/footer';
 
 const Footer = () => {
-  const [data, setData] = useState(footerData);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchFooterData = async () => {
+      try {
+        const footerData = await getFooter();
+        setData(footerData);
+      } catch (error) {
+        console.error('Error loading footer data:', error);
+      }
+    };
+    fetchFooterData();
+  }, []);
 
   // Icon mapping
   const iconMap = {
@@ -20,6 +32,16 @@ const Footer = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (!data) {
+    return (
+      <div className='w-full px-4 py-6'>
+        <div className="max-w-8xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-4 md:p-6">
+          <div className="text-center text-gray-600 dark:text-gray-400">Loading footer...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div 

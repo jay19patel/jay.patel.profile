@@ -1,7 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Eye, EyeOff, Save, X } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, EyeOff, Save, X, Images } from 'lucide-react'
 import { toast } from 'sonner'
+import { getGallery, updateGallery } from '@/app/actions/gallery'
 
 const GalleryTab = () => {
   const [galleryImages, setGalleryImages] = useState([])
@@ -23,7 +24,7 @@ const GalleryTab = () => {
 
   const loadGalleryData = async () => {
     try {
-      const galleryData = await import('@/data/gallery.json')
+      const galleryData = await getGallery()
       setGalleryImages(galleryData.images)
       setLoading(false)
     } catch (error) {
@@ -35,8 +36,7 @@ const GalleryTab = () => {
 
   const saveGalleryData = async (updatedImages) => {
     try {
-      // In a real app, you'd save to an API/database
-      // For now, we'll just update the state
+      await updateGallery({ images: updatedImages })
       setGalleryImages(updatedImages)
       toast.success('Gallery updated successfully!')
     } catch (error) {

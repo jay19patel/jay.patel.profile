@@ -2,97 +2,74 @@
   {
     "id": 1,
     "name": "YouTube",
-    "username": "@TechWithJay",
+    "username": "NJ as Coder",
     "description": "Tech tutorials, coding walkthroughs, and web development tips for developers",
     "icon": "Youtube",
     "bgColor": "bg-red-50",
     "darkBgColor": "dark:bg-red-900/20",
     "iconColor": "text-red-600 dark:text-red-400",
     "buttonColor": "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
-    "link": "https://youtube.com/@techwithcode"
+    "link": "https://www.youtube.com/@NJasCoder"
   },
   {
     "id": 2,
     "name": "Instagram",
-    "username": "@jay.codes",
+    "username": "@natkhat.jay",
     "description": "Behind-the-scenes coding, quick tips, and tech lifestyle content",
     "icon": "Instagram",
     "bgColor": "bg-gradient-to-br from-purple-50 to-pink-50",
     "darkBgColor": "dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-pink-900/20",
     "iconColor": "text-purple-600 dark:text-purple-400",
     "buttonColor": "bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600",
-    "link": "https://instagram.com/jay.codes"
+    "link": "https://instagram.com/natkhat.jay"
   },
   {
     "id": 3,
-    "name": "LinkedIn",
-    "username": "@jay-patel-dev",
-    "description": "Professional insights, career tips, and industry discussions",
-    "icon": "Linkedin",
-    "bgColor": "bg-blue-50",
-    "darkBgColor": "dark:bg-blue-900/20",
-    "iconColor": "text-blue-600 dark:text-blue-400",
-    "buttonColor": "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
-    "link": "https://linkedin.com/in/jay-patel-dev"
+    "name": "Instagram",
+    "username": "@nj.mint.in",
+    "description": "Creative content, design inspiration, and lifestyle posts",
+    "icon": "Instagram",
+    "bgColor": "bg-gradient-to-br from-purple-50 to-pink-50",
+    "darkBgColor": "dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-pink-900/20",
+    "iconColor": "text-purple-600 dark:text-purple-400",
+    "buttonColor": "bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 hover:from-purple-600 hover:via-pink-600 hover:to-orange-600",
+    "link": "https://instagram.com/nj.mint.in"
   },
   {
     "id": 4,
     "name": "GitHub",
-    "username": "@jay-patel",
+    "username": "@jay19patel",
     "description": "Open source projects, code repositories, and development contributions",
     "icon": "Github",
     "bgColor": "bg-gray-50",
     "darkBgColor": "dark:bg-gray-900/20",
     "iconColor": "text-gray-800 dark:text-gray-200",
     "buttonColor": "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
-    "link": "https://github.com/jay-patel"
+    "link": "https://github.com/jay19patel"
   },
   {
     "id": 5,
-    "name": "Twitter",
-    "username": "@jay_codes",
-    "description": "Daily tech thoughts, quick tips, and engaging with the dev community",
-    "icon": "Globe",
-    "bgColor": "bg-gray-50",
-    "darkBgColor": "dark:bg-gray-900/20",
-    "iconColor": "text-gray-800 dark:text-gray-200",
-    "buttonColor": "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
-    "link": "https://twitter.com/jay_codes"
+    "name": "LinkedIn",
+    "username": "@jayy19patel",
+    "description": "Professional insights, career tips, and industry discussions",
+    "icon": "Linkedin",
+    "bgColor": "bg-blue-50",
+    "darkBgColor": "dark:bg-blue-900/20",
+    "iconColor": "text-blue-600 dark:text-blue-400",
+    "buttonColor": "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
+    "link": "https://linkedin.com/in/jayy19patel"
   },
   {
-    "id": 6,
-    "name": "Upwork",
-    "username": "@jay-patel",
-    "description": "Freelance projects, client work, and professional development services",
-    "icon": "Briefcase",
-    "bgColor": "bg-green-50",
-    "darkBgColor": "dark:bg-green-900/20",
-    "iconColor": "text-green-600 dark:text-green-400",
-    "buttonColor": "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700",
-    "link": "https://upwork.com/freelancers/jay-patel"
-  },
-  {
-    "id": 7,
-    "name": "Pinterest",
-    "username": "@jaycodestech",
-    "description": "Tech inspiration, coding aesthetics, and development workflow ideas",
-    "icon": "Camera",
-    "bgColor": "bg-pink-50",
-    "darkBgColor": "dark:bg-pink-900/20",
-    "iconColor": "text-pink-600 dark:text-pink-400",
-    "buttonColor": "bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600",
-    "link": "https://pinterest.com/jaycodestech"
-  },
-  {
-    "id": 8,
-    "name": "Dev.to",
-    "username": "@jaypatel",
-    "description": "Technical articles, tutorials, and sharing knowledge with developers",
-    "icon": "Code",
-    "bgColor": "bg-gray-50",
-    "darkBgColor": "dark:bg-gray-900/20",
-    "iconColor": "text-gray-800 dark:text-gray-200",
-    "buttonColor": "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
-    "link": "https://dev.to/jaypatel"
+  "id": 6,
+  "name": "Twitter",
+  "username": "@jayy19patel",
+  "description": "Daily tech thoughts, quick tips, and engaging with the dev community",
+  "icon": "Globe",
+  "bgColor": "bg-gray-50",
+  "darkBgColor": "dark:bg-gray-900/20",
+  "iconColor": "text-gray-800 dark:text-gray-200",
+  "buttonColor": "bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900",
+  "link": "https://twitter.com/jayy19patel"
   }
+  
 ] 

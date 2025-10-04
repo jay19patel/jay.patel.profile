@@ -1,31 +1,17 @@
 {
   "announcements": [
     {
-      "id": 1,
-      "type": "youtube",
-      "title": "New Tutorial: Building AI-Powered Apps with Next.js 14",
-      "description": "Check out my latest YouTube video where I build a complete AI application from scratch using modern tools and techniques!",
-      "link": "https://youtube.com/watch?v=example",
-      "image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=600&fit=crop",
-      "icon": "▶️",
-      "color": "red",
+      "id": 1759606215244,
+      "type": "event",
+      "title": "Nj as Coder have new Video check now!!",
+      "description": "",
+      "link": "",
+      "icon": "event",
+      "color": "blue",
       "isActive": true,
       "priority": "high",
-      "createdAt": "2024-12-10",
-      "expiresAt": "2024-12-25"
-    },
-    {
-      "id": 1756191259242,
-      "type": "youtube",
-      "title": "New Video On Youtube",
-      "description": "This is For new Startup",
-      "link": "www.text.com",
-      "icon": "youtube",
-      "color": "red",
-      "isActive": true,
-      "priority": "medium",
-      "createdAt": "2025-08-26",
-      "expiresAt": "2025-09-25"
+      "createdAt": "2025-10-04",
+      "expiresAt": "2025-11-03"
     }
   ]
 }

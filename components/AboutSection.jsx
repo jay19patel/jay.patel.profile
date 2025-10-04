@@ -26,6 +26,7 @@ import {
 
 import { getTools } from '@/app/actions/tools'
 import { getSocialMedia } from '@/app/actions/socialMedia'
+import { getExperience } from '@/app/actions/experience'
 
 const AboutSection = () => {
   const [skills, setSkills] = useState([])
@@ -35,19 +36,7 @@ const AboutSection = () => {
   useEffect(() => {
     getTools().then(setSkills)
     getSocialMedia().then(setContentCreatorStats)
-
-    // Fetch experiences from JSON file
-    const fetchExperiences = async () => {
-      try {
-        const experienceData = await import('@/data/experience.json')
-        setExperiences(experienceData.experiences || [])
-      } catch (error) {
-        console.error('Error loading experiences:', error)
-        setExperiences([])
-      }
-    }
-
-    fetchExperiences()
+    getExperience().then(data => setExperiences(data.experiences || []))
   }, [])
 
 

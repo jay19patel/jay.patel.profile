@@ -11,6 +11,7 @@ export default function SearchComponent({ isMobile = false }) {
   const [isSearching, setIsSearching] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const inputRef = useRef(null)
+  const isComposingRef = useRef(false)
   const debounceRef = useRef(null)
 
   // Handle search with debouncing
@@ -94,7 +95,7 @@ export default function SearchComponent({ isMobile = false }) {
         className={
           isMobile
             ? "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 font-medium text-sm border border-gray-200/50 dark:border-gray-600/50"
-            : "flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg transition-colors"
+            : "flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg transition-colors"
         }
       >
         <Search className={isMobile ? "w-4 h-4 text-gray-500 dark:text-gray-400" : "w-4 h-4"} />
@@ -132,7 +133,12 @@ export default function SearchComponent({ isMobile = false }) {
                   placeholder="Search articles, projects, and more..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="flex-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 outline-none text-lg"
+                  onCompositionStart={() => { isComposingRef.current = true }}
+                  onCompositionEnd={() => { isComposingRef.current = false }}
+                  inputMode="text"
+                  autoComplete="off"
+                  spellCheck={false}
+                  className="flex-1 min-w-0 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 outline-none text-lg"
                 />
                 <button
                   onClick={handleClose}

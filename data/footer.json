@@ -17,27 +17,27 @@
   "socialMedia": [
     {
       "name": "Twitter",
-      "url": "https://twitter.com/jaypatel",
+      "url": "https://twitter.com/jayy19patel",
       "icon": "Twitter"
     },
     {
       "name": "Instagram", 
-      "url": "https://instagram.com/jaypatel",
+      "url": "https://instagram.com/natkhat.jay",
       "icon": "Instagram"
     },
     {
       "name": "GitHub",
-      "url": "https://github.com/jaypatel",
+      "url": "https://github.com/jay19patel",
       "icon": "Github"
     },
     {
       "name": "LinkedIn",
-      "url": "https://linkedin.com/in/jaypatel", 
+      "url": "https://linkedin.com/in/jayy19patel", 
       "icon": "Linkedin"
     }
   ],
   "developer": {
     "name": "Jay Patel",
-    "url": "https://github.com/jaypatel"
+    "url": "https://instagram.com/nj.mint.in"
   }
 }

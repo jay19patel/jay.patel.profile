@@ -163,12 +163,65 @@ export default function BlogPage() {
     }
   };
 
-  // Handle Enter key press in search input
-  const handleSearchKeyPress = (e) => {
-    if (e.key === 'Enter') {
+  // Handle Enter key press in search input (composition-safe)
+  const isComposingRef = useRef(false);
+  const handleCompositionStart = () => {
+    isComposingRef.current = true;
+  };
+  const handleCompositionEnd = () => {
+    isComposingRef.current = false;
+  };
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter' && !isComposingRef.current) {
+      e.preventDefault();
       handleSearchClick();
     }
   };
+
+  // Auto-focus functionality - focus search input when user types any character
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      // Skip if user is already typing in an input, textarea, or contenteditable element
+      const activeElement = document.activeElement;
+      const isTypingInInput = activeElement && (
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.contentEditable === 'true' ||
+        activeElement.isContentEditable
+      );
+
+      // Skip if user is pressing modifier keys (Ctrl, Alt, Meta, Shift)
+      const isModifierKey = e.ctrlKey || e.altKey || e.metaKey || e.shiftKey;
+
+      // Skip special keys that shouldn't trigger auto-focus
+      const specialKeys = [
+        'Escape', 'Enter', 'Tab', 'Backspace', 'Delete', 'ArrowUp', 'ArrowDown', 
+        'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown',
+        'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'
+      ];
+
+      // Only auto-focus if:
+      // 1. User is not typing in an input field
+      // 2. User is not pressing modifier keys
+      // 3. The key is not a special key
+      // 4. The key is a printable character (length 1 and not a control character)
+      if (!isTypingInInput && 
+          !isModifierKey && 
+          !specialKeys.includes(e.key) &&
+          e.key.length === 1 && 
+          e.key.charCodeAt(0) >= 32 &&
+          searchInputRef.current) {
+        
+        e.preventDefault();
+        searchInputRef.current.focus();
+        // Add the typed character to the search input
+        setSearchInput(prev => prev + e.key);
+      }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    return () => document.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   // Get category count - always show original counts
   const getCategoryCount = (categoryName) => {
@@ -240,8 +293,13 @@ export default function BlogPage() {
               placeholder="Search articles..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyPress={handleSearchKeyPress}
-              className="w-full pl-10 pr-10 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm"
+              onKeyDown={handleSearchKeyDown}
+              onCompositionStart={handleCompositionStart}
+              onCompositionEnd={handleCompositionEnd}
+              inputMode="text"
+              autoComplete="off"
+              spellCheck={false}
+              className="w-full min-w-0 pl-10 pr-10 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm"
             />
             {searchInput && (
               <button
@@ -309,7 +367,7 @@ export default function BlogPage() {
               >
                 <div className="flex items-center justify-between">
                   <span>{category}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
+                  <span className={`text-xs px-2 py-1 rounded-full transition-colors ${
                     selectedCategory === category
                       ? 'bg-purple-200 dark:bg-purple-800 text-purple-700 dark:text-purple-300'
                       : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'

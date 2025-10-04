@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ExternalLink, Calendar } from 'lucide-react'
+import { getAnnouncements } from '@/app/actions/announcements'
 
 const AnnouncementCard = ({ item, index, isActive }) => {
   const getTypeStyles = (type) => {
@@ -125,7 +126,7 @@ export default function AnnouncementDisplay() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const announcementData = await import('@/data/announcements.json')
+        const announcementData = await getAnnouncements()
 
         // Combine announcements and current tasks
         const announcements = (announcementData.announcements || [])
