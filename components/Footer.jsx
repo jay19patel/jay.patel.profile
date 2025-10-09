@@ -33,7 +33,7 @@ const Footer = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (!data) {
+  if (!data || !data.sections || !data.sections[0] || !data.sections[0].links || !data.socialMedia) {
     return (
       <div className='w-full px-4 py-6'>
         <div className="max-w-8xl mx-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-4 md:p-6">

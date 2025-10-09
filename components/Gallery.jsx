@@ -15,10 +15,11 @@ const Gallery = () => {
       try {
         const galleryData = await getGallery()
         // Filter only visible images
-        const visibleImages = galleryData.images.filter(image => image.visible)
+        const visibleImages = galleryData?.images?.filter(image => image.visible) || []
         setGalleryImages(visibleImages)
       } catch (error) {
         console.error('Error loading gallery:', error)
+        setGalleryImages([])
       }
     }
 
