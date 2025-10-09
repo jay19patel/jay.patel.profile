@@ -28,7 +28,7 @@ const Header = () => {
   // Navigation menu items
   const menuItems = [
     { name: 'Home', href: '/' },
-    { name: 'Services', href: '/services' },
+    // { name: 'Services', href: '/services' }, // Hidden from menu - can still access via URL
     { name: 'Blog', href: '/blog' }
   ];
 
